@@ -4,15 +4,14 @@ const router = express.Router();
 const pageScraper = require('../../Scrapper/pageController');
 const browserObject = require('../../Scrapper/browser');
 const isThereNewAnime = require('../../Scrapper/addNewAnime')
-
-let browserInstance = browserObject.startBrowser();
+const browserInstance = browserObject.startBrowser();
 
 let cacheTime;
 let datas
-//GET BACK ALL 15 ANIMES
+//GET BACK ALL 9 ANIMES
 router.get('/allanimes', async (req, res) => {
     try{
-        const { page = 1, limit = 15 } = req.query;
+        const { page = 1, limit = 9 } = req.query;
         const posts = await Post.find()
         .limit(limit * 1)
         .skip((page - 1) * limit);
@@ -66,6 +65,18 @@ const getAllNameOfNewEp = async (episodes) => {
     }
 }
 
+//GET BACK LAST 10 ANIME
+router.get('/anime/recentlyadded', async (req, res) => {
+    try{
+        const { page = 1, limit = 9 } = req.query;
+        const post = await Post.find({}).sort({$natural:-1}).limit(limit * 1)
+        .skip((page - 1) * limit);
+        res.json(post)
+    }catch(err){
+        res.json({message: err})
+    }
+});
+
 //GET BACK SPECIFIC ANIME
 router.get('/anime/:postId', async (req, res) => {
     try{
@@ -79,7 +90,7 @@ router.get('/anime/:postId', async (req, res) => {
 //GET ANIMES SERIE
 router.get('/animes/type/serie', async (req, res) => {
     try{
-        const { page = 1, limit = 15 } = req.query;
+        const { page = 1, limit = 9 } = req.query;
         const filmornot = req.query.filmornot;
         //await pageScraper.pageScraper(browserInstance);
         const posts = await Post.find({
@@ -100,9 +111,8 @@ router.get('/animes/type/serie', async (req, res) => {
 //GET ANIMES FILM
 router.get('/animes/type/film', async (req, res) => {
     try{
-        const { page = 1, limit = 15 } = req.query;
+        const { page = 1, limit = 9 } = req.query;
         const filmornot = req.query.filmornot;
-        //await pageScraper.pageScraper(browserInstance);
         const posts = await Post.find({
                 "saison": "Film"
             })
@@ -114,19 +124,10 @@ router.get('/animes/type/film', async (req, res) => {
     }
 });
 
-//GET BACK SAME ANIMES
-router.get('/allanimes/check/same/animes', async (req, res) => {
-    try{
-        
-    }catch(err){
-        res.json({message: err})
-    }
-});
-
 //GET BACK ANIME BY GENRE
 router.get('/animes/genres', async (req, res) => {
     try{
-        const genre = req.query.genre;
+        const genre1 = req.query.genre1;
         const genre2 = req.query.genre2;
         const genre3 = req.query.genre3;
         const genre4 = req.query.genre4;
@@ -138,12 +139,12 @@ router.get('/animes/genres', async (req, res) => {
         const genre10 = req.query.genre10;
         const genre11 = req.query.genre11;
         const genre12 = req.query.genre12;
-        const { page = 1, limit = 15 } = req.query;
+        const { page = 1, limit = 9 } = req.query;
         //await pageScraper.pageScraper(browserInstance);
         const posts = await Post.find({
             $and: [
                 {
-                "genre": genre,
+                "genre": genre1,
                 },
                 {
                 "genre": genre2,
@@ -198,6 +199,7 @@ router.post('/allanimes', async (req, res) => {
         duree: req.body.duree,
         genre: req.body.genre,
         image: req.body.image,
+        banniere: req.body.banniere,
         langue: req.body.langue,
         links: req.body.links,
         format_VOD: req.body.format_VOD,

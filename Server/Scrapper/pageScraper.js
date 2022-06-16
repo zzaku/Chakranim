@@ -1,5 +1,5 @@
 const axios = require('axios').default;
-
+const time = require('./node_modules/puppeteer/lib/cjs/puppeteer/common/LifecycleWatcher')
 const scraperObject = {
     url: 'https://vostfree.tv',
     async scraper(browser, previousScrappedAnime){
@@ -73,27 +73,71 @@ const scraperObject = {
         });
 
         let allAnimesLinks = []
+        console.log("Cherche les nouveaux animes et episodes disponibles...")
         for(let i = 0; i < sections; i++){
             let currentSectionData = await listSection(`https://vostfree.tv/lastnews/page/${i+1}/`);
             console.log(currentSectionData)
 			allAnimesLinks.push(currentSectionData)
 		}
+        console.log("Fin de la recherche.")
+
+        const getRandomFloat = (min, max) => Math.random() * (max - min) + min;
+
         let pagePromise = (link, nombre_ep) => new Promise(async(resolve, reject) => {
+
 			let newPage = await browser.newPage();
-			await newPage.goto(link);
+            await newPage.setRequestInterception(true);
+            const rejectRequestPattern = [
+                "googlesyndication.com",
+                "/*.doubleclick.net",
+                "/*.amazon-adsystem.com",
+                "/*.adnxs.com",
+                "/*.dirtyleague.com",
+                "/*.advnotreviews.com",
+                "/*.skiptheadz.com",
+                "/*.clkv4.com",
+                "/*.cuntempire.com",
+                "/*.adblockultra.com",
+                "/*.fr.stop-bot.com",
+                "/*.adblockerapp.com",
+                "/*.fastd.s3.amazonaws.com",
+                "/*.advnotacademy.com",
+                "/*.install.beststreamsearch.com",
+                "/*.mainsextube.com",
+                "/*.adzshield.com",
+                "/*.extyoneplus-3.com",
+                "/*.indefinitelytonsil.com",
+                "/*.indefinitelytonsil.com",
+                "/*.clkv4.extyoneplus-3.com/click?seat=2112827&i="
+              ];
+              await newPage.goto(link);
+              await newPage.setDefaultNavigationTimeout(0);
             await newPage.waitForSelector('#player-tabs > div.tab-blocks > div:nth-child(1) > div > div.new_player_top > div.new_player_next');
             await newPage.waitForTimeout(1000)
             let select = await newPage.$("div.jq-selectbox-wrapper > div")
             await newPage.waitForSelector('div.jq-selectbox-wrapper > div')
             await select.click();
+            newPage.on("request", (request) => {
+                if (rejectRequestPattern.find((pattern) => request.url().match(pattern))) {
+                    request.abort();
+                  } else request.continue();
+              });
             let fromStart = await newPage.$("div.jq-selectbox__dropdown > ul > li")
             await fromStart.click();
+            newPage.on("request", (request) => {
+                if (rejectRequestPattern.find((pattern) => request.url().match(pattern))) {
+                    request.abort();
+                  } else request.continue();
+              });
             await newPage.waitForTimeout(1000)
             let anime = await newPage.$$eval('#player-tabs > div.tab-blocks > div:nth-child(1) > div > div.new_player_top > div.new_player_selector_box > div.jq-selectbox-wrapper > select > option', async(ep) => {
                 let datas = [];
                 let genre = [];
                 let links = [];
                 let image = document.querySelector("div.slide-poster > img").src
+                let temp_banniere = document.querySelector("#dle-content > div.watch-top > div");
+                let temp_banniere2 = temp_banniere.style.backgroundImage;
+                let banniere = temp_banniere2.split('"')[1]
                 let nameOfAnime = document.querySelector("div.slide-middle > h1").textContent
                 let temp = nameOfAnime.split(" ")
                 let name = temp.slice(0, temp.length-1).join(' ')
@@ -113,7 +157,9 @@ const scraperObject = {
                     genre.push(cat.textContent)
                 }
                 let langue = nameOfAnime.split(" ").slice(-1).toString() === 'FRENCH' || nameOfAnime.split(" ").slice(-1).toString() === 'French' || 
-                nameOfAnime.split(" ").slice(-1).toString() === 'VF' ? 'VF' : nameOfAnime.split(" ").slice(-1).toString() === 'VOSTFR' || 
+                nameOfAnime.split(" ").slice(-1).toString() === 'VF' ? 'VF' : nameOfAnime.split(" ").slice(-1).toString() === 'VOSTFR' && genre[0] !== "Films VF-VOSTFR" ||
+                genre[0] === "Animes VOSTFR" && nameOfAnime.split(" ").slice(-1).toString() !== 'vf' || genre[0] === "Animes VOSTFR" && nameOfAnime.split(" ").slice(-1).toString() !== 'VF' || 
+                genre[0] === "Animes VOSTFR" && nameOfAnime.split(" ").slice(-1).toString() !== 'VOSTFR' ||
                 nameOfAnime.split(" ").slice(-1).toString() === 'Vostfr' || nameOfAnime.split(" ").slice(-1).toString() === 'VO' ? 'VOSTFR' : nameOfAnime.split(" ").slice(-1).toString() === 'VOSTFR' && genre[0] === "VF-VOSTFR" ? "VF" : "VF"
                 let laSaison = document.querySelector("div.slide-middle > ul > li:nth-child(2) > b:nth-child(2)")
                 let saison = laSaison ? laSaison.textContent : 'Film';
@@ -165,7 +211,7 @@ const scraperObject = {
                             next.click();
                         }
                     }
-                    ep.length >= 450 || nbrEp2 >= 450 ? datas.push({name, desc, image, genre, langue, saison, nombre_episode, links, 'need_suite': true, duree, date}) : datas.push({name, desc, image, genre, langue, saison, nombre_episode, links,'need_suite': false, duree, date});
+                    ep.length >= 450 || nbrEp2 >= 450 ? datas.push({name, desc, image, banniere, genre, langue, saison, nombre_episode, links, 'need_suite': true, duree, date}) : datas.push({name, desc, image, banniere, genre, langue, saison, nombre_episode, links,'need_suite': false, duree, date});
                     
                 return datas
             });
@@ -173,9 +219,10 @@ const scraperObject = {
 			await newPage.close();
 		});
 
-        let pagePromiseEpSupThan450 = (link) => new Promise(async(resolve, reject) => {
+        let pagePromiseEpSupThan450 = (link, bro) => new Promise(async(resolve, reject) => {
 			
 			let newPage = await browser.newPage();
+            await newPage.setDefaultNavigationTimeout(0);
 			await newPage.goto(link);
             await newPage.waitForSelector('#player-tabs > div.tab-blocks > div:nth-child(1) > div > div.new_player_top > div.new_player_next');
             await newPage.waitForTimeout(1000)
@@ -246,6 +293,7 @@ const scraperObject = {
 			await newPage.close();
 		});
 
+        console.log("Scrapp et envoie a l'API les animes trouvés...")
         for(elems of allAnimesLinks){
             for(link in elems){
                 let currentPageData1;
@@ -253,6 +301,7 @@ const scraperObject = {
                 let suite = elems[link].nbr_episode >= 300
                 let newEp = elems[link].newEp
                 currentPageData1 = await pagePromise(elems[link].link, elems[link].nbr_episode);
+                await page.waitForTimeout(getRandomFloat(1, 5))
                 if(elems[link].nbr_episode >= 200){
                     currentPageData2 = await pagePromiseEpSupThan450(elems[link].link)
                 } 
@@ -260,6 +309,7 @@ const scraperObject = {
                     name: currentPageData1[0].name,
                     desc: currentPageData1[0].desc,
                     image: currentPageData1[0].image,
+                    banniere: currentPageData1[0].banniere,
             	    genre: currentPageData1[0].genre,
                     langue: currentPageData1[0].langue,
                     saison: currentPageData1[0].saison,
@@ -278,6 +328,7 @@ const scraperObject = {
                     name: currentPageData1[0].name,
                     desc: currentPageData1[0].desc,
                     image: currentPageData1[0].image,
+                    banniere: currentPageData1[0].banniere,
             	    genre: currentPageData1[0].genre,
                     langue: currentPageData1[0].langue,
                     saison: currentPageData1[0].saison,
@@ -293,6 +344,7 @@ const scraperObject = {
                 })
             }
 		}
+        console.log("Fin du scrapping.")
         return
     }
 }

@@ -1,0 +1,87 @@
+@font-face {
+    src: url("../../../../../fonts/SF\ Fedora.ttf");
+    font-family: "jojo1";
+}
+
+@font-face {
+    src: url("../../../../../fonts/SF\ Fedora\ Outline.ttf");
+    font-family: "jojo2";
+}
+
+@font-face {
+    src: url("../../../../../fonts/SF\ Fedora\ Shadow.ttf");
+    font-family: "jojo3";
+}
+
+@font-face {
+    src: url("../../../../../fonts/SF\ Fedora\ Titles.ttf");
+    font-family: "jojo4";
+}
+
+@font-face {
+    src: url("../../../../../fonts/SF\ Fedora\ Titles\ Italic.ttf");
+    font-family: "jojo5";
+}
+
+@font-face {
+    src: url("../../../../../fonts/SF\ Fedora\ Titles\ Shadow.ttf");
+    font-family: "jojo6";
+}
+
+@font-face {
+    src: url("../../../../../fonts/SF\ Fedora\ Titles\ Shadow\ Italic.ttf");
+    font-family: "jojo7";
+}
+
+:root {
+    --cardWidth: 230px;
+    --cardHeight: 310px;
+    --cardMargin: 16px;
+  }
+
+.posters{
+    --cardWidth: 230px;
+    --cardHeight: 310px;
+    --cardMargin: 16px;
+  }
+
+.card{
+    height: 100%;
+    width: 100%;
+}
+
+.grid-container{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: "jojo3";
+    color: white;
+}
+
+.list-card{
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+h1{
+    margin-block-end: 0;
+    margin-block-start: 0;
+}
+
+.grid-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-container{
+    display: flex;
+    width: 80%;
+    height: 360px;
+    margin-left: 3px;
+    margin-right: 3px;
+    box-sizing: border-box;
+}

@@ -22,6 +22,10 @@ const PostSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    banniere: {
+        type: String,
+        required: true
+    },
     langue: {
         type: String,
         required: true

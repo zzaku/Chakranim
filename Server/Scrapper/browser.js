@@ -3,7 +3,6 @@ const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 puppeteer.use(AdblockerPlugin());
 puppeteer.use(StealthPlugin());
-const fs = require('fs/promises');
 
 async function startBrowser(){
 	let browser;

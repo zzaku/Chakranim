@@ -1,0 +1,121 @@
+
+.display-ep-anime{
+    display: flex;
+    height: 100%;
+    width: 50%;
+    font-family: "jojo7";
+    flex-direction: column;
+    background-color: rgb(0, 0, 0);
+    justify-content: center;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.container-display{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.container-title-anime{
+    height: 30%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.container-background-image-anime{
+    display: flex;
+    height: 100%;
+    width: auto;
+}
+
+.container-name-anime{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(20, 194, 150);
+}
+
+.container-info-anime{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    color: rgb(20, 194, 150);
+}
+
+.container-context-anime{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.container-desc-anime{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: rgb(20, 194, 150);
+}
+
+.container-moreinfo-anime{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    color: rgb(20, 194, 150);
+}
+
+.container-content-info-anime{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.container-saison-anime{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.container-vod-anime{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: rgb(20, 194, 150);
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+.container-episode-anime{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.vod-anime{
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+}

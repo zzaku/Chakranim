@@ -1,0 +1,10 @@
+.extrait-video{
+    height: 50%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.muteButton{
+    right: 10%;
+}
