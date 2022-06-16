@@ -55,7 +55,7 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}
                             Distribution<br></br>
                             {distribution}
                             </h3>
-                            <p style={{width: "40%", fontSize: "20px"}}>date: {anime.date}</p>
+                            <p style={{width: "40%", fontSize: "20px"}}>dates: {anime.date}</p>
                         </div>
                     </div>
                     <div className='container-moreinfo-anime'>
