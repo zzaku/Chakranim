@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { useState } from 'react';
 
-const ContentAnime = ({anime, wrapperRef}) => {
+const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}) => {
 
     let distributionTemp = anime ? anime.desc.split("Acteur") : null
     let description = anime ? anime.desc.split("Acteur")[0] : null
@@ -19,9 +19,14 @@ const ContentAnime = ({anime, wrapperRef}) => {
     let Streamsb = anime.links.filter(elem => elem[0].format_VOD === "Streamsb")
     let Vudeo = anime.links.filter(elem => elem[0].format_VOD === "Vudeo")
     let Mytv = anime.links.filter(elem => elem[0].format_VOD === "Mytv")
-
+    let LastPartdescriptionTemp = anime.desc.split("Acteur")[0].split(".").join('.').split(".")
+    if(LastPartdescriptionTemp[LastPartdescriptionTemp.length-1] === ""){LastPartdescriptionTemp.pop()}
+    let middleDesc = Math.trunc((LastPartdescriptionTemp.length-1) / 2) + 1
+    let LastPartdescription = anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") + "..."
+    console.log(middleDesc)
+    console.log(LastPartdescriptionTemp)
+    //.splice(0, 2).join("") + "..."
     const [lecteur, setLecteur] = useState({Lecteur: sibnet})
-    console.log(Uqload[0][0].episode)
 
     const buttons = [
         <Button key="Sibnet" onClick={() => setLecteur({Lecteur: sibnet})}>Sibnet</Button>,
@@ -43,7 +48,7 @@ const ContentAnime = ({anime, wrapperRef}) => {
                     </div>
                     <div className='container-info-anime'>
                         <div className="container-desc-anime">
-                            <h3>{description}</h3>
+                            {descriptionSuite ? <h3> {description} </h3> : <h3> {LastPartdescription} <a style={{color: "white", cursor: "pointer"}} onClick={() => setDescriptionSuite(true)}> Afficher la suite</a> </h3>}
                         </div>
                         <div className="container-context-anime">
                             <h3 style={{display: "flex", height: "100%", width: "100%", marginBlockEnd: 0}}>
@@ -92,7 +97,7 @@ const ContentAnime = ({anime, wrapperRef}) => {
                                         {buttons}
                                     </ButtonGroup>
                                     </Box></h2> 
-                                    <iframe src={elem[0].lien}></iframe>
+                                    {/*<iframe src={elem[0].lien}></iframe>*/}
                                 </div>
                             })
                             :

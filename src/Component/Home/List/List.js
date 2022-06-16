@@ -16,6 +16,7 @@ const List = ({genre, setGenre, animeFiltered, setAnimeFiltered, genres, page, s
 
     const [open, setOpen] = useState(false);
     const [anime, setAnime] = useState(null);
+    const [descriptionSuite, setDescriptionSuite] = useState(anime ? anime.desc.split("Acteur")[0].length < 200 ? true : false : null)
 
     let categorie = genres.includes("é") ? genres.replace("é", "e")
         : genres.includes("è") ? genres.replaceAll("è", "e")
@@ -87,6 +88,7 @@ const List = ({genre, setGenre, animeFiltered, setAnimeFiltered, genres, page, s
 
     const handleClose = () => {
         setOpen(false);
+        setDescriptionSuite(false)
       };
 
       const handleToggle = (myAnime) => {
@@ -117,7 +119,7 @@ const List = ({genre, setGenre, animeFiltered, setAnimeFiltered, genres, page, s
           open={open}
           
         >
-          {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} /> : (
+          {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} /> : (
             <CircularProgress color="inherit" />
           )}
         </Backdrop>
