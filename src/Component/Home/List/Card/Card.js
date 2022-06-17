@@ -68,7 +68,7 @@ const config = {
       const bounds = this.refs.wrapper.getBoundingClientRect();
       const centerX = this.props.width / 2;
       const centerY = this.props.height / 2;
-      const widthMultiplier = 320 / this.props.width;
+      const widthMultiplier = 100 / this.props.width;
   
       const offsetX = 0.52 - (pageX - bounds.left - scrollLeft) / width;
       const offsetY = 0.52 - (pageY - bounds.top - scrollTop) / height;

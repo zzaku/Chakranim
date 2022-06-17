@@ -68,7 +68,7 @@ const getAllNameOfNewEp = async (episodes) => {
 //GET BACK LAST 10 ANIME
 router.get('/anime/recentlyadded', async (req, res) => {
     try{
-        const { page = 1, limit = 9 } = req.query;
+        const { page = 1, limit = 21 } = req.query;
         const post = await Post.find({}).sort({$natural:-1}).limit(limit * 1)
         .skip((page - 1) * limit);
         res.json(post)
@@ -91,8 +91,6 @@ router.get('/anime/:postId', async (req, res) => {
 router.get('/animes/type/serie', async (req, res) => {
     try{
         const { page = 1, limit = 9 } = req.query;
-        const filmornot = req.query.filmornot;
-        //await pageScraper.pageScraper(browserInstance);
         const posts = await Post.find({
             $nin: [
                 {
@@ -112,7 +110,22 @@ router.get('/animes/type/serie', async (req, res) => {
 router.get('/animes/type/film', async (req, res) => {
     try{
         const { page = 1, limit = 9 } = req.query;
+        const posts = await Post.find({
+                "saison": "Film"
+            })
+        .limit(limit * 1)
+        .skip((page - 1) * limit);
+        res.json(posts)
+    }catch(err){
+        res.json({message: err})
+    }
+});
+
+//GET ALL ANIMES FILM WITHOUT PAGINATION
+router.get('/animes/type/Allfilm', async (req, res) => {
+    try{
         const filmornot = req.query.filmornot;
+        const { page = 1, limit = 21 } = req.query;
         const posts = await Post.find({
                 "saison": "Film"
             })
@@ -189,6 +202,69 @@ router.get('/animes/genres', async (req, res) => {
     }
 });
 
+//GET BACK ALL ANIMES BY GENRE WITHOUT PAGINATION
+router.get('/animes/Allgenres', async (req, res) => {
+    try{
+        const genre1 = req.query.genre1;
+        const genre2 = req.query.genre2;
+        const genre3 = req.query.genre3;
+        const genre4 = req.query.genre4;
+        const genre5 = req.query.genre5;
+        const genre6 = req.query.genre6;
+        const genre7 = req.query.genre7;
+        const genre8 = req.query.genre8;
+        const genre9 = req.query.genre9;
+        const genre10 = req.query.genre10;
+        const genre11 = req.query.genre11;
+        const genre12 = req.query.genre12;
+        const { page = 1, limit = 21 } = req.query;
+        const posts = await Post.find({
+            $and: [
+                {
+                "genre": genre1,
+                },
+                {
+                "genre": genre2,
+                },
+                {
+                "genre": genre3,
+                },
+                {
+                "genre": genre4,
+                },
+                {
+                "genre": genre5,
+                },
+                {
+                "genre": genre6,
+                },
+                {
+                "genre": genre7,
+                },
+                {
+                "genre": genre8,
+                },
+                {
+                "genre": genre9,
+                },
+                {
+                "genre": genre10,
+                },
+                {
+                "genre": genre11,
+                },
+                {
+                "genre": genre12,
+                },
+            ],
+        })
+        .limit(limit * 1)
+        .skip((page - 1) * limit);
+        res.json(posts)
+    }catch(err){
+        res.json({message: err})
+    }
+});
 
 //SUBMIT AN ANIME
 router.post('/allanimes', async (req, res) => {

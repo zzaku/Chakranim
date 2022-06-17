@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import NavigateNextTwoToneIcon from '@mui/icons-material/NavigateNextTwoTone';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewTwoToneIcon from '@mui/icons-material/ArrowBackIosNewTwoTone';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -9,11 +9,13 @@ import { Button } from '@mui/material';
 import ParallaxHover from './Card/Card';
 import "./style/List.css"
 
-const List = ({genre, setGenre, animeFiltered, setAnimeFiltered, genres, page, setPage}) =>{
+const List = ({genre, genres}) =>{
 
     let withoutDoublon = [{}] 
     const wrapperRef = useRef(null);
-
+    const cardListRef = useRef(null);
+    const scrollRightRef = useRef(null);
+    const scrollLeftRef = useRef(null);
     const [open, setOpen] = useState(false);
     const [anime, setAnime] = useState(null);
     const [descriptionSuite, setDescriptionSuite] = useState(anime ? anime.desc.split("Acteur")[0].length < 200 ? true : false : null)
@@ -68,24 +70,6 @@ const List = ({genre, setGenre, animeFiltered, setAnimeFiltered, genres, page, s
     }
     withoutDoublon = [{[genres]: filterDoublonAnime()}]
 
-    const nextPageByCategory = (cat) => {
-        if(cat === genres){
-            setPage({...page, [categorie]: page[categorie]+1})
-        }
-    }
-
-    const previousPageByCategory = (cat) => {
-        if(cat === genres){
-            setPage({...page, [categorie]: page[categorie]-1})
-        }
-    }
-
-    const displayPreviousButton = (cat) => {
-        if(cat === genres){
-            return page[categorie] > 1 ? <Button onClick={() => previousPageByCategory(genres)} style={{position: "absolute", height: "38%", left: 0, backgroundColor: "black", zIndex: 2, marginLeft: "15px", opacity: 0.7}} variant='text'><ArrowBackIosNewTwoToneIcon /></Button> : null
-        }
-    }
-
     const handleClose = () => {
         setOpen(false);
         setDescriptionSuite(false)
@@ -96,37 +80,49 @@ const List = ({genre, setGenre, animeFiltered, setAnimeFiltered, genres, page, s
         setOpen(!open);
       };
 
+      const scrollX = (cardListRef, scrollRightRef, scrollLeftRef) => {
+        let currentScrollPosition = 0
+        let scrollAmount = 320
+
+        let sCount = cardListRef
+        //let hScroll = scrollRef
+        console.log("le count", sCount)
+        console.log("le scroll btn RIGHT", scrollRightRef)
+        console.log("le scroll btn LEFT", scrollLeftRef)
+      }
+
+    const displayPreviousButton = (cat) => {
+        if(cat === genres){
+            return 2 > 1 ? <Button ref={scrollRightRef} onClick={() => scrollX(cardListRef, scrollRightRef)} style={{position: "absolute", height: "38%", left: "3.2rem", color: "white", background: "linear-gradient(90deg,rgba(0,0,0,.8),transparent)", zIndex: 2, marginLeft: "15px"}} variant='text'><ArrowBackIosNewTwoToneIcon sx={{ fontSize: 60 }} /></Button> : null
+        }
+    }
+
+
     const displayNextButton = (cat) => {
         if(cat === genres){
             if(genre[0][Object.keys(genre[0])[0]]){
                 if(genre[0][Object.keys(genre[0])[0]].length < 9){
             
                 } else {
-                    return <Button onClick={() => nextPageByCategory(genres)} style={{position: "absolute", height: "38%", right: 0, backgroundColor: "black", zIndex: 2, marginRight: "15px", opacity: 0.7}} variant='text'><NavigateNextTwoToneIcon /></Button>
+                    return <Button ref={scrollLeftRef} onClick={() => scrollX(cardListRef, scrollLeftRef)} style={{position: "absolute", height: "38%", right: "1.1rem", color: "white", background: "linear-gradient(90deg,transparent,rgba(0,0,0,.8))", zIndex: 2, marginRight: "15px"}} variant='text'><ArrowForwardIosIcon sx={{ fontSize: 60 }} /></Button>
                 }
             }
         }
     }
 
-    
-    
     console.log(anime)
 
     return (
       <div className="card">
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
-          open={open}
-          
+          open={open} 
         >
-          {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} /> : (
-            <CircularProgress color="inherit" />
-          )}
+          {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} /> : <CircularProgress color="inherit" />}
         </Backdrop>
-        <Grid width={"100%"} height={"100%"}>
           <div className="grid-container" >
             <h1>{DisplayAllCategory}</h1>
-            <div className="list-card">
+            <div className="list-card snaps-inline" ref={cardListRef}>
               {displayPreviousButton(genres)}
               {withoutDoublon[0][genres]
                 ? withoutDoublon[0][genres].map((genre) => (
@@ -164,7 +160,6 @@ const List = ({genre, setGenre, animeFiltered, setAnimeFiltered, genres, page, s
               {displayNextButton(genres)}
             </div>
           </div>
-        </Grid>
       </div>
     );
 }

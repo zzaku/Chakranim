@@ -47,7 +47,7 @@
 
 .card{
     height: 100%;
-    width: 100%;
+    width: auto;
 }
 
 .grid-container{
@@ -60,9 +60,27 @@
 }
 
 .list-card{
+    --spacer: 3rem;
     height: 100%;
     width: 100%;
-    display: flex;
+    padding: 0 var(--spacer) var(--spacer) var(--spacer);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 14%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    overflow-y: hidden;
+}
+.list-card::-webkit-scrollbar{
+    margin: 0;
+}
+
+.snaps-inline{
+    scroll-snap-type: inline mandatory;
+}
+
+.snaps-inline > * {
+    scroll-margin-inline: 0;
 }
 
 h1{
@@ -79,9 +97,7 @@ h1{
 
 .card-container{
     display: flex;
-    width: 80%;
+    width: 90%;
     height: 360px;
-    margin-left: 3px;
-    margin-right: 3px;
     box-sizing: border-box;
 }

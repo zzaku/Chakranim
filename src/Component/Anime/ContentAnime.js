@@ -23,9 +23,7 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}
     if(LastPartdescriptionTemp[LastPartdescriptionTemp.length-1] === ""){LastPartdescriptionTemp.pop()}
     let middleDesc = Math.trunc((LastPartdescriptionTemp.length-1) / 2) + 1
     let LastPartdescription = anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") + "..."
-    console.log(middleDesc)
-    console.log(LastPartdescriptionTemp)
-    //.splice(0, 2).join("") + "..."
+
     const [lecteur, setLecteur] = useState({Lecteur: sibnet})
 
     const buttons = [
@@ -55,7 +53,7 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}
                             Distribution<br></br>
                             {distribution}
                             </h3>
-                            <p style={{width: "40%", fontSize: "20px"}}>dates (test branch): {anime.date}</p>
+                            <p style={{width: "40%", fontSize: "20px"}}>date : {anime.date}</p>
                         </div>
                     </div>
                     <div className='container-moreinfo-anime'>
