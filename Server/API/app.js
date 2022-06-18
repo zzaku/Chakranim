@@ -15,7 +15,7 @@ const postsRoute = require('./routes/Anime')
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true, parameterLimit: 1000000, limit: '10000kb'}))
 app.use(bodyParser.json())
-app.use('/vod', postsRoute);
+app.use('/vod', postsRoute.router);
 
 
 
@@ -25,6 +25,10 @@ mongoose.connect(
      {useNewUrlParser: true},
       () => console.log('connected to DB!')
     );
+
+
+//Scrap Data
+postsRoute.scrap
 
 
 

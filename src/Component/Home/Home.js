@@ -5,7 +5,7 @@ import "./style/Home.css"
 
 const Home = () => {
 
-    const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance", "Films", "Nouveautes"], [])
+    const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance", "Films", "Nouveaux Episodes"], [])
 
     const [genre1, setGenre1] = useState([{}])
     const [genre2, setGenre2] = useState([{}])

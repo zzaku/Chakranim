@@ -18,7 +18,7 @@ const List = ({genre, genres}) =>{
     const scrollLeftRef = useRef(null);
     const [open, setOpen] = useState(false);
     const [anime, setAnime] = useState(null);
-    const [descriptionSuite, setDescriptionSuite] = useState(anime ? anime.desc.split("Acteur")[0].length < 200 ? true : false : null)
+    const [descriptionSuite, setDescriptionSuite] = useState(anime ? anime.desc.split("Acteur")[0].length < 200 ? false : true : null)
 
     let categorie = genres.includes("é") ? genres.replace("é", "e")
         : genres.includes("è") ? genres.replaceAll("è", "e")
@@ -56,10 +56,11 @@ const List = ({genre, genres}) =>{
             for (let anime in genre[0][genres]) {
       
                 // Extract the name
-                let animeName = genre[0][genres][anime]['name'];
-      
+                let animeName = genre[0][genres][anime]['name'].includes("×") ? genre[0][genres][anime]['name'].replace("×", "X").toUpperCase() : genre[0][genres][anime]['name'].toUpperCase();
+
                 // Use the name as the index
                 uniqueObject[animeName] = genre[0][genres][anime];
+                console.log(genre[0] , " : ", animeName, " inclu ? ", animeName.includes("×"))
             }
 
             for (let anime in uniqueObject){
@@ -80,20 +81,28 @@ const List = ({genre, genres}) =>{
         setOpen(!open);
       };
 
-      const scrollX = (cardListRef, scrollRightRef, scrollLeftRef) => {
-        let currentScrollPosition = 0
-        let scrollAmount = 320
+      let currentScrollPosition = 0
+      let scrollAmount = 320
 
-        let sCount = cardListRef
-        //let hScroll = scrollRef
-        console.log("le count", sCount)
-        console.log("le scroll btn RIGHT", scrollRightRef)
-        console.log("le scroll btn LEFT", scrollLeftRef)
+      let sCont = cardListRef
+      let hScroll = scrollRightRef
+      
+      //let maxScroll = -sCont.current.offsetWidth + hScroll.current.offsetWidth
+      //console.log(maxScroll)
+
+
+      const scrollX = (val) => {
+          currentScrollPosition += (val * scrollAmount)
+          sCont.current.style.scrollLeft = currentScrollPosition + "px"
+          console.log(sCont.current.style.scrollLeft)
       }
+      
+
+      
 
     const displayPreviousButton = (cat) => {
         if(cat === genres){
-            return 2 > 1 ? <Button ref={scrollRightRef} onClick={() => scrollX(cardListRef, scrollRightRef)} style={{position: "absolute", height: "38%", left: "3.2rem", color: "white", background: "linear-gradient(90deg,rgba(0,0,0,.8),transparent)", zIndex: 2, marginLeft: "15px"}} variant='text'><ArrowBackIosNewTwoToneIcon sx={{ fontSize: 60 }} /></Button> : null
+            return 2 > 1 ? <Button ref={scrollRightRef} onClick={() => scrollX(-1)} style={{position: "absolute", height: "38%", left: "3.2rem", color: "white", background: "linear-gradient(90deg,rgba(0,0,0,.8),transparent)", zIndex: 2, marginLeft: "15px"}} variant='text'><ArrowBackIosNewTwoToneIcon sx={{ fontSize: 60 }} /></Button> : null
         }
     }
 
@@ -104,7 +113,7 @@ const List = ({genre, genres}) =>{
                 if(genre[0][Object.keys(genre[0])[0]].length < 9){
             
                 } else {
-                    return <Button ref={scrollLeftRef} onClick={() => scrollX(cardListRef, scrollLeftRef)} style={{position: "absolute", height: "38%", right: "1.1rem", color: "white", background: "linear-gradient(90deg,transparent,rgba(0,0,0,.8))", zIndex: 2, marginRight: "15px"}} variant='text'><ArrowForwardIosIcon sx={{ fontSize: 60 }} /></Button>
+                    return <Button ref={scrollLeftRef} onClick={() => scrollX(1)} style={{position: "absolute", height: "38%", right: "1.1rem", color: "white", background: "linear-gradient(90deg,transparent,rgba(0,0,0,.8))", zIndex: 2, marginRight: "15px"}} variant='text'><ArrowForwardIosIcon sx={{ fontSize: 60 }} /></Button>
                 }
             }
         }

@@ -1,4 +1,5 @@
 import './style/ContentAnime.css'
+import Overlay from './Overlay/Overlay';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,14 +26,15 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}
     let LastPartdescription = anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") + "..."
 
     const [lecteur, setLecteur] = useState({Lecteur: sibnet})
-
+    const allLinks = [anime.links, anime.nextLinks]
+    console.log(allLinks)
     const buttons = [
         <Button key="Sibnet" onClick={() => setLecteur({Lecteur: sibnet})}>Sibnet</Button>,
         <Button key="Uqload" onClick={() => setLecteur({Lecteur: Uqload})}>Uqload</Button>,
         <Button key="Streamsb" onClick={() => setLecteur({Lecteur: Vudeo})}>Streamsb</Button>,
         <Button key="Vudeo" onClick={() => setLecteur({Lecteur: Mytv})}>Vudeo</Button>,
       ];
-      
+      console.log(anime.saison)
     return (
         <div className="display-ep-anime" ref={wrapperRef}>
                 <div className='container-display'>
@@ -62,7 +64,7 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}
                             <p style={{width: "30%", fontSize: "20px"}}>durée: {anime.duree.replace(" ", "").trim()}</p>
                         </div>
                         <div className="container-saison-anime">
-                            <h3 style={{fontSize: "20px"}}>saison : {anime.saison}</h3>
+                            {anime.saison === "Film" ? <h3 style={{fontSize: "20px"}}>Film :</h3> : <h3 style={{fontSize: "20px"}}>saison : {anime.saison}</h3>}
                             <FormControl>
                                 <InputLabel style={{fontSize: "20px"}} id="Langue-select-label">Langue</InputLabel>
                                 <Select labelId="Langue-select-label" 
@@ -77,26 +79,16 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}
                         </div>
                     </div>
                     <div className='container-vod-anime'>
+                            {anime.saison === "Film" ? null : <h2>Liste des épisodes</h2>}
                         <div className="container-episode-anime">
                             {lecteur.Lecteur ? lecteur.Lecteur.map(elem => {
-                                return <div className='vod-anime'>
-                                    <h2>{elem[0].episode}</h2>
-                                    <h2>lecteur : 
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                '& > *': {
-                                                m: 1,
-                                                },
-                                            }}>
-                                    <ButtonGroup size="small" aria-label="small button group">
-                                        {buttons}
-                                    </ButtonGroup>
-                                    </Box></h2> 
-                                    {/*<iframe src={elem[0].lien}></iframe>*/}
+                                return (
+                                <div className='vod-anime'>
+                                    <div onClick={() => console.log("clicked")} className='vod-cards card-shadow' style={{display: "flex", height: "auto", width: "auto", borderRadius: "15px", cursor: "pointer"}}>
+                                        <Overlay image={anime.image} episode={elem[0].episode} saison={anime.saison} />
+                                    </div>
                                 </div>
+                                )
                             })
                             :
                             <h2>Prochainement</h2>

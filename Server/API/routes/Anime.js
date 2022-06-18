@@ -32,24 +32,22 @@ router.get('/allanimes/check', async (req, res) => {
 });
 
 //CHECK AND SCRAP NEW ANIMES
-router.get('/allanimes/scrap', async (req, res) => {
-    try{
-        const newData = await isThereNewAnime()
-        const testify = await pageScraper.pageScraper(browserInstance, newData);
+const scrapper = setInterval(async () => {
+    const newData = await isThereNewAnime()
+        const scrap = await pageScraper.pageScraper(browserInstance, newData);
         const posts = await Post.find({
             newEp: {$exists: true}
     })
         if(posts.length > 0){
-            const cleaner = await getAllNameOfNewEp(posts)
+           return await getAllNameOfNewEp(posts)
         }
-
-    }catch(err){
-            res.json({message: err})
-    }
-});
+    return
+}, 18000000)
 
 //SWAP ALL PREVIOUS ANIME EP WITH NEW EP
 const getAllNameOfNewEp = async (episodes) => {
+
+    console.log("suppression des anciennes versions des animes et ajout des nouvelles versions...")
     for(episode of episodes){
         const delOldVersionAnime = await Post.remove({
             name: episode.name, langue: episode.langue, saison: episode.saison, newEp: {$exists: false}
@@ -63,6 +61,7 @@ const getAllNameOfNewEp = async (episodes) => {
             { $set: { "nouveau": true } }
         )
     }
+    console.log("correction appliqué.")
 }
 
 //GET BACK LAST 10 ANIME
@@ -323,6 +322,7 @@ router.delete('/anime/:postId', async (req, res) => {
 });
 
 
-
-
-module.exports = router
+module.exports = {
+    router: router,
+    scrap: scrapper
+}
