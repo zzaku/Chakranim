@@ -4,37 +4,55 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { epContext } from '../../App';
 
-const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}) => {
+import { useContext, useState } from 'react';
+import { color } from '@mui/system';
 
+const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite, setOpen, setNotAtHome}) => {
+
+    let withoutDoublon = [{}] 
+    const setEp = useContext(epContext)
+    
     let distributionTemp = anime ? anime.desc.split("Acteur") : null
     let description = anime ? anime.desc.split("Acteur")[0] : null
     let distribution = anime ? "Acteur" + anime.desc.split("Acteur")[distributionTemp.length-1].replaceAll("\n", "") : null
-    
-    let sibnet = anime.links.filter(elem => elem[0].format_VOD === "Sibnet")
-    let Uqload = anime.links.filter(elem => elem[0].format_VOD === "Uqload")
-    let Streamsb = anime.links.filter(elem => elem[0].format_VOD === "Streamsb")
-    let Vudeo = anime.links.filter(elem => elem[0].format_VOD === "Vudeo")
-    let Mytv = anime.links.filter(elem => elem[0].format_VOD === "Mytv")
     let LastPartdescriptionTemp = anime.desc.split("Acteur")[0].split(".").join('.').split(".")
     if(LastPartdescriptionTemp[LastPartdescriptionTemp.length-1] === ""){LastPartdescriptionTemp.pop()}
     let middleDesc = Math.trunc((LastPartdescriptionTemp.length-1) / 2) + 1
     let LastPartdescription = anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") + "..."
 
-    const [lecteur, setLecteur] = useState({Lecteur: sibnet})
+    //const [lecteur, setLecteur] = useState({Lecteur: sibnet})
     const allLinks = [anime.links, anime.nextLinks]
-    console.log(allLinks)
-    const buttons = [
-        <Button key="Sibnet" onClick={() => setLecteur({Lecteur: sibnet})}>Sibnet</Button>,
-        <Button key="Uqload" onClick={() => setLecteur({Lecteur: Uqload})}>Uqload</Button>,
-        <Button key="Streamsb" onClick={() => setLecteur({Lecteur: Vudeo})}>Streamsb</Button>,
-        <Button key="Vudeo" onClick={() => setLecteur({Lecteur: Mytv})}>Vudeo</Button>,
-      ];
-      console.log(anime.saison)
+
+      const filterDoublonAnime = () => {
+        let newArray = [];
+        let uniqueObject = {};
+
+        if(allLinks[0]){
+
+            for (let anime in allLinks[0]) {
+      
+                // Extract the name
+                let animeName = allLinks[0][anime][0]['episode'];
+
+                // Use the name as the index
+                uniqueObject[animeName] = allLinks[0][anime];
+            }
+
+            for (let anime in uniqueObject){
+                newArray.push(uniqueObject[anime])
+            }
+        }
+        return newArray 
+    }
+    withoutDoublon = [{episode: filterDoublonAnime()}]
+
+    const setLecteurEpisode = (episode) => {
+        return allLinks[0].filter(elem => elem[0].episode === episode)
+    }
+
     return (
         <div className="display-ep-anime" ref={wrapperRef}>
                 <div className='container-display'>
@@ -48,14 +66,14 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}
                     </div>
                     <div className='container-info-anime'>
                         <div className="container-desc-anime">
-                            {descriptionSuite ? <h3> {description} </h3> : <h3> {LastPartdescription} <a style={{color: "white", cursor: "pointer"}} onClick={() => setDescriptionSuite(true)}> Afficher la suite</a> </h3>}
+                            {descriptionSuite ? <h3> {description} </h3> : <h3> {LastPartdescription} <a style={{color: "cyan", cursor: "pointer"}} onClick={() => setDescriptionSuite(true)}> Afficher la suite</a> </h3>}
                         </div>
                         <div className="container-context-anime">
-                            <h3 style={{display: "flex", height: "100%", width: "100%", marginBlockEnd: 0}}>
+                            <h3 style={{display: "flex", height: "100%", width: "100%", marginBlockEnd: 0, color: "white"}}>
                             Distribution<br></br>
                             {distribution}
                             </h3>
-                            <p style={{width: "40%", fontSize: "20px"}}>date : {anime.date}</p>
+                            <p style={{width: "40%", fontSize: "20px", color: "cyan"}}>date : {anime.date}</p>
                         </div>
                     </div>
                     <div className='container-moreinfo-anime'>
@@ -64,7 +82,7 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}
                             <p style={{width: "30%", fontSize: "20px"}}>durée: {anime.duree.replace(" ", "").trim()}</p>
                         </div>
                         <div className="container-saison-anime">
-                            {anime.saison === "Film" ? <h3 style={{fontSize: "20px"}}>Film :</h3> : <h3 style={{fontSize: "20px"}}>saison : {anime.saison}</h3>}
+                            {anime.saison === "Film" ? <h3 style={{fontSize: "20px", color: "cyan"}}>Film :</h3> : <h3 style={{fontSize: "20px", color: "cyan"}}>saison : {anime.saison}</h3>}
                             <FormControl>
                                 <InputLabel style={{fontSize: "20px"}} id="Langue-select-label">Langue</InputLabel>
                                 <Select labelId="Langue-select-label" 
@@ -81,19 +99,20 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite}
                     <div className='container-vod-anime'>
                             {anime.saison === "Film" ? null : <h2>Liste des épisodes</h2>}
                         <div className="container-episode-anime">
-                            {lecteur.Lecteur ? lecteur.Lecteur.map(elem => {
+                            {withoutDoublon[0].episode ? withoutDoublon[0].episode.map(elem => {
                                 return (
-                                <div className='vod-anime'>
-                                    <div onClick={() => console.log("clicked")} className='vod-cards card-shadow' style={{display: "flex", height: "auto", width: "auto", borderRadius: "15px", cursor: "pointer"}}>
-                                        <Overlay image={anime.image} episode={elem[0].episode} saison={anime.saison} />
+                                    <div className='vod-anime'>
+                                        <Link to={`/watch/${anime.name.replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${elem[0].episode.replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
+                                            <div onClick={() => setOpen(false) + setNotAtHome(true) + setEp({current_episode: setLecteurEpisode(elem[0].episode), all_episode: allLinks[0], name: anime.name})} className='vod-cards card-shadow' style={{display: "flex", height: "auto", width: "auto", borderRadius: "15px", cursor: "pointer"}}>
+                                                <Overlay image={anime.image} episode={elem[0].episode} saison={anime.saison} />
+                                            </div>
+                                        </Link>    
                                     </div>
-                                </div>
                                 )
                             })
                             :
                             <h2>Prochainement</h2>
                             }
-                            
                         </div>
                     </div>
                 </div>

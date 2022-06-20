@@ -9,7 +9,7 @@ import { Button } from '@mui/material';
 import ParallaxHover from './Card/Card';
 import "./style/List.css"
 
-const List = ({genre, genres}) =>{
+const List = ({genre, genres, setNotAtHome}) =>{
 
     let withoutDoublon = [{}] 
     const wrapperRef = useRef(null);
@@ -60,7 +60,6 @@ const List = ({genre, genres}) =>{
 
                 // Use the name as the index
                 uniqueObject[animeName] = genre[0][genres][anime];
-                console.log(genre[0] , " : ", animeName, " inclu ? ", animeName.includes("×"))
             }
 
             for (let anime in uniqueObject){
@@ -96,9 +95,6 @@ const List = ({genre, genres}) =>{
           sCont.current.style.scrollLeft = currentScrollPosition + "px"
           console.log(sCont.current.style.scrollLeft)
       }
-      
-
-      
 
     const displayPreviousButton = (cat) => {
         if(cat === genres){
@@ -119,15 +115,13 @@ const List = ({genre, genres}) =>{
         }
     }
 
-    console.log(anime)
-
     return (
       <div className="card">
         <Backdrop
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
           open={open} 
         >
-          {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} /> : <CircularProgress color="inherit" />}
+          {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
         </Backdrop>
           <div className="grid-container" >
             <h1>{DisplayAllCategory}</h1>

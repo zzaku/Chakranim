@@ -2,9 +2,10 @@ import { NavLink, Nav, Bars, NavMenu } from "./NavbarElements";
 import { FcSearch } from 'react-icons/fc';
 import { TiThList } from 'react-icons/ti';
 import { useRef, useState } from 'react';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import './style/Nav.css'
 
-const Navbar = () => {
+const Navbar = ({notAtHome, setNotAtHome}) => {
 
 const [appearNav, setAppearNav] = useState(true)
 const nav = useRef()
@@ -23,7 +24,15 @@ console.log(nav)
 
     return(
         <> {appearNav ? 
-            <Nav ref={nav} className="Navigation">
+          <Nav ref={nav} className="Navigation">
+              {notAtHome ?
+                <NavLink to={"/"}>
+                  <div className="goBack" onClick={() => setNotAtHome(false)}>
+                    <KeyboardBackspaceIcon fontSize="large" />
+                  </div>
+                </NavLink>
+                :
+                null}
                 <NavLink to={"/"}>
                     <TiThList size={"40px"} />
                 </NavLink>

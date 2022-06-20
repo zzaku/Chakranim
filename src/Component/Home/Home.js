@@ -3,7 +3,7 @@ import List from "./List/List"
 import { useEffect, useMemo, useState } from "react"
 import "./style/Home.css"
 
-const Home = () => {
+const Home = ({setNotAtHome}) => {
 
     const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance", "Films", "Nouveaux Episodes"], [])
 
@@ -166,20 +166,20 @@ const Home = () => {
                     </div>
                     <div className="list">
                         <div className="list-container">
-                            {lastAnime && genres[13] ? <List genres={genres[13]} genre={lastAnime} setGenre={setLastAnime}/> : null}
-                            {genre1 && genres[0] ? <List genres={genres[0]} genre={ genre1} setGenre={setGenre1} /> : null}
-                            {genre2 && genres[1] ?<List genres={genres[1]} genre={ genre2} setGenre={setGenre2} /> : null}
-                            {genre3 && genres[2] ?<List genres={genres[2]} genre={ genre3} setGenre={setGenre3} /> : null}
-                            {genre4 && genres[3] ?<List genres={genres[3]} genre={ genre4} setGenre={setGenre4} /> : null}
-                            {genre5 && genres[4] ?<List genres={genres[4]} genre={ genre5} setGenre={setGenre5} /> : null}
-                            {genre6 && genres[5] ?<List genres={genres[5]} genre={ genre6} setGenre={setGenre6} /> : null}
-                            {genre7 && genres[6] ?<List genres={genres[6]} genre={ genre7} setGenre={setGenre7} /> : null}
-                            {genre8 && genres[7] ?<List genres={genres[7]} genre={ genre8} setGenre={setGenre8} /> : null}
-                            {genre9 && genres[8] ?<List genres={genres[8]} genre={ genre9} setGenre={setGenre9} /> : null}
-                            {genre10 && genres[9] ?<List genres={genres[9]} genre={ genre10} setGenre={setGenre10} /> : null}
-                            {genre11 && genres[10] ?<List genres={genres[10]} genre={ genre11} setGenre={setGenre11} /> : null}
-                            {genre12 && genres[11] ?<List genres={genres[11]} genre={ genre12} setGenre={setGenre12} /> : null}
-                            {genre13 && genres[12] ?<List genres={genres[12]} genre={ genre13} setGenre={setGenre13} /> : null}
+                            {lastAnime && genres[13] ? <List genres={genres[13]} genre={lastAnime} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
+                            {genre1 && genres[0] ? <List genres={genres[0]} genre={ genre1} setGenre={setGenre1} setNotAtHome={setNotAtHome}/> : null}
+                            {genre2 && genres[1] ?<List genres={genres[1]} genre={ genre2} setGenre={setGenre2} setNotAtHome={setNotAtHome}/> : null}
+                            {genre3 && genres[2] ?<List genres={genres[2]} genre={ genre3} setGenre={setGenre3} setNotAtHome={setNotAtHome}/> : null}
+                            {genre4 && genres[3] ?<List genres={genres[3]} genre={ genre4} setGenre={setGenre4} setNotAtHome={setNotAtHome}/> : null}
+                            {genre5 && genres[4] ?<List genres={genres[4]} genre={ genre5} setGenre={setGenre5} setNotAtHome={setNotAtHome}/> : null}
+                            {genre6 && genres[5] ?<List genres={genres[5]} genre={ genre6} setGenre={setGenre6} setNotAtHome={setNotAtHome}/> : null}
+                            {genre7 && genres[6] ?<List genres={genres[6]} genre={ genre7} setGenre={setGenre7} setNotAtHome={setNotAtHome}/> : null}
+                            {genre8 && genres[7] ?<List genres={genres[7]} genre={ genre8} setGenre={setGenre8} setNotAtHome={setNotAtHome}/> : null}
+                            {genre9 && genres[8] ?<List genres={genres[8]} genre={ genre9} setGenre={setGenre9} setNotAtHome={setNotAtHome}/> : null}
+                            {genre10 && genres[9] ?<List genres={genres[9]} genre={ genre10} setGenre={setGenre10} setNotAtHome={setNotAtHome}/> : null}
+                            {genre11 && genres[10] ?<List genres={genres[10]} genre={ genre11} setGenre={setGenre11} setNotAtHome={setNotAtHome}/> : null}
+                            {genre12 && genres[11] ?<List genres={genres[11]} genre={ genre12} setGenre={setGenre12} setNotAtHome={setNotAtHome}/> : null}
+                            {genre13 && genres[12] ?<List genres={genres[12]} genre={ genre13} setGenre={setGenre13} setNotAtHome={setNotAtHome}/> : null}
                         </div>
                     </div>
                 </div>
