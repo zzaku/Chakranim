@@ -28,7 +28,7 @@ return (
 			<Heading>Github</Heading>
 		</Column>
 		</Row>
-        <p style={{color: "white", fontSize: "10px", display: "flex", justifyContent: "center", alignItems: "center"}}>La loi française vous autorise à télécharger un fichier seulement si vous en possédez l'original. Ni Mangaflix, ni ses hébergeurs, quiconque ne pourra être tenu responsable d'une mauvaise utilisation de ce site.</p>
+        <p style={{color: "white", fontSize: "10px", display: "flex", justifyContent: "center", alignItems: "center"}}>La loi française vous autorise à télécharger un fichier seulement si vous en possédez l'original. Ni Chakranime, ni ses hébergeurs, quiconque ne pourra être tenu responsable d'une mauvaise utilisation de ce site.</p>
 	</Container>
 	</Box>
 );

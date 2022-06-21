@@ -11,16 +11,17 @@ export const epContext = createContext()
 function App() {
 
   const [notAtHome, setNotAtHome] = useState(false)
-  const [ep, setEp] = useState({current_episode: [], all_episodes: [], name: ""})
+  const [ep, setEp] = useState({current_episode: [], all_episodes: [], name: "", current_link: ""})
+  const [epFilter, setEpFilter] = useState(() => () => {})
 
   return (
-      <epContext.Provider value={setEp}>
+      <epContext.Provider value={{setEp: setEp, setEpFilter: setEpFilter}}>
         <div className="App">
           <Router>
             <Navbar notAtHome={notAtHome} setNotAtHome={setNotAtHome} />
               <Routes>
                 <Route path='/' element={<Home setNotAtHome={setNotAtHome} />} />
-                <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} />} />
+                <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} epFilter={epFilter} />} />
             </Routes>
           <Footer />
         </Router>

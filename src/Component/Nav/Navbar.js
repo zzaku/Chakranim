@@ -9,7 +9,6 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
 
 const [appearNav, setAppearNav] = useState(true)
 const nav = useRef()
-console.log(nav)
 
     window.addEventListener('scroll',function(){
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
