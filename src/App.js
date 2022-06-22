@@ -3,6 +3,7 @@ import Navbar from './Component/Nav/Navbar'
 import Home from './Component/Home/Home'
 import Footer from './Component/Footer/Footer';
 import VodPlayer from './Route/VodPlayer/VodPlayer';
+import AllAnimes from './Route/AllAnimes/AllAnimes';
 import './App.css';
 import { createContext, useContext, useState } from 'react';
 
@@ -22,6 +23,7 @@ function App() {
               <Routes>
                 <Route path='/' element={<Home setNotAtHome={setNotAtHome} />} />
                 <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} epFilter={epFilter} />} />
+                <Route path='/list/animes' element={<AllAnimes />} />
             </Routes>
           <Footer />
         </Router>

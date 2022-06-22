@@ -32,14 +32,21 @@ const nav = useRef()
                 </NavLink>
                 :
                 null}
-                <NavLink to={"/"}>
+                <NavMenu style={{justifyContent: "space-around", width: "50%"}}>
+                  <NavLink to={"/"}>
                     <TiThList size={"40px"} />
-                </NavLink>
+                  </NavLink>
+                  <Bars />
+                  <NavLink to={"/list/animes"}>
+                    <h2>La liste complète</h2>
+                  </NavLink>
+                </NavMenu>
+                
                 <Bars />
-                <NavMenu>
-                <NavLink to={"/"}>
-                    <FcSearch size={"40px"}/>
-                </NavLink>
+                <NavMenu style={{justifyContent: "space-around", width: "50%"}}>
+                  <NavLink to={"/"}>
+                      <FcSearch size={"40px"}/>
+                  </NavLink>
                 </NavMenu>
             </Nav>
             :

@@ -11,8 +11,9 @@ let datas
 //GET BACK ALL 9 ANIMES
 router.get('/allanimes', async (req, res) => {
     try{
-        const { page = 1, limit = 9 } = req.query;
+        const { page = 1, limit = 15 } = req.query;
         const posts = await Post.find()
+        .sort({$natural:-1})
         .limit(limit * 1)
         .skip((page - 1) * limit);
         res.json(posts)

@@ -9,6 +9,7 @@ import { Button } from '@mui/material';
 import ParallaxHover from './Card/Card';
 import "./style/List.css"
 
+
 const List = ({genre, genres, setNotAtHome}) =>{
 
     let withoutDoublon = [{}] 

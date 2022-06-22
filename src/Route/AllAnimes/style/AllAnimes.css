@@ -1,0 +1,67 @@
+.animes-list{
+    height: 165vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: blueviolet;
+}
+
+.list-container-anime{
+    margin-top: 5%;
+    height: 90%;
+    width: 90%;
+    justify-content: center;
+    display: flex;
+    background-color: burlywood;
+}
+
+.layout-coontainer{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+}
+
+.grid-container{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.pagination{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.nextpage{
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    right: 0;
+    top: 50;
+    bottom: 0;
+    text-align: center;
+    background: transparent;
+    border-radius: 15px;
+    border: 2px white solid;
+    color: black;
+}
+
+.previouspage{
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    top: 50;
+    bottom: 0;
+    text-align: center;
+    background: transparent;
+    border-radius: 15px;
+    border: 2px white solid;
+    color: black;
+}

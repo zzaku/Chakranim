@@ -9,6 +9,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import './style/VodPlayer.css'
 import Backdrop from '@mui/material/Backdrop';
+import { Link } from 'react-router-dom';
 
 const VodPlayer = ({ep, setEp, epFilter}) => {
 
@@ -21,10 +22,13 @@ const VodPlayer = ({ep, setEp, epFilter}) => {
     let currentEp = ep.current_episode[0][0].episode
     let epMax = ep.all_episode[ep.all_episode.length-1][0].episode
     let epMin = ep.all_episode[0][0].episode
-    
+    let urlEp = ep.current_episode[0][0].episode.split(" ")[0] + " "
+    let urlEpNext  = "0" +(parseInt( ep.current_episode[0][0].episode.split(" ")[1])+1).toString()
+    let urlEpPrevious  = "0" +(parseInt( ep.current_episode[0][0].episode.split(" ")[1])-1).toString()
     
     const goToNextEP = (current_episode) => {
         let nbrOfNextEp = ep.all_episode.find(elem => elem[0].episode === current_episode.split(" ")[0] + " 0" + (parseInt(current_episode.split(" ")[1])+1).toString())
+
             if(nbrOfNextEp === undefined){
 
             } else {
@@ -32,6 +36,7 @@ const VodPlayer = ({ep, setEp, epFilter}) => {
             }
             
     }
+
 
     const goToPreviousEP = (current_episode) => {
         let nbrOfNextEp = ep.all_episode.find(elem => elem[0].episode === current_episode.split(" ")[0] + " 0" + (parseInt(current_episode.split(" ")[1])-1).toString())
@@ -82,7 +87,10 @@ const VodPlayer = ({ep, setEp, epFilter}) => {
                         <div className='title'>
                             <h1>{ep.name.split("Saison")[0] + " " + ep.current_episode[0][0].episode}</h1>
                         </div>
-                            <Backdrop
+                        <div className='iframe-container' ref={iframeContainer}>
+                            {next ? <iframe className='iframe' src={ep.current_episode[0][0].lien}></iframe> : <iframe className='iframe' src={lecteur[0][0].lien}></iframe>}
+                        </div>
+                            {/*<Backdrop
                             style={{display: "flex", width: "100%", height: "75.9%", top: "10%"}}
                                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                                 open={!checked}
@@ -90,7 +98,7 @@ const VodPlayer = ({ep, setEp, epFilter}) => {
                                 <div className='iframe-container' ref={iframeContainer}>
                                     {next ? <iframe className='iframe' src={ep.current_episode[0][0].lien}></iframe> : <iframe className='iframe' src={lecteur[0][0].lien}></iframe>}
                                 </div>
-                            </Backdrop>
+                            </Backdrop>*/}
                         <div className='watch-content'>
                             <div className='lecteur-container'>
                                 <h2>Lecteurs</h2>
@@ -116,8 +124,12 @@ const VodPlayer = ({ep, setEp, epFilter}) => {
                             </div>
                             <div className='otherEpisode-content'>
                                 <Stack spacing={2} direction="row">
-                                    <ColorButton disabled={currentEp === epMin ? true : false} onClick={() => goToPreviousEP(ep.current_episode[0][0].episode) + setNext(true)} variant="contained">Episode précédent</ColorButton>
-                                    <ColorButton disabled={currentEp === epMax ? true : false} onClick={() => goToNextEP(ep.current_episode[0][0].episode) + setNext(true)} variant="contained">Episode suivant</ColorButton>
+                                    <Link to={`/watch/${ep.name.split("Saison")[0].replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${(urlEp  + urlEpPrevious ).replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
+                                        <ColorButton disabled={currentEp === epMin ? true : false} onClick={() => goToPreviousEP(ep.current_episode[0][0].episode) + setNext(true)} variant="contained">Episode précédent</ColorButton>
+                                    </Link>
+                                    <Link to={`/watch/${ep.name.split("Saison")[0].replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${(urlEp + urlEpNext).replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
+                                        <ColorButton disabled={currentEp === epMax ? true : false} onClick={() => goToNextEP(ep.current_episode[0][0].episode) + setNext(true)} variant="contained">Episode suivant</ColorButton>
+                                    </Link>
                                 </Stack>
                             </div>
                             <div className='cinema-mode'>

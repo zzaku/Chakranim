@@ -6,9 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import { Link } from 'react-router-dom';
 import { epContext } from '../../App';
-
-import { useContext, useState } from 'react';
-import { color } from '@mui/system';
+import { useContext } from 'react';
 
 const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite, setOpen, setNotAtHome}) => {
 
