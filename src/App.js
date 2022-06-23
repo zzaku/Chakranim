@@ -23,7 +23,7 @@ function App() {
               <Routes>
                 <Route path='/' element={<Home setNotAtHome={setNotAtHome} />} />
                 <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} epFilter={epFilter} />} />
-                <Route path='/list/animes' element={<AllAnimes />} />
+                <Route path='/list/animes' element={<AllAnimes setNotAtHome={setNotAtHome} />} />
             </Routes>
           <Footer />
         </Router>

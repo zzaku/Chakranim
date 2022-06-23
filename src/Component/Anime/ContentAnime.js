@@ -8,19 +8,19 @@ import { Link } from 'react-router-dom';
 import { epContext } from '../../App';
 import { useContext } from 'react';
 
-const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite, setOpen, setNotAtHome}) => {
+const ContentAnime = ({anime, wrapperRef, descriptionSuite, descriptionSuite2, setDescriptionSuite, setOpen, setNotAtHome}) => {
 
-    let withoutDoublon = [{}] 
+    let withoutDoublon = [{}]
     const setEp = useContext(epContext)
     const setEpFilter = useContext(epContext)
 
-    let distributionTemp = anime ? anime.desc.split("Acteur") : null
-    let description = anime ? anime.desc.split("Acteur")[0] : null
-    let distribution = anime ? "Acteur" + anime.desc.split("Acteur")[distributionTemp.length-1].replaceAll("\n", "") : null
-    let LastPartdescriptionTemp = anime.desc.split("Acteur")[0].split(".").join('.').split(".")
-    if(LastPartdescriptionTemp[LastPartdescriptionTemp.length-1] === ""){LastPartdescriptionTemp.pop()}
-    let middleDesc = Math.trunc((LastPartdescriptionTemp.length-1) / 2) + 1
-    let LastPartdescription = anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") + "..."
+    let distributionTemp = anime.desc ? anime.desc.split("Acteur") : null
+    let description = anime.desc ? anime.desc.split("Acteur")[0] : null
+    let distribution = anime.desc ? "Acteur" + anime.desc.split("Acteur")[distributionTemp.length-1].replaceAll("\n", "") : null
+    let LastPartdescriptionTemp = anime.desc ? anime.desc.split("Acteur")[0].split(".").join('.').split(".") : null
+    if(LastPartdescriptionTemp){if(LastPartdescriptionTemp[LastPartdescriptionTemp.length-1] === ""){LastPartdescriptionTemp.pop()}}
+    let middleDesc = LastPartdescriptionTemp && Math.trunc((LastPartdescriptionTemp.length-1) / 2) + 1
+    let LastPartdescription = anime.desc && anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") + "..."
 
     //const [lecteur, setLecteur] = useState({Lecteur: sibnet})
     const allLinks = [anime.links, anime.nextLinks]
@@ -47,6 +47,7 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite,
         return newArray 
     }
     withoutDoublon = [{episode: filterDoublonAnime()}]
+    
 
     const setLecteurEpisode = (tab, episode) => {
         return tab.filter(elem => elem[0].episode === episode)
@@ -65,7 +66,7 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite,
                     </div>
                     <div className='container-info-anime'>
                         <div className="container-desc-anime">
-                            {descriptionSuite ? <h3> {description} </h3> : <h3> {LastPartdescription} <a style={{color: "cyan", cursor: "pointer"}} onClick={() => setDescriptionSuite(true)}> Afficher la suite</a> </h3>}
+                            {!descriptionSuite ? <h3> {description} </h3> : <h3> {LastPartdescription} <a style={{color: "cyan", cursor: "pointer"}} onClick={() => setDescriptionSuite(false)}> Afficher la suite</a> </h3>}
                         </div>
                         <div className="container-context-anime">
                             <h3 style={{display: "flex", height: "100%", width: "100%", marginBlockEnd: 0, color: "white"}}>
@@ -77,11 +78,11 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, setDescriptionSuite,
                     </div>
                     <div className='container-moreinfo-anime'>
                         <div className="container-content-info-anime">
-                            <p style={{fontSize: "20px"}}>genre : {anime.genre.slice(1).join(', ')}</p>
-                            <p style={{width: "30%", fontSize: "20px"}}>durée: {anime.duree.replace(" ", "").trim()}</p>
+                            <p style={{fontSize: "20px"}}>genre : {anime.genre && anime.genre.slice(1).join(', ')}</p>
+                            <p style={{width: "30%", fontSize: "20px"}}>durée: {anime.duree && anime.duree.replace(" ", "").trim()}</p>
                         </div>
                         <div className="container-saison-anime">
-                            {anime.saison === "Film" ? <h3 style={{fontSize: "20px", color: "cyan"}}>Film :</h3> : <h3 style={{fontSize: "20px", color: "cyan"}}>saison : {anime.saison}</h3>}
+                            {anime.saison === "Film" ? <h3 style={{fontSize: "20px", color: "cyan"}}>Film :</h3> : <h3 style={{fontSize: "20px", color: "cyan"}}>saison : {anime.saison && anime.saison}</h3>}
                             <FormControl>
                                 <InputLabel style={{fontSize: "20px"}} id="Langue-select-label">Langue</InputLabel>
                                 <Select labelId="Langue-select-label" 

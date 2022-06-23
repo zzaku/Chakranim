@@ -1,5 +1,5 @@
 .animes-list{
-    height: 165vh;
+    height: 180vh;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -20,6 +20,7 @@
     display: flex;
     width: 100%;
     height: 100%;
+    background-color: green;
     flex-direction: column;
 }
 
@@ -29,13 +30,26 @@
     height: 100%;
 }
 
+.pagination-content{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
 .pagination{
+    display: flex;
+    height: auto;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.filters{
     display: flex;
     height: 100%;
     width: 100%;
-    bottom: 0;
-    align-items: center;
-    justify-content: center;
+    background-color: aqua;
 }
 
 .nextpage{
