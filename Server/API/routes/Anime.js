@@ -138,7 +138,7 @@ router.get('/animes/type/Allfilm', async (req, res) => {
 });
 
 //GET BACK ANIME BY GENRE
-router.get('/animes/genres', async (req, res) => {
+router.get('/Allanimes/genres', async (req, res) => {
     try{
         const genre1 = req.query.genre1;
         const genre2 = req.query.genre2;
@@ -152,7 +152,6 @@ router.get('/animes/genres', async (req, res) => {
         const genre10 = req.query.genre10;
         const genre11 = req.query.genre11;
         const genre12 = req.query.genre12;
-        const { page = 1, limit = 9 } = req.query;
         //await pageScraper.pageScraper(browserInstance);
         const posts = await Post.find({
             $and: [
@@ -194,8 +193,6 @@ router.get('/animes/genres', async (req, res) => {
                 },
             ],
         })
-        .limit(limit * 1)
-        .skip((page - 1) * limit);
         res.json(posts)
     }catch(err){
         res.json({message: err})

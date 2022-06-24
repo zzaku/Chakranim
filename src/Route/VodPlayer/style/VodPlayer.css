@@ -81,3 +81,10 @@ h1, h2 {
     width: auto;
     height: 15%;
 }
+
+.buttontogotootherep{
+    display: flex;
+    height: 50%;
+    justify-content: space-around;
+    align-items: center;
+}

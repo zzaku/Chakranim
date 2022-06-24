@@ -124,7 +124,7 @@ const VodPlayer = ({ep, setEp, epFilter}) => {
                                 </Box>
                             </div>
                             <div className='otherEpisode-content'>
-                                <Stack spacing={2} direction="row">
+                                <Stack spacing={2} direction="row"  className='buttontogotootherep'>
                                     <Link to={`/watch/${ep.current_episode[0] && ep.name.split("Saison")[0].replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${urlEp && urlEpPrevious && ( urlEp  + urlEpPrevious ).replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
                                         <ColorButton disabled={currentEp === epMin ? true : false} onClick={() => goToPreviousEP(ep.current_episode[0][0].episode) + setNext(true)} variant="contained">Episode précédent</ColorButton>
                                     </Link>

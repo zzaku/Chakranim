@@ -14,6 +14,7 @@ import "./style/AllAnimes.css"
 
 const AllAnimes = ({setNotAtHome}) => {
 
+    let withoutDoublon = [{}] 
     const [nextPage, setNextPage] = useState(1)
     const [animes, setAnimes] = useState([])
     const [allAnimes, setAllAnimes] = useState([])
@@ -86,7 +87,7 @@ const AllAnimes = ({setNotAtHome}) => {
 
       useEffect( () => {
         if(getGenres[0] && getGenres[0].length > 0){
-            fetch(`http://localhost:4000/VOD/animes/Allgenres?${getParam(getGenres)}`)
+            fetch(`http://localhost:4000/VOD/Allanimes/genres?${getParam(getGenres)}`)
             .then(res => res.json())
             .then(datas => setAnimes(datas))
         } else {
@@ -97,6 +98,29 @@ const AllAnimes = ({setNotAtHome}) => {
         
     }, [getGenres])
 
+    const filterDoublonAnime = () => {
+        let newArray = [];
+        let uniqueObject = {};
+
+        if(animes){
+
+            for (let anime in animes) {
+      
+                // Extract the name
+                let animeName = animes[anime]['name'].includes("×") ? animes[anime]['name'].replace("×", "X").toUpperCase() : animes[anime]['name'].toUpperCase();
+
+                // Use the name as the index
+                uniqueObject[animeName] = animes[anime];
+            }
+
+            for (let anime in uniqueObject){
+                newArray.push(uniqueObject[anime])
+            }
+        }
+        return newArray 
+    }
+    withoutDoublon = filterDoublonAnime()
+
 
     let lastPage = Math.trunc(allAnimes/15)
 
@@ -104,18 +128,21 @@ const AllAnimes = ({setNotAtHome}) => {
     let taille = anime.desc && anime.desc.split("Acteur")[0].length
     let descr = anime.desc && anime.desc.split("Acteur")[0]
 
-    console.log(getGenres)
+    console.log(animes)
     
     return (
         <div className='animes-list'>
             <div className='list-container-anime'>
                 <div className="layout-coontainer">
                 <div className="pagination-content">
+                {getGenres[0] && getGenres[0].length === 0 ? 
                     <div className="pagination">
                         <Stack spacing={10}>
-                            {allAnimes.length/15 === Math.trunc(allAnimes.length/15) ? <Pagination value={nextPage} count={lastPage} onChange={(e, value) => setNextPage(value)} variant="outlined" color="primary" /> : <Pagination count={Math.trunc(allAnimes.length/15) + 1} onChange={(e, value) => setNextPage(value)} variant="outlined" color="primary" />}
+                            {allAnimes.length/15 === Math.trunc(allAnimes.length/15) ? <Pagination value={nextPage} count={lastPage} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} /> : <Pagination count={Math.trunc(allAnimes.length/15) + 1} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />}
                         </Stack>
                     </div>
+                    : 
+                     null}
                         <div className="filters">
                             <Autocomplete
                                 multiple
@@ -148,9 +175,8 @@ const AllAnimes = ({setNotAtHome}) => {
                     </div>
                     
                     <div className="grid-container">
-                        <Grid container spacing={4} padding="2%">
                             <div className="previouspage">
-                                <Button style={{color: "black"}} onClick={() => setNextPage(nextPage-1)}><ArrowBackIosNewTwoTone /></Button>
+                                <Button style={{color: "black"}} onClick={() => setNextPage(nextPage-1)}><ArrowBackIosNewTwoTone style={{backgroundColor:"white", borderRadius: "15px"}} /></Button>
                             </div>
                             <Backdrop
                                 sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
@@ -158,36 +184,55 @@ const AllAnimes = ({setNotAtHome}) => {
                                 >
                                 {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
                             </Backdrop>
-                            {animes.map(anime => {
+                            {getGenres[0] && getGenres[0].length > 0 ?
+                                <div className="container-layout">
+                                    {withoutDoublon.map(anime => {
+                                        return(
+                                                <div className="card-content" onClick={() => handleToggle(anime)}>
+                                                    <img style={{height: "100%", width: "100%"}} src={anime.image} alt={anime.name}/>
+                                                </div>
+                                            )
+                                        })
+                                    } 
+                                </div>
+                            :
+                            <Grid className="grid" container spacing={2} padding="2%">
+                            {withoutDoublon.map(anime => {
                                 return(
                                     <>
-                                        <Grid item xs={3} md={2.4} onClick={() => handleToggle(anime)}>
-                                            <Card sx={{ maxWidth: "auto"}}>
-                                                <CardActionArea >
-                                                    <CardMedia
-                                                        component="img"
-                                                        height="410"
-                                                        image={anime.image}
-                                                        alt="green iguana"
-                                                    />
-                                                    
-                                                </CardActionArea>
-                                            </Card>
+                                        <Grid item xs={4} md={2} onClick={() => handleToggle(anime)}>
+                                            <div className="card-content">
+                                                <Card sx={{ maxWidth: "auto"}}>
+                                                    <CardActionArea >
+                                                        <CardMedia
+                                                            component="img"
+                                                            height="auto"
+                                                            image={anime.image}
+                                                            alt="green iguana"
+                                                        />
+                                                    </CardActionArea>
+                                                </Card>
+                                            </div>
+                                            
                                         </Grid>
                                     </>
                                     )
-                                })   
-                            }    
+                                }) 
+                            } 
+                                </Grid> 
+                            }
                             <div className="nextpage">
-                                <Button style={{color: "black"}} onClick={() => setNextPage(nextPage+1)}><ArrowForwardIosIcon /></Button>
+                                <Button style={{color: "black"}} onClick={() => setNextPage(nextPage+1)}><ArrowForwardIosIcon style={{backgroundColor:"white", borderRadius: "15px"}}/></Button>
                             </div>
-                        </Grid>
                     </div>
+                    {getGenres[0] && getGenres[0].length <= 0 ?
                     <div className="pagination">
                         <Stack spacing={10}>
-                            {allAnimes.length/15 === Math.trunc(allAnimes.length/15) ? <Pagination count={lastPage} onChange={(e, value) => setNextPage(value)} variant="outlined" color="primary" /> : <Pagination count={Math.trunc(allAnimes.length/15) + 1} onChange={(e, value) => setNextPage(value)} variant="outlined" color="primary" />}
+                             {allAnimes.length/15 === Math.trunc(allAnimes.length/15) ? <Pagination count={lastPage} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} /> : <Pagination count={Math.trunc(allAnimes.length/15) + 1} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />} 
                         </Stack>
                     </div> 
+                    : 
+                    null}
                 </div>
             </div>
         </div>
