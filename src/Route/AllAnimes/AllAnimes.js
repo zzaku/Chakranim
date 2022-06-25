@@ -135,7 +135,7 @@ const AllAnimes = ({setNotAtHome}) => {
             <div className='list-container-anime'>
                 <div className="layout-coontainer">
                 <div className="pagination-content">
-                {getGenres[0] && getGenres[0].length === 0 ? 
+                {!getGenres[0] || getGenres[0].length < 1 ? 
                     <div className="pagination">
                         <Stack spacing={10}>
                             {allAnimes.length/15 === Math.trunc(allAnimes.length/15) ? <Pagination value={nextPage} count={lastPage} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} /> : <Pagination count={Math.trunc(allAnimes.length/15) + 1} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />}
@@ -175,9 +175,12 @@ const AllAnimes = ({setNotAtHome}) => {
                     </div>
                     
                     <div className="grid-container">
+                        {!getGenres[0] || getGenres[0].length < 1 ?
                             <div className="previouspage">
                                 <Button style={{color: "black"}} onClick={() => setNextPage(nextPage-1)}><ArrowBackIosNewTwoTone style={{backgroundColor:"white", borderRadius: "15px"}} /></Button>
                             </div>
+                        :
+                        null}
                             <Backdrop
                                 sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
                                 open={open} 
@@ -221,9 +224,12 @@ const AllAnimes = ({setNotAtHome}) => {
                             } 
                                 </Grid> 
                             }
+                            {!getGenres[0] || getGenres[0].length < 1 ?
                             <div className="nextpage">
                                 <Button style={{color: "black"}} onClick={() => setNextPage(nextPage+1)}><ArrowForwardIosIcon style={{backgroundColor:"white", borderRadius: "15px"}}/></Button>
                             </div>
+                            :
+                            null}
                     </div>
                     {getGenres[0] && getGenres[0].length <= 0 ?
                     <div className="pagination">

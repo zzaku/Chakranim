@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 const VodPlayer = ({ep, setEp, epFilter}) => {
 
-    console.log(ep)
+
     const [lecteur, setLecteur] = useState(ep.current_episode)
     const [next, setNext] = useState(false)
     const [checked, setChecked] = useState(true)

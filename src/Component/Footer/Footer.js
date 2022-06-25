@@ -8,9 +8,9 @@ FooterLink,
 Heading,
 } from "./style/FooterStyles";
 
-const Footer = () => {
+const Footer = ({footerRef}) => {
 return (
-	<Box>
+	<Box ref={footerRef && footerRef}>
 	<h1 style={{ color: "cyan",
 				textAlign: "center",
 				marginTop: "-50px" }}>
