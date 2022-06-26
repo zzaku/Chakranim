@@ -26,19 +26,18 @@ function App() {
     .then(data => setAllAnimes(data))
   }, [])
 
-console.log(startSearching)
   return (
       <epContext.Provider value={{setEp: setEp, setEpFilter: setEpFilter, setSearch: setSearch, search: search, setStartSearching: setStartSearching, setAnimeToFind: setAnimeToFind}}>
         <div className="App">
-          <Search open={search} notAtHome={notAtHome} setNotAtHome={setNotAtHome} startSearching={startSearching} allAnimes={allAnimes} animeToFind={animeToFind} />
           <Router>
             {!search && <Navbar notAtHome={notAtHome} setNotAtHome={setNotAtHome} />}
+            <Search open={search} notAtHome={notAtHome} setNotAtHome={setNotAtHome} startSearching={startSearching} allAnimes={allAnimes} animeToFind={animeToFind} />
           <Routes>
                 <Route path='/' element={<Home setNotAtHome={setNotAtHome} />} />
                 <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} epFilter={epFilter} />} />
-                <Route path='/list/animes' element={<AllAnimes setNotAtHome={setNotAtHome} />} />
+                <Route path='/list/animes' element={<AllAnimes allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />
             </Routes>
-          <Footer />
+          {!startSearching && <Footer />}
         </Router>
       </div>
     </epContext.Provider>

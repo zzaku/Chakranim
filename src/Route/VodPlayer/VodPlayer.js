@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
-import { cyan, grey } from '@mui/material/colors';
+import { cyan } from '@mui/material/colors';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import './style/VodPlayer.css'
@@ -117,7 +117,7 @@ const VodPlayer = ({ep, setEp, epFilter}) => {
                                         {ep.current_episode.map((episode, index) => {  
                                             if(index === 0){
                                             } else {
-                                            return <Button onClick={() => switchLecteur(episode[0].format_VOD)} style={{color: "white"}} key={ep.current_episode[index-1][0].format_VOD} >{ep.current_episode[index-1][0].format_VOD}</Button>
+                                            return <Button key={episode._id} onClick={() => switchLecteur(episode[0].format_VOD)} style={{color: "white"}} >{ep.current_episode[index-1][0].format_VOD}</Button>
                                             }
                                         })}
                                     </ButtonGroup>

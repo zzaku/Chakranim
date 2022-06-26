@@ -24,8 +24,9 @@
 }
 
 .watch-container{
-    height: 85%;
-    width: 100%;
+    margin-top: 5%;
+    height: 80%;
+    width: 92.5%;
     flex-direction: column;
     display: flex;
     justify-content: center;

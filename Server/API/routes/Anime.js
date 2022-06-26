@@ -32,6 +32,16 @@ router.get('/allanimes/check', async (req, res) => {
     }
 });
 
+//GET BACK LENGTH OF ANIMES LIST 
+router.get('/allanimes/length', async (req, res) => {
+    try{
+        const posts = await Post.find()
+        res.json(posts.length)
+    }catch(err){
+        res.json({message: err})
+    }
+});
+
 //CHECK AND SCRAP NEW ANIMES
 const scrapper = setInterval(async () => {
     const newData = await isThereNewAnime()
@@ -152,7 +162,7 @@ router.get('/Allanimes/genres', async (req, res) => {
         const genre10 = req.query.genre10;
         const genre11 = req.query.genre11;
         const genre12 = req.query.genre12;
-        //await pageScraper.pageScraper(browserInstance);
+        const { page = 1, limit = 15 } = req.query;
         const posts = await Post.find({
             $and: [
                 {
@@ -193,6 +203,8 @@ router.get('/Allanimes/genres', async (req, res) => {
                 },
             ],
         })
+        .limit(limit * 1)
+        .skip((page - 1) * limit);
         res.json(posts)
     }catch(err){
         res.json({message: err})

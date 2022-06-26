@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import './style/Card.css'
 
 const config = {
@@ -59,13 +59,13 @@ const config = {
       const max = Math.max(this.props.width, this.props.height);
       return current / max * config.alpha;
     }
+     test = createRef();
   
     __handleMouseMove({ pageX, pageY, nativeEvent}) {
       const width = this.props.width;
       const height = this.props.height;
       const { scrollTop: scrollTop, scrollLeft: scrollLeft } = document.body;
-  
-      const bounds = this.refs.wrapper.getBoundingClientRect();
+      const bounds = this.test.current.getBoundingClientRect();
       const centerX = this.props.width / 2;
       const centerY = this.props.height / 2;
       const widthMultiplier = 100 / this.props.width;
@@ -138,8 +138,8 @@ const config = {
       });
   
       return (
-        <div style={{ transformStyle: 'preserve-3d', height: "100%", width: "100%", display: "flex"}}>
-          <figure ref='wrapper' className='ph-wrapper' style={{stylesWrapper, height: "100%", width: "100%", display: "flex"}} onMouseMove={this.__handleMouseMove.bind(this)} onMouseLeave={this.__handleMouseLeave.bind(this)}>
+        <div ref={this.test} style={{ transformStyle: 'preserve-3d', height: "100%", width: "100%", display: "flex"}}>
+          <figure className='ph-wrapper' style={{stylesWrapper, height: "100%", width: "100%", display: "flex"}} onMouseMove={this.__handleMouseMove.bind(this)} onMouseLeave={this.__handleMouseLeave.bind(this)}>
             <div className='ph-shadow' style={stylesShadow} />
             <div className='ph-layers'>
               {this.__renderChildren(this.props.children)}

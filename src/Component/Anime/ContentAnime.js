@@ -13,6 +13,7 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, descriptionSuite2, s
     let withoutDoublon = [{}]
     const setEp = useContext(epContext)
     const setEpFilter = useContext(epContext)
+    const openSearch = useContext(epContext)
 
     let distributionTemp = anime.desc ? anime.desc.split("Acteur") : null
     let description = anime.desc ? anime.desc.split("Acteur")[0] : null
@@ -101,9 +102,9 @@ const ContentAnime = ({anime, wrapperRef, descriptionSuite, descriptionSuite2, s
                         <div className="container-episode-anime">
                             {withoutDoublon[0].episode ? withoutDoublon[0].episode.map(elem => {
                                 return (
-                                    <div className='vod-anime'>
+                                    <div className='vod-anime' key={anime._id}>
                                         <Link to={`/watch/${anime.name.replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${elem[0].episode.replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
-                                            <div onClick={() => setOpen(false) + setNotAtHome(true) + setEp.setEp({current_episode: setLecteurEpisode(allLinks[0], elem[0].episode), all_episode: allLinks[0], name: anime.name}) + setEpFilter.setEpFilter(() => (tab, episode) => tab.filter(elem => elem[0].episode === episode))} className='vod-cards card-shadow' style={{display: "flex", height: "auto", width: "auto", borderRadius: "15px", cursor: "pointer"}}>
+                                            <div onClick={() => setOpen(false) + setNotAtHome(true) + setEp.setEp({current_episode: setLecteurEpisode(allLinks[0], elem[0].episode), all_episode: allLinks[0], name: anime.name}) + setEpFilter.setEpFilter(() => (tab, episode) => tab.filter(elem => elem[0].episode === episode)) + openSearch.setSearch(false)} className='vod-cards card-shadow' style={{display: "flex", height: "auto", width: "auto", borderRadius: "15px", cursor: "pointer"}}>
                                                 <Overlay image={anime.image} episode={elem[0].episode} saison={anime.saison} />
                                             </div>
                                         </Link>    

@@ -3,6 +3,7 @@ import { FcSearch } from 'react-icons/fc';
 import { TiThList } from 'react-icons/ti';
 import { useContext, useRef, useState } from 'react';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { useNavigate } from "react-router-dom";
 import { epContext } from "../../App";
 import './style/Nav.css'
 import { Button, TextField } from "@mui/material";
@@ -12,16 +13,19 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
   const open = useContext(epContext)
   const [appearNav, setAppearNav] = useState(true)
   const nav = useRef()
+  const navigate = useNavigate();
 
     window.addEventListener('scroll',function(){
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      if(nav.current){
+        if(scrollTop === 0){
+          nav.current.style.background = "transparent"
+        }
+        else{
+          nav.current.style.background = "#000"
+        }
+      }
       
-      if(scrollTop === 0){
-        nav.current.style.background = "transparent"
-      }
-      else{
-        nav.current.style.background = "#000"
-      }
     });
 
     return(
@@ -34,12 +38,10 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                   </div>
                 </NavLink>
                 :
-                null}
-                <NavMenu style={{justifyContent: "space-around", width: "50%"}}>
-                  <NavLink to={"/"}>
+                <NavLink to={"/"}>
                     <TiThList size={"40px"} />
-                  </NavLink>
-                  <Bars />
+                </NavLink>}
+                <NavMenu style={{justifyContent: "space-around", width: "50%"}}>
                   <NavLink to={"/list/animes"}>
                     <h2>La liste complète</h2>
                   </NavLink>
@@ -60,9 +62,9 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                       <Button onClick={() => open.setStartSearching(false)}  style={{display: "flex", height: "auto", width: "30%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}}><KeyboardBackspaceIcon style={{display: "flex", justifyContent: "center", alignItems: "center", color: "white"}} fontSize="large" /></Button>
                     </div>
                     <div className="search-button" style={{height: "100%", width: "50%"}}>
-                          <Button style={{display: "flex", height: "auto", width: "11%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}} ><FcSearch style={{display: "flex", justifyContent: "center", alignItems: "center"}} size={"40px"} cursor="pointer" onClick={() => open.setSearch(true)}/></Button>
+                          <Button onClick={() => open.setSearch(true)} style={{display: "flex", height: "auto", width: "11%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}} ><FcSearch style={{display: "flex", justifyContent: "center", alignItems: "center"}} size={"40px"} cursor="pointer" /></Button>
                           <div className="search-input">
-                            <TextField onChange={(val) => open.setStartSearching(true) + open.setAnimeToFind(val.target.value)} className="text-field" style={{background: "white", color: "black", borderRadius: "200px 200px 200px 200px"}} id="standard" label="Recherche ton anime" variant="standard" />
+                            <TextField onChange={(val) => open.setStartSearching(true) + open.setAnimeToFind(val.target.value) + navigate("/Search/Animes")} className="text-field" style={{background: "white", color: "black", borderRadius: "200px 200px 200px 200px"}} id="standard" label="Recherche ton anime" variant="standard" />
                           </div>
                     </div>
                 </Nav>

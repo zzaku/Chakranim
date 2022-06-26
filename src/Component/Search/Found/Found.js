@@ -8,7 +8,8 @@ const Found = ({animeFound, setNotAtHome}) => {
 
     const [anime, setAnime] = useState([])
     const [open, setOpen] = useState(false)
-    const wrapperRef = useRef(null);
+    let withoutDoublon = []
+    const wrapperRef = useRef();
 
     let descriptionSuite = anime.desc ? anime.desc.split("Acteur")[0].length < 400 ? false : true : null
 
@@ -29,8 +30,32 @@ const Found = ({animeFound, setNotAtHome}) => {
         };
       }, [wrapperRef]);
 
+      const filterDoublonAnime = () => {
+        let newArray = [];
+        let uniqueObject = {};
+
+        if(animeFound){
+
+            for (let anime in animeFound) {
+      
+                // Extract the name
+                let animeName = animeFound[anime]['name'].includes("×") ? animeFound[anime]['name'].replace("×", "X").toUpperCase() : animeFound[anime]['name'].toUpperCase();
+
+                // Use the name as the index
+                uniqueObject[animeName] = animeFound[anime];
+            }
+
+            for (let anime in uniqueObject){
+                newArray.push(uniqueObject[anime])
+            }
+        }
+        return newArray 
+    }
+    withoutDoublon = filterDoublonAnime()
+
     const handleClose = () => {
         setOpen(false);
+        setAnime([])
         descriptionSuite = false
     };
 
@@ -48,18 +73,15 @@ const Found = ({animeFound, setNotAtHome}) => {
                 {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
             </Backdrop>
             <div className='found-container'>
-                {animeFound.map(anime => {
+                {withoutDoublon.map(anime => {
                     return (
-                        <div className='anime-card' onClick={() => handleAnime(anime)}>
+                        <div key={anime._id} className='anime-card' onClick={() => handleAnime(anime)}>
                             <img style={{display: "flex", height: "100%", width: "100%"}} src={anime.image} />
                         </div> 
                     )
                    
                 })
                 }
-            </div>
-            <div className='found-suggestions'>
-
             </div>
         </div>
     )

@@ -1,17 +1,18 @@
 import { Backdrop } from "@mui/material"
 import { useEffect, useRef, useState } from "react"
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 import ContentAnime from "../Anime/ContentAnime";
 import Navbar from "../Nav/Navbar"
 import Found from "./Found/Found";
-import Footer from "../Footer/Footer";
+import { useNavigate } from "react-router-dom";
 
 
-
-const Search = ({open, notAtHome, setNotAtHome, startSearching, animeToFind, allAnimes}) => {
+const Search = ({open, notAtHome, setNotAtHome, animeToFind, allAnimes}) => {
 
     const [animeFound, setAnimeFound] = useState([])
     const footerRef = useRef()
+  
 
     useEffect(() => {
         setAnimeFound(allAnimes.filter(anime => anime.name.toUpperCase().includes(animeToFind.toUpperCase())))
@@ -22,24 +23,20 @@ const Search = ({open, notAtHome, setNotAtHome, startSearching, animeToFind, all
            footerRef.current.style.bottom = 0 
         } 
     }, [footerRef.current])
-
    
 
     return (
-        <Router>
-            <Backdrop 
-            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
-            open={open} 
-            >
-                {startSearching && <>
-                    <Found animeFound={animeFound} setNotAtHome={setNotAtHome} />
+        <>
+           
+                <Routes>
+                    <Route path='/Search/Animes' element={<Found animeFound={animeFound} setNotAtHome={setNotAtHome} />} />
                     {/*<Footer footerRef={footerRef} />*/}
-                    </>
-                }
+                </Routes>
+                
+                
             
                 <Navbar notAtHome={notAtHome} setNotAtHome={setNotAtHome} />
-                </Backdrop>
-            </Router>
+          </>   
     )
 }
 

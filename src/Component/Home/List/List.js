@@ -18,7 +18,8 @@ const List = ({genre, genres, setNotAtHome}) =>{
     const scrollLeftRef = useRef(null);
     const [open, setOpen] = useState(false);
     const [anime, setAnime] = useState(null);
-    const [descriptionSuite, setDescriptionSuite] = useState(anime ? anime.desc.split("Acteur")[0].length < 200 ? false : true : null)
+    const [descriptionSuite, setDescriptionSuite] = useState(false)
+    const refCard = useRef()
 
     let categorie = genres.includes("é") ? genres.replace("é", "e")
         : genres.includes("è") ? genres.replaceAll("è", "e")
@@ -29,6 +30,13 @@ const List = ({genre, genres, setNotAtHome}) =>{
     let DisplayAllCategory =  categorie.includes("_") ? categorie.replaceAll("_", " ") 
     : categorie.includes("-") ? categorie.replaceAll("-", " ") 
     : categorie
+
+    useEffect(() => {
+      if(anime){
+        setDescriptionSuite(anime.desc.split("Acteur")[0].length < 400 ? false : true)
+        console.log(anime.desc.split("Acteur")[0].length)
+      }
+    }, [anime])
 
     useEffect(() => {
         /**
@@ -73,6 +81,7 @@ const List = ({genre, genres, setNotAtHome}) =>{
     const handleClose = () => {
         setOpen(false);
         setDescriptionSuite(false)
+        setAnime(null)
       };
 
       const handleToggle = (myAnime) => {
@@ -130,36 +139,23 @@ const List = ({genre, genres, setNotAtHome}) =>{
               {withoutDoublon[0][genres]
                 ? withoutDoublon[0][genres].map((genre) => (
                     <div
+                      key={genre._id}
                       className="card-container"
                       style={{ cursor: "pointer" }}
                       onClick={() => handleToggle(genre)}
                     >
-                      <ParallaxHover width={"700"} height={"700"}>
+                      <ParallaxHover width={"700"} height={"700"} refCard={refCard} >
                         <img
                           alt={"carde-anime: " + genre.name}
                           className="posters"
                           style={{ height: "100%", width: "100%" }}
-                          src={genre.image}
+                          src={genre.image && genre.image}
                         />
                       </ParallaxHover>
                     </div>
                   ))
-                : genre.map((genre) => (
-                    <div
-                      className="card-container"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleToggle(genre)}
-                    >
-                      <ParallaxHover width={"700"} height={"700"}>
-                        <img
-                          alt={"carde-anime: " + genre.name}
-                          className="posters"
-                          style={{ height: "100%", width: "100%" }}
-                          src={genre.image}
-                        />
-                      </ParallaxHover>
-                    </div>
-                  ))}
+                : 
+                null}
               {displayNextButton(genres)}
             </div>
           </div>

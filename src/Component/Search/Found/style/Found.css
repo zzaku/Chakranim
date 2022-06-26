@@ -1,6 +1,6 @@
 .found{
     display: flex;
-    height: 100vh;
+    height: 100%;
     width: 100%;
     margin-top: 10%;
     background: transparent
@@ -8,24 +8,16 @@
 
 .found-container{
     display: flex;
-    height: 90%;
-    width: 80%;
+    height: 100%;
+    width: 100%;
     justify-content: space-around;
     flex-wrap: wrap;
     overflow-x: hidden;
 }
 
-.found-suggestions{
-    display: flex;
-    height: 90%;
-    width: 20%;
-    
-    background-color: darkcyan;
-}
-
 .anime-card{
     display: flex;
     height: auto;
-    width: 15%;
+    width: 12%;
     margin: 5px;
 }

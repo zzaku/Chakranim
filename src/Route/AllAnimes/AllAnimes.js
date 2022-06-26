@@ -2,7 +2,8 @@ import { Grid, Card, CardActionArea, CardMedia, Stack, Pagination, Button, Backd
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewTwoTone from "@mui/icons-material/ArrowBackIosNewTwoTone";
 import ContentAnime from "../../Component/Anime/ContentAnime";
-import { useState, useRef, useEffect, useMemo } from "react"
+import { useState, useRef, useEffect, useMemo, useContext } from "react"
+import { epContext } from "../../App";
 import CircularProgress from '@mui/material/CircularProgress';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
@@ -17,9 +18,9 @@ const AllAnimes = ({setNotAtHome}) => {
     let withoutDoublon = [{}] 
     const [nextPage, setNextPage] = useState(1)
     const [animes, setAnimes] = useState([])
-    const [allAnimes, setAllAnimes] = useState([])
     const [anime, setAnime] = useState([]);
     const [open, setOpen] = useState(false);
+    const getAll = useContext(epContext)
 
     const wrapperRef = useRef(null);
 
@@ -31,29 +32,30 @@ const AllAnimes = ({setNotAtHome}) => {
     let descriptionSuite = anime.desc ? anime.desc.split("Acteur")[0].length < 400 ? false : true : null
 
     let getAll15Animes = `http://localhost:4000/VOD/allanimes?page=${nextPage}`
-    let getAllAnimes = `http://localhost:4000/VOD/allanimes/check`
 
-    useEffect(() => {
-        fetch(getAllAnimes)
-        .then(res => res.json())
-        .then(data => setAllAnimes(data))
-    }, [])
-    
-    useEffect(() => {
-        fetch(getAll15Animes)
-        .then(res => res.json())
-        .then(data => setAnimes(data))
-    }, [nextPage])
+    const getParam = (parameter) => {
+      let params = ""
+      for(let i = 0; i < 12; i++){
+          if(parameter[0][i]){
+              params += `&genre${i+1}=${parameter[0][i]}`
+          } else {
+              params += `&genre${i+1}=${parameter[0][0]}`
+          }
+      }
+      return params
+  }
 
-    const handleClose = () => {
-        setOpen(false);
-        descriptionSuite = false
-      };
-
-      const handleToggle = (myAnime) => {
-        setAnime(myAnime)
-        setOpen(!open);
-      };
+    useEffect( () => {
+      if(getGenres[0] && getGenres[0].length > 0){
+          fetch(`http://localhost:4000/VOD/Allanimes/genres?${getParam(getGenres)}`)
+          .then(res => res.json())
+          .then(datas => setAnimes(datas))
+      } else {
+          fetch(getAll15Animes)
+          .then(res => res.json())
+          .then(data => setAnimes(data))
+      }
+    }, [nextPage, getGenres, getAll15Animes])
 
     useEffect(() => {
         /**
@@ -72,31 +74,15 @@ const AllAnimes = ({setNotAtHome}) => {
         };
       }, [wrapperRef]);
 
+    const handleClose = () => {
+        setOpen(false);
+        setAnime([])
+      };
 
-      const getParam = (parameter) => {
-        let params = ""
-        for(let i = 0; i < 12; i++){
-            if(parameter[0][i]){
-                params += `&genre${i+1}=${parameter[0][i]}`
-            } else {
-                params += `&genre${i+1}=${parameter[0][0]}`
-            }
-        }
-        return params
-    }
-
-      useEffect( () => {
-        if(getGenres[0] && getGenres[0].length > 0){
-            fetch(`http://localhost:4000/VOD/Allanimes/genres?${getParam(getGenres)}`)
-            .then(res => res.json())
-            .then(datas => setAnimes(datas))
-        } else {
-            fetch(getAll15Animes)
-            .then(res => res.json())
-            .then(data => setAnimes(data))
-        }
-        
-    }, [getGenres])
+      const handleToggle = (myAnime) => {
+        setAnime(myAnime)
+        setOpen(!open);
+      };
 
     const filterDoublonAnime = () => {
         let newArray = [];
@@ -119,26 +105,17 @@ const AllAnimes = ({setNotAtHome}) => {
         }
         return newArray 
     }
-    withoutDoublon = filterDoublonAnime()
-
-
-    let lastPage = Math.trunc(allAnimes/15)
-
-
-    let taille = anime.desc && anime.desc.split("Acteur")[0].length
-    let descr = anime.desc && anime.desc.split("Acteur")[0]
-
-    console.log(animes)
+    withoutDoublon = useMemo(() => filterDoublonAnime(), [animes]) 
     
     return (
         <div className='animes-list'>
             <div className='list-container-anime'>
                 <div className="layout-coontainer">
                 <div className="pagination-content">
-                {!getGenres[0] || getGenres[0].length < 1 ? 
+                {getGenres[0] && getGenres[0].length < 1 ? 
                     <div className="pagination">
                         <Stack spacing={10}>
-                            {allAnimes.length/15 === Math.trunc(allAnimes.length/15) ? <Pagination value={nextPage} count={lastPage} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} /> : <Pagination count={Math.trunc(allAnimes.length/15) + 1} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />}
+                            <Pagination value={nextPage} count={68} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />
                         </Stack>
                     </div>
                     : 
@@ -191,7 +168,7 @@ const AllAnimes = ({setNotAtHome}) => {
                                 <div className="container-layout">
                                     {withoutDoublon.map(anime => {
                                         return(
-                                                <div className="card-content" onClick={() => handleToggle(anime)}>
+                                                <div className="card-content" onClick={() => handleToggle(anime)} key={anime._id}>
                                                     <img style={{height: "100%", width: "100%"}} src={anime.image} alt={anime.name}/>
                                                 </div>
                                             )
@@ -203,7 +180,7 @@ const AllAnimes = ({setNotAtHome}) => {
                             {withoutDoublon.map(anime => {
                                 return(
                                     <>
-                                        <Grid item xs={4} md={2} onClick={() => handleToggle(anime)}>
+                                        <Grid item xs={4} md={2} onClick={() => handleToggle(anime)} key={anime._id}>
                                             <div className="card-content">
                                                 <Card sx={{ maxWidth: "auto"}}>
                                                     <CardActionArea >
@@ -234,7 +211,7 @@ const AllAnimes = ({setNotAtHome}) => {
                     {getGenres[0] && getGenres[0].length <= 0 ?
                     <div className="pagination">
                         <Stack spacing={10}>
-                             {allAnimes.length/15 === Math.trunc(allAnimes.length/15) ? <Pagination count={lastPage} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} /> : <Pagination count={Math.trunc(allAnimes.length/15) + 1} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />} 
+                            <Pagination count={68} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />
                         </Stack>
                     </div> 
                     : 
