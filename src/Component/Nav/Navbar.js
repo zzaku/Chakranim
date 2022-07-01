@@ -59,7 +59,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
             <> {appearNav ? 
               <Nav ref={nav} className="Navigation">
                     <div className="backToMainMenu" onClick={() => open.setSearch(false)}>
-                      <Button onClick={() => open.setStartSearching(false)}  style={{display: "flex", height: "auto", width: "30%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}}><KeyboardBackspaceIcon style={{display: "flex", justifyContent: "center", alignItems: "center", color: "white"}} fontSize="large" /></Button>
+                      <Button onClick={() => open.setStartSearching(false) + navigate("/")}  style={{display: "flex", height: "auto", width: "30%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}}><KeyboardBackspaceIcon style={{display: "flex", justifyContent: "center", alignItems: "center", color: "white"}} fontSize="large" /></Button>
                     </div>
                     <div className="search-button" style={{height: "100%", width: "50%"}}>
                           <Button onClick={() => open.setSearch(true)} style={{display: "flex", height: "auto", width: "11%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}} ><FcSearch style={{display: "flex", justifyContent: "center", alignItems: "center"}} size={"40px"} cursor="pointer" /></Button>

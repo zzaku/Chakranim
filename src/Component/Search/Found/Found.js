@@ -39,8 +39,26 @@ const Found = ({animeFound, setNotAtHome}) => {
             for (let anime in animeFound) {
       
                 // Extract the name
-                let animeName = animeFound[anime]['name'].includes("×") ? animeFound[anime]['name'].replace("×", "X").toUpperCase() : animeFound[anime]['name'].toUpperCase();
-
+                let animeName = animeFound[anime]['name'].includes("-") && !animeFound[anime]['name'].includes("Saison") && !animeFound[anime]['name'].includes(".") ?
+                 animeFound[anime]['name'].split("OAV")[0].replaceAll("-", " ").toUpperCase() : 
+                 animeFound[anime]['name'].includes("-") && animeFound[anime]['name'].includes("Saison") && !animeFound[anime]['name'].includes(".") ? 
+                 animeFound[anime]['name'].split("Saison")[0].replaceAll(".", " ").replaceAll("-", " ").toUpperCase() : 
+                 animeFound[anime]['name'].includes("OAV") && !animeFound[anime]['name'].includes(".") ? 
+                 animeFound[anime]['name'].split("OAV")[0].toUpperCase() : 
+                 animeFound[anime]['name'].includes("OAV") && animeFound[anime]['name'].includes(".") ? 
+                 animeFound[anime]['name'].split("OAV")[0].replaceAll(".", " ").toUpperCase() : 
+                 animeFound[anime]['name'].includes("Saison") && !animeFound[anime]['name'].includes(".") ? 
+                 animeFound[anime]['name'].split("Saison")[0].toUpperCase() : 
+                 animeFound[anime]['name'].includes("Saison") && animeFound[anime]['name'].includes(".") ? 
+                 animeFound[anime]['name'].split("Saison")[0].replaceAll(".", " ").toUpperCase() : 
+                 animeFound[anime]['name'].includes(".") ? 
+                 animeFound[anime]['name'].replace(".", " ").toUpperCase() : 
+                 animeFound[anime]['name'].includes("!") ? 
+                 animeFound[anime]['name'].replace("!", "").toUpperCase() : 
+                 animeFound[anime]['name'].includes("×") ? 
+                 animeFound[anime]['name'].replace("×", "X").toUpperCase() : 
+                 animeFound[anime]['name'].toUpperCase()
+                 console.log(animeName)
                 // Use the name as the index
                 uniqueObject[animeName] = animeFound[anime];
             }

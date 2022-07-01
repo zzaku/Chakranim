@@ -9,7 +9,7 @@ import ParallaxHover from './Card/Card';
 import "./style/List.css"
 
 
-const List = ({genre, genres, setNotAtHome}) =>{
+const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
 
     let withoutDoublon = [{}] 
     const wrapperRef = useRef(null);
@@ -19,6 +19,7 @@ const List = ({genre, genres, setNotAtHome}) =>{
     const [open, setOpen] = useState(false);
     const [anime, setAnime] = useState(null);
     const [descriptionSuite, setDescriptionSuite] = useState(false)
+    const [animeBySeason, setAnimeBySeason] = useState([])
     const refCard = useRef()
 
     let categorie = genres.includes("é") ? genres.replace("é", "e")
@@ -86,7 +87,18 @@ const List = ({genre, genres, setNotAtHome}) =>{
 
       const handleToggle = (myAnime) => {
         setAnime(myAnime)
-        setOpen(!open);
+        setAnimeBySeason(allAnimes.filter(nameOfAnime => {
+          let firstPart = nameOfAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
+          let secondPart = nameOfAnime.name.split(" ").length > 1 ? nameOfAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+          let thirdPart = nameOfAnime.name.split(" ").length > 2 ? nameOfAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+
+          let firstPartToCheck = myAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
+          let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+          let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+
+          return firstPart + " " + secondPart + " " + thirdPart === firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck
+      }))
+        setOpen(true);
       };
 
       let currentScrollPosition = 0
@@ -130,7 +142,7 @@ const List = ({genre, genres, setNotAtHome}) =>{
           sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
           open={open} 
         >
-          {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
+          {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
         </Backdrop>
           <div className="grid-container" >
             <h1>{DisplayAllCategory}</h1>

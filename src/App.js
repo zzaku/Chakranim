@@ -33,7 +33,7 @@ function App() {
             {!search && <Navbar notAtHome={notAtHome} setNotAtHome={setNotAtHome} />}
             <Search open={search} notAtHome={notAtHome} setNotAtHome={setNotAtHome} startSearching={startSearching} allAnimes={allAnimes} animeToFind={animeToFind} />
           <Routes>
-                <Route path='/' element={<Home setNotAtHome={setNotAtHome} />} />
+                <Route path='/' element={<Home allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />
                 <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} epFilter={epFilter} />} />
                 <Route path='/list/animes' element={<AllAnimes allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />
             </Routes>

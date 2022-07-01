@@ -2,9 +2,9 @@ import React, { createRef } from "react";
 import './style/Card.css'
 
 const config = {
-    scale: 1.03, // How large to scale the item: 1.00 -> 1.10~
-    rotation: 0.3, // Rotation modifier: 0.1 (more) -> 0.5 (less)
-    alpha: 0.4, // Alpha channel modifer: 1.01 -> 1.1~
+    scale: 1.05, // How large to scale the item: 1.00 -> 1.10~
+    rotation: 0.1, // Rotation modifier: 0.1 (more) -> 0.5 (less)
+    alpha: 1.4, // Alpha channel modifer: 1.01 -> 1.1~
     shadow: 8 // How much the shadow moves
   };
   
@@ -21,8 +21,8 @@ const config = {
       this.state = {
         rotateX: 0,
         rotateY: 0,
-        shadowMovement: 20,
-        shadowSize: 50,
+        shadowMovement: 0,
+        shadowSize: 0,
         scale: 1,
         angle: 0,
         alpha: 0
@@ -75,8 +75,8 @@ const config = {
   
       const deltaX = (pageX - bounds.left - scrollLeft) - centerX;
       const deltaY = (pageY - bounds.top - scrollTop) - centerY;
-      const rotateX = (deltaY - offsetY) * (0.08 * widthMultiplier);
-      const rotateY = (offsetX - deltaX) * (0.04 * widthMultiplier);
+      const rotateX = (deltaY - offsetY) * (3.7 * widthMultiplier);
+      const rotateY = (offsetX - deltaX) * (0.00 * widthMultiplier);
       const angleRad = Math.atan2(deltaY, deltaX);
       const angleRaw = angleRad * 180 / Math.PI - 90;
       const angleDeg = angleRaw < 0 ? angleRaw + 360 : angleRaw;
@@ -89,7 +89,7 @@ const config = {
     }
   
     __handleMouseLeave() {
-      this.__buildState(0, 0, 20, 50, 1, 0, 0);
+      this.__buildState(0, 0, 0, 0, 1, 0, 0.4);
     }
   
     __renderChildren(children) {

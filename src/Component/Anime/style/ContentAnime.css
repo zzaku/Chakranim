@@ -96,6 +96,14 @@
     align-items: center;
 }
 
+.container-langue{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .container-vod-anime{
     display: flex;
     flex-direction: column;

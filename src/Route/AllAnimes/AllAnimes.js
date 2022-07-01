@@ -13,15 +13,15 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import "./style/AllAnimes.css"
 
 
-const AllAnimes = ({setNotAtHome}) => {
+const AllAnimes = ({allAnimes, setNotAtHome}) => {
 
     let withoutDoublon = [{}] 
     const [nextPage, setNextPage] = useState(1)
     const [animes, setAnimes] = useState([])
     const [anime, setAnime] = useState([]);
+    const [animeBySeason, setAnimeBySeason] = useState([])
     const [open, setOpen] = useState(false);
     const getAll = useContext(epContext)
-
     const wrapperRef = useRef(null);
 
     const [getGenres, setGetGenres] = useState([])
@@ -47,7 +47,7 @@ const AllAnimes = ({setNotAtHome}) => {
 
     useEffect( () => {
       if(getGenres[0] && getGenres[0].length > 0){
-          fetch(`http://localhost:4000/VOD/Allanimes/genres?${getParam(getGenres)}`)
+          fetch(`http://localhost:4000/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
           .then(res => res.json())
           .then(datas => setAnimes(datas))
       } else {
@@ -81,6 +81,17 @@ const AllAnimes = ({setNotAtHome}) => {
 
       const handleToggle = (myAnime) => {
         setAnime(myAnime)
+        setAnimeBySeason(allAnimes.filter(nameOfAnime => {
+            let firstPart = nameOfAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
+            let secondPart = nameOfAnime.name.split(" ").length > 1 ? nameOfAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+            let thirdPart = nameOfAnime.name.split(" ").length > 2 ? nameOfAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+
+            let firstPartToCheck = myAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
+            let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+            let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+
+            return firstPart + " " + secondPart + " " + thirdPart === firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck
+        }))
         setOpen(!open);
       };
 
@@ -93,7 +104,25 @@ const AllAnimes = ({setNotAtHome}) => {
             for (let anime in animes) {
       
                 // Extract the name
-                let animeName = animes[anime]['name'].includes("×") ? animes[anime]['name'].replace("×", "X").toUpperCase() : animes[anime]['name'].toUpperCase();
+                let animeName =  animes[anime]['name'].includes("-") && !animes[anime]['name'].includes("Saison") && !animes[anime]['name'].includes(".") ?
+                 animes[anime]['name'].split("OAV")[0].replaceAll("-", " ").toUpperCase() : 
+                 animes[anime]['name'].includes("-") && animes[anime]['name'].includes("Saison") && !animes[anime]['name'].includes(".") ? 
+                 animes[anime]['name'].split("Saison")[0].replaceAll(".", " ").replaceAll("-", " ").toUpperCase() : 
+                 animes[anime]['name'].includes("OAV") && !animes[anime]['name'].includes(".") ? 
+                 animes[anime]['name'].split("OAV")[0].toUpperCase() : 
+                 animes[anime]['name'].includes("OAV") && animes[anime]['name'].includes(".") ? 
+                 animes[anime]['name'].split("OAV")[0].replaceAll(".", " ").toUpperCase() : 
+                 animes[anime]['name'].includes("Saison") && !animes[anime]['name'].includes(".") ? 
+                 animes[anime]['name'].split("Saison")[0].toUpperCase() : 
+                 animes[anime]['name'].includes("Saison") && animes[anime]['name'].includes(".") ? 
+                 animes[anime]['name'].split("Saison")[0].replaceAll(".", " ").toUpperCase() : 
+                 animes[anime]['name'].includes(".") ? 
+                 animes[anime]['name'].replace(".", " ").toUpperCase() : 
+                 animes[anime]['name'].includes("!") ? 
+                 animes[anime]['name'].replace("!", "").toUpperCase() : 
+                 animes[anime]['name'].includes("×") ? 
+                 animes[anime]['name'].replace("×", "X").toUpperCase() : 
+                 animes[anime]['name'].toUpperCase()
 
                 // Use the name as the index
                 uniqueObject[animeName] = animes[anime];
@@ -112,14 +141,12 @@ const AllAnimes = ({setNotAtHome}) => {
             <div className='list-container-anime'>
                 <div className="layout-coontainer">
                 <div className="pagination-content">
-                {getGenres[0] && getGenres[0].length < 1 ? 
                     <div className="pagination">
                         <Stack spacing={10}>
                             <Pagination value={nextPage} count={68} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />
                         </Stack>
                     </div>
-                    : 
-                     null}
+                    
                         <div className="filters">
                             <Autocomplete
                                 multiple
@@ -152,32 +179,42 @@ const AllAnimes = ({setNotAtHome}) => {
                     </div>
                     
                     <div className="grid-container">
-                        {!getGenres[0] || getGenres[0].length < 1 ?
                             <div className="previouspage">
                                 <Button style={{color: "black"}} onClick={() => setNextPage(nextPage-1)}><ArrowBackIosNewTwoTone style={{backgroundColor:"white", borderRadius: "15px"}} /></Button>
                             </div>
-                        :
-                        null}
                             <Backdrop
                                 sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
                                 open={open} 
                                 >
-                                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
+                                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
                             </Backdrop>
-                            {getGenres[0] && getGenres[0].length > 0 ?
-                                <div className="container-layout">
-                                    {withoutDoublon.map(anime => {
-                                        return(
-                                                <div className="card-content" onClick={() => handleToggle(anime)} key={anime._id}>
-                                                    <img style={{height: "100%", width: "100%"}} src={anime.image} alt={anime.name}/>
-                                                </div>
-                                            )
-                                        })
-                                    } 
-                                </div>
-                            :
+                            
+                               
                             <Grid className="grid" container spacing={2} padding="2%">
-                            {withoutDoublon.map(anime => {
+                            {getGenres[0] && getGenres[0].length > 0 ?
+                            withoutDoublon.map(anime => {
+                                return(
+                                    <>
+                                        <Grid item xs={4} md={2} onClick={() => handleToggle(anime)} key={anime._id}>
+                                            <div className="card-content">
+                                                <Card sx={{ maxWidth: "auto"}}>
+                                                    <CardActionArea >
+                                                        <CardMedia
+                                                            component="img"
+                                                            height="auto"
+                                                            image={anime.image}
+                                                            alt="green iguana"
+                                                        />
+                                                    </CardActionArea>
+                                                </Card>
+                                            </div>
+                                            
+                                        </Grid>
+                                    </>
+                                    )
+                                })
+                            :
+                            withoutDoublon.map(anime => {
                                 return(
                                     <>
                                         <Grid item xs={4} md={2} onClick={() => handleToggle(anime)} key={anime._id}>
@@ -198,24 +235,12 @@ const AllAnimes = ({setNotAtHome}) => {
                                     </>
                                     )
                                 }) 
-                            } 
-                                </Grid> 
                             }
-                            {!getGenres[0] || getGenres[0].length < 1 ?
+                            </Grid> 
                             <div className="nextpage">
                                 <Button style={{color: "black"}} onClick={() => setNextPage(nextPage+1)}><ArrowForwardIosIcon style={{backgroundColor:"white", borderRadius: "15px"}}/></Button>
                             </div>
-                            :
-                            null}
                     </div>
-                    {getGenres[0] && getGenres[0].length <= 0 ?
-                    <div className="pagination">
-                        <Stack spacing={10}>
-                            <Pagination count={68} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />
-                        </Stack>
-                    </div> 
-                    : 
-                    null}
                 </div>
             </div>
         </div>
