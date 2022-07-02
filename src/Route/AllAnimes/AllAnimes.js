@@ -186,7 +186,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
                                 sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
                                 open={open} 
                                 >
-                                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
+                                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} open={open} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
                             </Backdrop>
                             
                                

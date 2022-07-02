@@ -88,11 +88,28 @@
     align-items: center;
 }
 
-.container-saison-anime{
+.container-current-saison-anime{
     display: flex;
-    height: 100%;
+    height: auto;
     width: 100%;
     justify-content: space-around;
+    align-items: center;
+}
+
+.container-saison-anime{
+    display: flex;
+    height: auto;
+    width: 30%;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttonGroup-saison{
+    display: flex;
+    height: auto;
+    width: auto;
+    margin-left: 5%;
+    justify-content: center;
     align-items: center;
 }
 

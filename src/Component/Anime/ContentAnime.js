@@ -4,10 +4,12 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import { Link } from '@mui/material';
+import { Link } from 'react-router-dom';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import { epContext } from '../../App';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import { useState } from 'react';
+import { Button } from '@mui/material';
 
 const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSuite, descriptionSuite2, setDescriptionSuite, setOpen, setNotAtHome}) => {
 
@@ -15,7 +17,6 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
     const setEp = useContext(epContext)
     const setEpFilter = useContext(epContext)
     const openSearch = useContext(epContext)
-    console.log(anime)
     let distributionTemp = anime.desc ? anime.desc.split("Acteur") : null
     let description = anime.desc ? anime.desc.split("Acteur")[0] : null
     let distribution = anime.desc ? "Acteur" + anime.desc.split("Acteur")[distributionTemp.length-1].replaceAll("\n", "") : null
@@ -25,23 +26,14 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
     let LastPartdescription = anime.desc && anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") + "..."
 
     //const [lecteur, setLecteur] = useState({Lecteur: sibnet})
-    const allLinks = [anime.links, anime.nextLinks]
-
-    const menuRef = useRef()
+    const allLinks = useMemo(() => [anime.links, anime.nextLinks], [anime])
     const seasonRef = useRef()
-    const [seasonSlected, setAgeSeasonSelected] = useState('');
-    const handleChange = (event) => {
-        setAgeSeasonSelected(event.target.value);
-    };
-
-    
-    
-
+   
       const filterDoublonAnime = () => {
         let newArray = [];
         let uniqueObject = {};
 
-        if(allLinks[0]){
+        if(anime.links){
 
             for (let anime in allLinks[0]) {
       
@@ -58,46 +50,62 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
         }
         return newArray 
     }
+
     withoutDoublon = [{episode: filterDoublonAnime()}]
-    
 
-    const setLecteurEpisode = (tab, episode) => {
-        return tab.filter(elem => elem[0].episode === episode)
-    }
+    const [seasonSelected, setSeasonSelected] = useState(false);
+    const [langueSelected, setLangueSelected] = useState(false);
 
-    const getNbrOfSeason = () => {
-            let otherSeason = animeBySeason.filter(elem => elem.saison !== anime.saison)
-            let newArray = [];
-            let uniqueObject = {};
+    useEffect(() => {
+      setSeasonSelected(false)
+      setLangueSelected(false)
+      withoutDoublon = [{episode: filterDoublonAnime()}]
+    }, [anime])
+
+
+const setLecteurEpisode = (tab, episode) => {
+  return tab.filter(elem => elem[0].episode === episode)
+}
+
+const getNbrOfSeason = () => {
+  let otherSeason = animeBySeason.filter(elem => elem.saison !== anime.saison)
+  let newArray = [];
+  let uniqueObject = {};
+  
+  if(otherSeason){
     
-            if(otherSeason){
-    
-                for (let anime in otherSeason) {
+    for (let anime in otherSeason) {
           
-                    // Extract the name
-                    let animeName = otherSeason[anime]['saison'];
-    
-                    // Use the name as the index
-                    uniqueObject[animeName] = otherSeason[anime];
-                }
-    
-                for (let anime in uniqueObject){
-                    newArray.push(uniqueObject[anime])
-                }
-            }
-            return newArray 
+      // Extract the name
+      let animeName = otherSeason[anime]['saison'];
+      
+      // Use the name as the index
+      uniqueObject[animeName] = otherSeason[anime];
     }
-
-
-    let nbrSeason = getNbrOfSeason()
-    console.log(nbrSeason)
-
-    let seasonChanged = (otherSeason, langue) => {
-        setAnime([])
-        
+    
+    for (let anime in uniqueObject){
+      newArray.push(uniqueObject[anime])
     }
+  }
+  return newArray 
+}
 
-    return (
+let nbrSeason = getNbrOfSeason()
+
+let seasonChanged = (otherSeason, langue) => {
+  let testSeason = animeBySeason.filter(elem => elem.saison === otherSeason.saison && elem.langue === langue || elem.saison === otherSeason.saison)[0]
+  if(testSeason){
+    setAnime(testSeason)
+  }
+}
+
+let testLangue = animeBySeason.filter(elem => elem.saison === anime.saison && elem.langue === (anime.langue === "VF" ? "VOSTFR" : "VF"))[0]
+const onLangueChanged = () => {
+    setAnime(testLangue)
+}
+console.log(animeBySeason)
+
+return (
       <div className="display-ep-anime" ref={wrapperRef}>
         <div className="container-display">
           <div className="container-title-anime">
@@ -153,7 +161,7 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
                 durée: {anime.duree && anime.duree.replace(" ", "").trim()}
               </p>
             </div>
-            <div ref={seasonRef} className="container-saison-anime">
+            <div ref={seasonRef} className="container-current-saison-anime">
               {anime.saison === "Film" ? (
                 <h3 style={{ fontSize: "20px", color: "cyan" }}>Film :</h3>
               ) : (
@@ -163,23 +171,23 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
               )}
               {nbrSeason[0] ? (<div ref={seasonRef} className="container-saison-anime">
               
-                    <InputLabel id="Saison">Saison</InputLabel>
-                    
+                    <h3 id="Saison"> Autre saison</h3>
+                    <div className='buttonGroup-saison'>
                     {nbrSeason.map((elem) => {
                       return (
-                        <div>
-                          {elem.saison === "00" ? null : (
-                            <MenuItem
-                              onClick={() => seasonChanged(elem, anime.langue)}
-                              value={"season"}
-                            >
-                              {elem.saison}
-                            </MenuItem>
-                          )}
-                        </div>
+                          <ButtonGroup style={{backgroundColor: "black"}} size="large" aria-label="large button group">
+                            {elem.saison === "00" ? null : (
+                              <Button
+                                onClick={() => setSeasonSelected(true) + seasonChanged(elem, anime.langue)}
+                                value={"season"}
+                              >
+                                {elem.saison}
+                              </Button>
+                            )}
+                          </ButtonGroup>
                       );
                     })}
-                  
+                  </div>
                </div>
               ) : null}
             </div>
@@ -187,16 +195,16 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
               <h3 style={{ fontSize: "20px", color: "cyan" }}>
                 langue : {anime.langue}
               </h3>
-              <Link href="" underline="none">
+              {testLangue ? <Button onClick={() => setLangueSelected(true) + onLangueChanged(anime.saison, anime.langue === "VF" ? "VOSTFR" : "VF")}>
                 {anime.langue === "VF"
                   ? "regarder en VOSTFR"
                   : "regarder en VF"}
-              </Link>
+              </Button> : null}
             </div>
           </div>
           <div className="container-vod-anime">
             {anime.saison === "Film" ? null : <h2>Liste des épisodes</h2>}
-            <div className="container-episode-anime">
+            {seasonSelected || langueSelected ? null : <div className="container-episode-anime">
               {withoutDoublon[0].episode ? (
                 withoutDoublon[0].episode.map((elem) => {
                   return (
@@ -254,7 +262,7 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
               ) : (
                 <h2>Prochainement</h2>
               )}
-            </div>
+            </div>}
           </div>
         </div>
       </div>
