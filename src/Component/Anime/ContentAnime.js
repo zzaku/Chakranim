@@ -103,7 +103,6 @@ let testLangue = animeBySeason.filter(elem => elem.saison === anime.saison && el
 const onLangueChanged = () => {
     setAnime(testLangue)
 }
-console.log(animeBySeason)
 
 return (
       <div className="display-ep-anime" ref={wrapperRef}>
@@ -173,18 +172,20 @@ return (
               
                     <h3 id="Saison"> Autre saison</h3>
                     <div className='buttonGroup-saison'>
-                    {nbrSeason.map((elem) => {
+                    {nbrSeason.map((elem, i) => {
                       return (
-                          <ButtonGroup style={{backgroundColor: "black"}} size="large" aria-label="large button group">
-                            {elem.saison === "00" ? null : (
-                              <Button
-                                onClick={() => setSeasonSelected(true) + seasonChanged(elem, anime.langue)}
-                                value={"season"}
-                              >
-                                {elem.saison}
-                              </Button>
-                            )}
-                          </ButtonGroup>
+                        <div key={elem._id + i}>
+                            <ButtonGroup style={{backgroundColor: "black"}} size="large" aria-label="large button group">
+                              {elem.saison === "00" ? null : (
+                                <Button
+                                  onClick={() => setSeasonSelected(true) + seasonChanged(elem, anime.langue)}
+                                  value={"season"}
+                                >
+                                  {elem.saison}
+                                </Button>
+                              )}
+                            </ButtonGroup>
+                        </div>
                       );
                     })}
                   </div>
@@ -206,9 +207,9 @@ return (
             {anime.saison === "Film" ? null : <h2>Liste des épisodes</h2>}
             {seasonSelected || langueSelected ? null : <div className="container-episode-anime">
               {withoutDoublon[0].episode ? (
-                withoutDoublon[0].episode.map((elem) => {
+                withoutDoublon[0].episode.map((elem, i) => {
                   return (
-                    <div className="vod-anime" key={anime._id}>
+                    <div className="vod-anime" key={anime._id + i}>
                       <Link
                         to={`/watch/${anime.name
                           .replaceAll(" ", "-")

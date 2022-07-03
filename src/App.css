@@ -2,8 +2,10 @@ body{
     background-color: black;
 }
 
-.app{
-    height: 900vh;
-    width: 100%;
+.App{
     display: flex;
+    height: auto;
+    width: 100%;
+    flex-direction: column;
 }
+

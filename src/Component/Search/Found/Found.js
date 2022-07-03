@@ -4,14 +4,20 @@ import { Backdrop } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress';
 import ContentAnime from '../../Anime/ContentAnime'
 
-const Found = ({animeFound, setNotAtHome}) => {
+const Found = ({allAnimes, animeFound, setNotAtHome}) => {
 
     const [anime, setAnime] = useState([])
     const [open, setOpen] = useState(false)
+    const [animeBySeason, setAnimeBySeason] = useState([])
+    const [descriptionSuite, setDescriptionSuite] = useState(false)
     let withoutDoublon = []
     const wrapperRef = useRef();
 
-    let descriptionSuite = anime.desc ? anime.desc.split("Acteur")[0].length < 400 ? false : true : null
+    useEffect(() => {
+        if(anime.desc){
+        setDescriptionSuite(anime.desc.split("Acteur")[0].length < 400 ? false : true)
+        }
+    }, [anime])
 
     useEffect(() => {
         /**
@@ -58,7 +64,7 @@ const Found = ({animeFound, setNotAtHome}) => {
                  animeFound[anime]['name'].includes("×") ? 
                  animeFound[anime]['name'].replace("×", "X").toUpperCase() : 
                  animeFound[anime]['name'].toUpperCase()
-                 console.log(animeName)
+
                 // Use the name as the index
                 uniqueObject[animeName] = animeFound[anime];
             }
@@ -74,11 +80,21 @@ const Found = ({animeFound, setNotAtHome}) => {
     const handleClose = () => {
         setOpen(false);
         setAnime([])
-        descriptionSuite = false
     };
 
-    const handleAnime = (anime) => {
-        setAnime(anime)
+    const handleAnime = (myAnime) => {
+        setAnime(myAnime)
+        setAnimeBySeason(allAnimes.filter(nameOfAnime => {
+            let firstPart = nameOfAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
+            let secondPart = nameOfAnime.name.split(" ").length > 1 ? nameOfAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+            let thirdPart = nameOfAnime.name.split(" ").length > 2 ? nameOfAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+  
+            let firstPartToCheck = myAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
+            let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+            let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
+  
+            return firstPart + " " + secondPart + " " + thirdPart === firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck
+        }))
         setOpen(true)
     }
 
@@ -88,7 +104,7 @@ const Found = ({animeFound, setNotAtHome}) => {
                 sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
                 open={open} 
             >
-                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} descriptionSuite={descriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
+                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
             </Backdrop>
             <div className='found-container'>
                 {withoutDoublon.map(anime => {

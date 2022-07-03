@@ -20,7 +20,7 @@ const config = {
       super(props);
       this.state = {
         rotateX: 0,
-        rotateY: 0,
+        rotateY: 500,
         shadowMovement: 0,
         shadowSize: 0,
         scale: 1,
@@ -75,8 +75,8 @@ const config = {
   
       const deltaX = (pageX - bounds.left - scrollLeft) - centerX;
       const deltaY = (pageY - bounds.top - scrollTop) - centerY;
-      const rotateX = (deltaY - offsetY) * (3.7 * widthMultiplier);
-      const rotateY = (offsetX - deltaX) * (0.00 * widthMultiplier);
+      const rotateX = 0;
+      const rotateY = 360;
       const angleRad = Math.atan2(deltaY, deltaX);
       const angleRaw = angleRad * 180 / Math.PI - 90;
       const angleDeg = angleRaw < 0 ? angleRaw + 360 : angleRaw;
@@ -85,11 +85,11 @@ const config = {
       const shadowSize = 120;
       const alpha = this.__calculateAlphaFromCenter(distanceFromCenter);
   
-      this.__buildState(rotateX, rotateY, shadowMovement, shadowSize, config.scale, angleDeg, alpha);
+      this.__buildState(rotateX, rotateY, shadowMovement, shadowSize, config.scale, angleDeg, 0.4);
     }
   
     __handleMouseLeave() {
-      this.__buildState(0, 0, 0, 0, 1, 0, 0.4);
+      this.__buildState(0, 500, 0, 0, 1, 0, 0);
     }
   
     __renderChildren(children) {

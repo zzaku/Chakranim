@@ -35,7 +35,6 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     useEffect(() => {
       if(anime){
         setDescriptionSuite(anime.desc.split("Acteur")[0].length < 400 ? false : true)
-        console.log(anime.desc.split("Acteur")[0].length)
       }
     }, [anime])
 
@@ -149,9 +148,9 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
             <div className="list-card snaps-inline" ref={cardListRef}>
               {displayPreviousButton(genres)}
               {withoutDoublon[0][genres]
-                ? withoutDoublon[0][genres].map((genre) => (
+                ? withoutDoublon[0][genres].map((genre, i) => (
                     <div
-                      key={genre._id}
+                      key={genre._id + i}
                       className="card-container"
                       style={{ cursor: "pointer" }}
                       onClick={() => handleToggle(genre)}

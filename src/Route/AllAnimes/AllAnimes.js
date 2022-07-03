@@ -23,13 +23,11 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
     const [open, setOpen] = useState(false);
     const getAll = useContext(epContext)
     const wrapperRef = useRef(null);
-
+    const [descriptionSuite, setDescriptionSuite] = useState(false)
     const [getGenres, setGetGenres] = useState([])
     const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance"], [])
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-    let descriptionSuite = anime.desc ? anime.desc.split("Acteur")[0].length < 400 ? false : true : null
 
     let getAll15Animes = `http://localhost:4000/VOD/allanimes?page=${nextPage}`
 
@@ -44,6 +42,12 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
       }
       return params
   }
+
+    useEffect(() => {
+        if(anime.desc){
+        setDescriptionSuite(anime.desc.split("Acteur")[0].length < 400 ? false : true)
+        }
+    }, [anime])
 
     useEffect( () => {
       if(getGenres[0] && getGenres[0].length > 0){
@@ -186,16 +190,15 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
                                 sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
                                 open={open} 
                                 >
-                                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} open={open} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
+                                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} open={open} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
                             </Backdrop>
                             
                                
                             <Grid className="grid" container spacing={2} padding="2%">
                             {getGenres[0] && getGenres[0].length > 0 ?
-                            withoutDoublon.map(anime => {
+                            withoutDoublon.map((anime, i) => {
                                 return(
-                                    <>
-                                        <Grid item xs={4} md={2} onClick={() => handleToggle(anime)} key={anime._id}>
+                                        <Grid key={anime._id + i} item xs={4} md={2} onClick={() => handleToggle(anime)}>
                                             <div className="card-content">
                                                 <Card sx={{ maxWidth: "auto"}}>
                                                     <CardActionArea >
@@ -207,17 +210,14 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
                                                         />
                                                     </CardActionArea>
                                                 </Card>
-                                            </div>
-                                            
+                                            </div>         
                                         </Grid>
-                                    </>
                                     )
                                 })
                             :
-                            withoutDoublon.map(anime => {
+                            withoutDoublon.map((anime, i) => {
                                 return(
-                                    <>
-                                        <Grid item xs={4} md={2} onClick={() => handleToggle(anime)} key={anime._id}>
+                                        <Grid key={anime._id + i} item xs={4} md={2} onClick={() => handleToggle(anime)}>
                                             <div className="card-content">
                                                 <Card sx={{ maxWidth: "auto"}}>
                                                     <CardActionArea >
@@ -230,9 +230,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
                                                     </CardActionArea>
                                                 </Card>
                                             </div>
-                                            
                                         </Grid>
-                                    </>
                                     )
                                 }) 
                             }

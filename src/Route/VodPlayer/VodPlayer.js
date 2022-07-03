@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import './style/VodPlayer.css'
 import Backdrop from '@mui/material/Backdrop';
 import { Link } from 'react-router-dom';
+import background from './test.jpg'
 
 const VodPlayer = ({ep, setEp, epFilter}) => {
 
@@ -52,10 +53,8 @@ const VodPlayer = ({ep, setEp, epFilter}) => {
         let newLecteur = ep.current_episode.filter(lecteur => lecteur[0].format_VOD === nameOfLecteur)
         setNext(false)
         setLecteur(newLecteur)
-        console.log(newLecteur)
     }
 
-    console.log(checked)
     const setModCinema = () => {
         if(checked){
             iframeContainer.current.style.width = "69%"
@@ -81,7 +80,7 @@ const VodPlayer = ({ep, setEp, epFilter}) => {
 
 
     return (
-        <div className='container-vod-player'>
+        <div className='container-vod-player' >
             <div className='vod'>
                 <div className='watch'>
                     <div className='watch-container'>

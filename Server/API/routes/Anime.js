@@ -53,7 +53,7 @@ const scrapper = setInterval(async () => {
            return await getAllNameOfNewEp(posts)
         }
     return
-}, 18000000)
+}, 3600000)
 
 //SWAP ALL PREVIOUS ANIME EP WITH NEW EP
 const getAllNameOfNewEp = async (episodes) => {

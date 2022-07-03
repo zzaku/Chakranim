@@ -19,9 +19,9 @@ const Extrait = () => {
     
     return (
         <div className="extrait-video">
-             <Player ref={playerRef} fluid={false} autoPlay={true} loop={true} url="https://www.youtube.com/watch?v=p4A4rklgKtw"  muted={son}>
+             <Player height={"90vh"} ref={playerRef} fluid={false} autoPlay={true} loop={true} url="https://www.youtube.com/watch?v=p4A4rklgKtw"  muted={son}>
                 <source src={extrait} />
-                <ControlBar autoHide={true} disableCompletely={true}/>
+                <ControlBar autoHide={true} disableCompletely={true} />
             </Player>
              <Button variant="outlined" className="muteButton" onClick={() => setSon(son === son ? !son : son)} style={{borderRadius: "50%", color:"white", width: "50px", position: "absolute", height: "50px", zIndex: "2", opacity: "1"}}>{son ? <VolumeOffIcon /> : <VolumeUpIcon />}</Button >
         </div>

@@ -29,7 +29,7 @@ const Search = ({open, notAtHome, setNotAtHome, animeToFind, allAnimes}) => {
         <>
            
                 <Routes>
-                    <Route path='/Search/Animes' element={<Found animeFound={animeFound} setNotAtHome={setNotAtHome} />} />
+                    <Route path='/Search/Animes' element={<Found allAnimes={allAnimes} animeFound={animeFound} setNotAtHome={setNotAtHome} />} />
                     {/*<Footer footerRef={footerRef} />*/}
                 </Routes>
                 
