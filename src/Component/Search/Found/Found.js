@@ -106,7 +106,19 @@ const Found = ({allAnimes, animeFound, setNotAtHome}) => {
             >
                 {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
             </Backdrop>
+            {withoutDoublon.length === 0 ? 
             <div className='found-container'>
+                <div className='resultat-found'>
+                    <h2>Aucun animes trouvé :/</h2>
+                </div>
+                <div style={{width:"100%", justifyContent: "center", height: "0", paddingBottom: "75%", display: "flex"}}><iframe src="https://giphy.com/embed/tRWPEUIpuKAtq" style={{position: "absolute", height: "auto", width: "auto"}} frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><a href="https://giphy.com/gifs/naruto-gaara-tRWPEUIpuKAtq"></a>
+            </div>
+            :
+            <div className='found-container'>
+                <div className='resultat-found'>
+                    <h2>Résultats : {withoutDoublon.length} {withoutDoublon.length > 1 ? "animés trouvés" : "animé trouvé"}</h2>
+                </div>
+                <div className='found-container-list'> 
                 {withoutDoublon.map(anime => {
                     return (
                         <div key={anime._id} className='anime-card' onClick={() => handleAnime(anime)}>
@@ -116,7 +128,8 @@ const Found = ({allAnimes, animeFound, setNotAtHome}) => {
                    
                 })
                 }
-            </div>
+                </div>
+            </div>}
         </div>
     )
 }

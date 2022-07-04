@@ -10,7 +10,6 @@ import Checkbox from '@mui/material/Checkbox';
 import './style/VodPlayer.css'
 import Backdrop from '@mui/material/Backdrop';
 import { Link } from 'react-router-dom';
-import background from './test.jpg'
 
 const VodPlayer = ({ep, setEp, epFilter}) => {
 

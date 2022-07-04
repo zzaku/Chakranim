@@ -23,7 +23,7 @@ const Extrait = () => {
                 <source src={extrait} />
                 <ControlBar autoHide={true} disableCompletely={true} />
             </Player>
-             <Button variant="outlined" className="muteButton" onClick={() => setSon(son === son ? !son : son)} style={{borderRadius: "50%", color:"white", width: "50px", position: "absolute", height: "50px", zIndex: "2", opacity: "1"}}>{son ? <VolumeOffIcon /> : <VolumeUpIcon />}</Button >
+             <Button variant="outlined" className="muteButton" onClick={() => setSon(son === son ? !son : son)} style={{borderRadius: "50%", border: "1px solid", color:"white", width: "50px", position: "absolute", height: "50px", zIndex: "2", opacity: "1"}}>{son ? <VolumeOffIcon /> : <VolumeUpIcon />}</Button >
         </div>
     )
 }

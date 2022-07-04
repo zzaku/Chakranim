@@ -6,6 +6,9 @@ import ContentAnime from '../../Anime/ContentAnime';
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@mui/material';
 import ParallaxHover from './Card/Card';
+import Neon from './Neon/Neon';
+import imgKi from './ki.png'
+import goku from './kamea.gif'
 import "./style/List.css"
 
 
@@ -21,6 +24,8 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     const [descriptionSuite, setDescriptionSuite] = useState(false)
     const [animeBySeason, setAnimeBySeason] = useState([])
     const refCard = useRef()
+    const neonContainerRef = useRef()
+    const neonRef = useRef()
 
     let categorie = genres.includes("é") ? genres.replace("é", "e")
         : genres.includes("è") ? genres.replaceAll("è", "e")
@@ -37,6 +42,12 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
         setDescriptionSuite(anime.desc.split("Acteur")[0].length < 400 ? false : true)
       }
     }, [anime])
+
+    useEffect(() => {
+      
+        neonRef.current.firstChild.src = imgKi
+      
+    }, [neonRef])
 
     useEffect(() => {
         /**
@@ -145,30 +156,40 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
         </Backdrop>
           <div className="grid-container" >
             <h1>{DisplayAllCategory}</h1>
-            <div className="list-card snaps-inline" ref={cardListRef}>
-              {displayPreviousButton(genres)}
-              {withoutDoublon[0][genres]
-                ? withoutDoublon[0][genres].map((genre, i) => (
-                    <div
-                      key={genre._id + i}
-                      className="card-container"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleToggle(genre)}
-                    >
-                      <ParallaxHover width={"700"} height={"700"} refCard={refCard} >
-                        <img
-                          alt={"carde-anime: " + genre.name}
-                          className="posters"
-                          style={{ height: "100%", width: "100%" }}
-                          src={genre.image && genre.image}
-                        />
-                      </ParallaxHover>
-                    </div>
-                  ))
-                : 
-                null}
-              {displayNextButton(genres)}
-            </div>
+            <div ref={neonContainerRef} className='grid-list-container'>
+              
+              
+              <div ref={neonRef} className='animation'>
+                <Neon imgKi={imgKi} neonContainerHeight={neonContainerRef.current && neonContainerRef.current.offsetHeight} neonContainerWidth={neonContainerRef.current && neonContainerRef.current.offsetWidth} />
+              <div className='goku-gif'>
+                <img style={{display: "flex", height: "100%", width: "100%"}} src={goku} />
+              </div>
+              </div>
+                <div className="list-card snaps-inline" ref={cardListRef}>
+                  {displayPreviousButton(genres)}
+                  {withoutDoublon[0][genres]
+                    ? withoutDoublon[0][genres].map((genre, i) => (
+                        <div
+                          key={genre._id + i}
+                          className="card-container"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => handleToggle(genre)}
+                        >
+                          <ParallaxHover width={"700"} height={"700"} refCard={refCard} >
+                            <img
+                              alt={"carde-anime: " + genre.name}
+                              className="posters"
+                              style={{ height: "100%", width: "100%" }}
+                              src={genre.image && genre.image}
+                            />
+                          </ParallaxHover>
+                        </div>
+                      ))
+                    : 
+                    null}
+                  {displayNextButton(genres)}
+                </div>
+              </div>
           </div>
       </div>
     );

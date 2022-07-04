@@ -1,7 +1,7 @@
 import { NavLink, Nav, Bars, NavMenu } from "./NavbarElements";
 import { FcSearch } from 'react-icons/fc';
 import { TiThList } from 'react-icons/ti';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useNavigate } from "react-router-dom";
 import { epContext } from "../../App";
@@ -14,9 +14,19 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
   const [appearNav, setAppearNav] = useState(true)
   const nav = useRef()
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if(nav.current){
+      if(scrollTop === 0){
+        nav.current.style.background = "transparent"
+      }
+    }
+  }, [open.search])
 
     window.addEventListener('scroll',function(){
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      console.log(scrollTop)
       if(nav.current){
         if(scrollTop === 0){
           nav.current.style.background = "transparent"
@@ -39,11 +49,11 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                 </NavLink>
                 :
                 <NavLink to={"/"}>
-                    <TiThList size={"40px"} />
+                    <h1>Chakranime</h1>
                 </NavLink>}
                 <NavMenu style={{justifyContent: "space-around", width: "50%"}}>
                   <NavLink to={"/list/animes"}>
-                    <h2>La liste complète</h2>
+                    <h2>Touts les animes</h2>
                   </NavLink>
                 </NavMenu>
                 
@@ -64,7 +74,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                     <div className="search-button" style={{height: "100%", width: "50%"}}>
                           <Button onClick={() => open.setSearch(true)} style={{display: "flex", height: "auto", width: "11%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}} ><FcSearch style={{display: "flex", justifyContent: "center", alignItems: "center"}} size={"40px"} cursor="pointer" /></Button>
                           <div className="search-input">
-                            <TextField onChange={(val) => open.setStartSearching(true) + open.setAnimeToFind(val.target.value) + navigate("/Search/Animes")} className="text-field" style={{background: "white", color: "black", borderRadius: "200px 200px 200px 200px"}} id="standard" label="Recherche ton anime" variant="standard" />
+                            <TextField onChange={(val) => open.setStartSearching(true) + open.setAnimeToFind(val.target.value) + navigate("/Search/Animes")} autoComplete="off" className="text-field" style={{background: "white", color: "black", borderRadius: "200px 200px 200px 200px"}} id="standard" label="Recherche ton anime" variant="standard" />
                           </div>
                     </div>
                 </Nav>

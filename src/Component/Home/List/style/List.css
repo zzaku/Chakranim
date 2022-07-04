@@ -59,11 +59,23 @@
     color: white;
 }
 
+.grid-list-container{
+    height: 100%;
+    width: 100%;
+    position: relative;;
+}
+
+.goku-gif{
+    display: flex;
+    height: 50%;
+    width: 50%;
+}
+
 .list-card{
     --spacer: 3rem;
     height: 100%;
     width: 100%;
-    padding: 1rem var(--spacer) 4rem var(--spacer);
+    padding: 5rem var(--spacer) 4rem var(--spacer);
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 14%;
@@ -81,6 +93,12 @@
 
 .snaps-inline > * {
     scroll-margin-inline: 0;
+}
+
+.animation{
+    position: absolute;
+    height: 50%;
+    width: 18%;
 }
 
 h1{

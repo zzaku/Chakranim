@@ -30,10 +30,15 @@
     -moz-box-shadow: 9px 5px 49px 68px rgba(0,0,0,1);
 }
 
+.neon1{
+    position: absolute;
+    
+}
+
 .list-container{
     height: 98%;
     width: 98%;
     display: grid;
-    grid-template-rows: repeat(6, auto);
+    grid-template-rows: repeat(6, 550px);
     
 }

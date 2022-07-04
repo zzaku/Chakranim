@@ -64,11 +64,30 @@
 
 .filters{
     margin-top: 2%;
+    padding-top: 5px;
     display: flex;
+    flex-direction: row;
     height: auto;
     width: 100%;
     background: white;
     border-radius: 15px;
+}
+
+.filter-bar > div > div{
+    display: flex;
+    height: auto;
+}
+
+.filter-bar{
+    display: flex;
+    height: auto;
+    margin-right: 5%;
+}
+
+.filter-page > h2{
+    display: flex;
+    height: 100%;
+    color: black;
 }
 
 .nextpage{

@@ -49,7 +49,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
         }
     }, [anime])
 
-    useEffect( () => {
+    useEffect(() => {
       if(getGenres[0] && getGenres[0].length > 0){
           fetch(`http://localhost:4000/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
           .then(res => res.json())
@@ -59,7 +59,15 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
           .then(res => res.json())
           .then(data => setAnimes(data))
       }
-    }, [nextPage, getGenres, getAll15Animes])
+    }, [nextPage, getGenres])
+
+    useEffect(() => {
+        if(getGenres[0] && getGenres[0].length > 0){
+            setNextPage(1)
+        } else {
+            setNextPage(1)
+        }
+    }, [getGenres])
 
     useEffect(() => {
         /**
@@ -153,6 +161,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
                     
                         <div className="filters">
                             <Autocomplete
+                                className="filter-bar"
                                 multiple
                                 id="Genres-tags"
                                 options={genres}
@@ -179,13 +188,21 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
                                     <TextField {...params} label="Genres" placeholder="Favorites" />
                                 )}
                             />
+                            <div className="filter-page">
+                                <h3 style={{display: "flex", height: "100%"}}>Page : {nextPage}</h3>
+                            </div>
                         </div> 
                     </div>
                     
                     <div className="grid-container">
-                            <div className="previouspage">
-                                <Button style={{color: "black"}} onClick={() => setNextPage(nextPage-1)}><ArrowBackIosNewTwoTone style={{backgroundColor:"white", borderRadius: "15px"}} /></Button>
-                            </div>
+                        {nextPage === 1 ? 
+                        null 
+                        : 
+                        <div className="previouspage">
+                            <Button style={{color: "black"}} onClick={() => setNextPage(nextPage-1)}><ArrowBackIosNewTwoTone style={{backgroundColor:"white", borderRadius: "15px"}} /></Button>
+                        </div>
+                        }
+                            
                             <Backdrop
                                 sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
                                 open={open} 
@@ -235,9 +252,13 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
                                 }) 
                             }
                             </Grid> 
+                            {nextPage === 68 ?
+                            null
+                            :
                             <div className="nextpage">
                                 <Button style={{color: "black"}} onClick={() => setNextPage(nextPage+1)}><ArrowForwardIosIcon style={{backgroundColor:"white", borderRadius: "15px"}}/></Button>
                             </div>
+                            }
                     </div>
                 </div>
             </div>
