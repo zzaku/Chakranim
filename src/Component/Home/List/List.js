@@ -7,8 +7,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@mui/material';
 import ParallaxHover from './Card/Card';
 import Neon from './Neon/Neon';
-import imgKi from './ki.png'
-import goku from './kamea.gif'
+import goku from './Neon/assets/kamea.gif'
+import jiren from './Neon/assets/jiren.gif'
+import tpGoku from './Neon/assets/tpGoku.gif'
+import gohan from './Neon/assets/gohan.gif'
+import { parseGIF, decompressFrames  } from 'gifuct-js';
 import "./style/List.css"
 
 
@@ -25,7 +28,8 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     const [animeBySeason, setAnimeBySeason] = useState([])
     const refCard = useRef()
     const neonContainerRef = useRef()
-    const neonRef = useRef()
+    const gokuRef = useRef()
+    const jirenRef = useRef()
 
     let categorie = genres.includes("é") ? genres.replace("é", "e")
         : genres.includes("è") ? genres.replaceAll("è", "e")
@@ -43,11 +47,54 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
       }
     }, [anime])
 
+    
+let sumDelay1
+let sumDelay2
+let sumDelay3 = 0
+
     useEffect(() => {
       
-        neonRef.current.firstChild.src = imgKi
-      
-    }, [neonRef])
+      fetch(goku)
+      .then(res => res.arrayBuffer())
+      .then(buff => parseGIF(buff))
+      .then(gif => {
+        sumDelay1 = displayGifOneTime(decompressFrames(gif, true));
+        if(sumDelay1 > 0){
+          setTimeout(() => {
+            fetch(tpGoku)
+            .then(res => res.arrayBuffer())
+            .then(buff => parseGIF(buff))
+            .then(gif => {
+              sumDelay2 = displayGifOneTime(decompressFrames(gif, true));
+              console.log(setDurationFrame(decompressFrames(gif, true)))
+              if(sumDelay2 > 0){
+                  gokuRef.current.src = tpGoku;
+                  gokuRef.current.style.height = "auto";
+                  gokuRef.current.style.width = "auto";
+                  setTimeout(() => {
+                    gokuRef.current.src = gohan;
+                }, sumDelay2-100);
+              }
+              })
+        }, sumDelay1);   
+      }
+
+      })
+    }, [sumDelay1, sumDelay2, gokuRef.current])
+
+    const displayGifOneTime = (array) => {
+      if(array[0]){
+        let sumDelay = array.map(frame => frame.delay).reduce((a, b) => a + b)
+        return sumDelay
+      }
+    }
+    const setDurationFrame = (array) => {
+      if(array[0]){
+        let sumDelay = array.map(frame => frame.delay).reduce((a, b) => a + b)
+        array[0].delay += 40000
+        return array[0]
+      }
+    }
 
     useEffect(() => {
         /**
@@ -157,12 +204,11 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
           <div className="grid-container" >
             <h1>{DisplayAllCategory}</h1>
             <div ref={neonContainerRef} className='grid-list-container'>
-              
-              
-              <div ref={neonRef} className='animation'>
-                <Neon imgKi={imgKi} neonContainerHeight={neonContainerRef.current && neonContainerRef.current.offsetHeight} neonContainerWidth={neonContainerRef.current && neonContainerRef.current.offsetWidth} />
-              <div className='goku-gif'>
-                <img style={{display: "flex", height: "100%", width: "100%"}} src={goku} />
+              <div className='animation'>
+                <Neon sumDelay1={sumDelay1 > 0 ? null : sumDelay1} neonContainerHeight={neonContainerRef.current && neonContainerRef.current.offsetHeight} neonContainerWidth={neonContainerRef.current && neonContainerRef.current.offsetWidth} />
+              <div className='animation-gif'>
+                <img ref={gokuRef} style={{display: "flex", height: "auto", width: "auto"}} src={goku} />
+                <img ref={jirenRef} style={{display: "flex", height: "auto", width: "auto", webkitTransform: "scaleX(-1)"}} src={jiren} />
               </div>
               </div>
                 <div className="list-card snaps-inline" ref={cardListRef}>

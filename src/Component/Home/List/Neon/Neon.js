@@ -1,104 +1,55 @@
 import styled from "styled-components"
+import imgki from './assets/ki.png'
 
-const Neon = ({neonContainerWidth, neonContainerHeight}) => {
-
+const Neon = ({neonContainerWidth, sumDelay1, neonContainerHeight}) => {
+console.log(sumDelay1)
     const Neon1 = styled.img`
-    position: absolute;
-    height: 100%;
-    width: 100%;
+    position : absolute;
+    height: 0;
+    width: 0;
     top: 0;
-    left: 70px;
-    -webkit-animation: 3s linear 2s infinite move_neon1;
-    animation: 3s linear 2s infinite move_neon1;
+    left: 30;
+    -webkit-animation-name: slideInRight;
+    animation-name: slideInRight;
+    animation-duration: 6s;
+    animation-delay: 1.4s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
 
-    @keyframes move_neon1 {
-        0% {
-          transform: translateX(0) translateY(0);
-          width: 28%;
-          height: 28%;
-        }
-      
-        25% {
-          transform: translateX(${neonContainerWidth/4}px) translateY(0) !important;
-          width: 28%;
-          height: 28%;
-        }
-      
-        50% {
-          transform: translateX(${neonContainerWidth/2}px) translateY(0);
-          width: 28%;
-          height: 28%;
-        }
-      
-        75% {
-          transform: translateX(${neonContainerWidth - 200}px) translateY(0);
-          width: 28%;
-          height: 28%;
-        }
-
-      90% {
-        transform: translateX(${neonContainerWidth/4}) translateY(0);
-          width: 28%;
-          height: 28%;
-      }
-
-      100% {
-        transform: translateX(0) translateY(0);
-          width: 28%;
-          height: 28%;
-      }
-        
-      }
-`
-    const Neon2 = styled.div`
-    position: absolute;
-    height: 15px;
-    width: 50px;
-    background-color: aqua;
-    left: ${neonContainerWidth-10}px;
-    top: ${neonContainerHeight-10}px;
-    -webkit-animation: 3.5s linear 0s infinite move_neon2;
-    animation: 1s linear 0s infinite move_neon2;
-
-    @keyframes move_neon2 {
-        0% {
-          transform: translateX(-50px) translateY(0);
-          width: 50px;
-          height: 10px;
-        }
-      
-        25% {
-          transform: translateX(-${neonContainerWidth/2}px) translateY(0);
-          width: 80px;
-          height: 10px;
-        }
-      
-        50% {
-          transform: translateX(-${(neonContainerWidth/4)*3}px) translateY(0);
-          width: 110px;
-          height: 10px;
-        }
-      
-        75% {
-          transform: translateX(-${neonContainerWidth}px) translateY(0);
-          width: 150px;
-          height: 10px;
-        }
-
-      90% {
-        transform: translateX(-${(neonContainerWidth/4)}) translateY(0);
-          width: 80px;
-          height: 10px;
-      }
-
-      100% {
-        transform: translateX(-50px) translateY(0);
-        width: 50px;
-        height: 10px;
-      }
-    }  
+    @keyframes slideInRight {
+    0% {
+    transform: translateX(0);
+    visibility: visible;
+    height: 40%;
+    width: 10%
+    }
+    25% {
+    transform: translateX(${neonContainerWidth - 240}px);
+    visibility: visible;
+    height: 40%;
+    width: 10%
+    }
+    50% {
+    transform: translateX(0);
+    visibility: visible;
+    height: 75%;
+    width: 20%
+    }
+    75% {
+    transform: translateX(${neonContainerWidth - 240}px);
+    visibility: visible;
+    height: 40%;
+    width: 10%
+    }
+    100% {
+    transform: translateX(0);
+    height: 40%;
+    width: 10%
+    }
+    } 
 `
 
-    return <Neon1 />
+
+    return <Neon1 src={imgki} />
 }
 export default Neon

@@ -37,8 +37,8 @@
 
 .list-container{
     height: 98%;
-    width: 98%;
+    width: 95%;
     display: grid;
-    grid-template-rows: repeat(6, 550px);
+    grid-template-rows: repeat(6, 600px);
     
 }
