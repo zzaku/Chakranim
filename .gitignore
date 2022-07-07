@@ -5,6 +5,7 @@
 /Server/Scrapper/node_modules
 /Server/API/node_modules
 /Server/API/.env
+.env
 /.pnp
 .pnp.js
 

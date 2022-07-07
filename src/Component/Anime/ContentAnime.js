@@ -1,9 +1,5 @@
 import './style/ContentAnime.css'
 import Overlay from './Overlay/Overlay';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import { Link } from 'react-router-dom';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { epContext } from '../../App';
@@ -15,7 +11,6 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
 
     let withoutDoublon = [{}]
     const setEp = useContext(epContext)
-    const setEpFilter = useContext(epContext)
     const openSearch = useContext(epContext)
     let distributionTemp = anime.desc ? anime.desc.split("Acteur") : null
     let description = anime.desc ? anime.desc.split("Acteur")[0] : null
@@ -232,13 +227,8 @@ return (
                               ),
                               all_episode: allLinks[0],
                               name: anime.name,
+                              image: anime.image,
                             }) +
-                            setEpFilter.setEpFilter(
-                              () => (tab, episode) =>
-                                tab.filter(
-                                  (elem) => elem[0].episode === episode
-                                )
-                            ) +
                             openSearch.setSearch(false)
                           }
                           className="vod-cards card-shadow"

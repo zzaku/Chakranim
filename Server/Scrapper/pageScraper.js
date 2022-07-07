@@ -296,52 +296,54 @@ const scraperObject = {
         console.log("Scrapp et envoie a l'API les animes trouvés...")
         for(elems of allAnimesLinks){
             for(link in elems){
-                let currentPageData1;
-                let currentPageData2;
-                let suite = elems[link].nbr_episode >= 300
-                let newEp = elems[link].newEp
-                currentPageData1 = await pagePromise(elems[link].link, elems[link].nbr_episode);
-                await page.waitForTimeout(getRandomFloat(1, 5))
-                if(elems[link].nbr_episode >= 200){
-                    currentPageData2 = await pagePromiseEpSupThan450(elems[link].link)
-                } 
-                suite ? await axios.post('http://localhost:4000/vod/allanimes/', {
-                    name: currentPageData1[0].name,
-                    desc: currentPageData1[0].desc,
-                    image: currentPageData1[0].image,
-                    banniere: currentPageData1[0].banniere,
-            	    genre: currentPageData1[0].genre,
-                    langue: currentPageData1[0].langue,
-                    saison: currentPageData1[0].saison,
-                    nombre_episode: currentPageData1[0].nombre_episode,
-                    nombre_episode_final: elems[link].nbr_episode,
-                    need_suite: currentPageData1[0].need_suite,
-                    lastPart: currentPageData2[0].lastPart,
-                    nextLinks: currentPageData2[0].nextLinks,
-                    links: currentPageData1[0].links,
-                    newEp: newEp,
-                    duree: currentPageData1[0].duree,
-                    date: currentPageData1[0].date
-                }) 
-                : 
-                await axios.post('http://localhost:4000/vod/allanimes/', {
-                    name: currentPageData1[0].name,
-                    desc: currentPageData1[0].desc,
-                    image: currentPageData1[0].image,
-                    banniere: currentPageData1[0].banniere,
-            	    genre: currentPageData1[0].genre,
-                    langue: currentPageData1[0].langue,
-                    saison: currentPageData1[0].saison,
-                    nombre_episode: currentPageData1[0].nombre_episode,
-                    nombre_episode_final: elems[link].nbr_episode,
-                    need_suite: currentPageData1[0].need_suite,
-                    lastPart: false,
-                    nextLinks: null,
-                    links: currentPageData1[0].links,
-                    newEp: newEp,
-                    duree: currentPageData1[0].duree,
-                    date: currentPageData1[0].date
-                })
+                if(elems[link]){
+                    let currentPageData1;
+                    let currentPageData2;
+                    let suite = elems[link].nbr_episode >= 300
+                    let newEp = elems[link].newEp
+                    currentPageData1 = await pagePromise(elems[link].link, elems[link].nbr_episode);
+                    await page.waitForTimeout(getRandomFloat(1, 5))
+                    if(elems[link].nbr_episode >= 200){
+                        currentPageData2 = await pagePromiseEpSupThan450(elems[link].link)
+                    } 
+                    suite ? await axios.post('http://localhost:4000/vod/allanimes/', {
+                        name: currentPageData1[0].name,
+                        desc: currentPageData1[0].desc,
+                        image: currentPageData1[0].image,
+                        banniere: currentPageData1[0].banniere,
+                        genre: currentPageData1[0].genre,
+                        langue: currentPageData1[0].langue,
+                        saison: currentPageData1[0].saison,
+                        nombre_episode: currentPageData1[0].nombre_episode,
+                        nombre_episode_final: elems[link].nbr_episode,
+                        need_suite: currentPageData1[0].need_suite,
+                        lastPart: currentPageData2[0].lastPart,
+                        nextLinks: currentPageData2[0].nextLinks,
+                        links: currentPageData1[0].links,
+                        newEp: newEp,
+                        duree: currentPageData1[0].duree,
+                        date: currentPageData1[0].date
+                    }) 
+                    : 
+                    await axios.post('http://localhost:4000/vod/allanimes/', {
+                        name: currentPageData1[0].name,
+                        desc: currentPageData1[0].desc,
+                        image: currentPageData1[0].image,
+                        banniere: currentPageData1[0].banniere,
+                        genre: currentPageData1[0].genre,
+                        langue: currentPageData1[0].langue,
+                        saison: currentPageData1[0].saison,
+                        nombre_episode: currentPageData1[0].nombre_episode,
+                        nombre_episode_final: elems[link].nbr_episode,
+                        need_suite: currentPageData1[0].need_suite,
+                        lastPart: false,
+                        nextLinks: null,
+                        links: currentPageData1[0].links,
+                        newEp: newEp,
+                        duree: currentPageData1[0].duree,
+                        date: currentPageData1[0].date
+                    })
+                }
             }
 		}
         console.log("Fin du scrapping.")

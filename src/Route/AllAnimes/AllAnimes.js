@@ -21,7 +21,6 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
     const [anime, setAnime] = useState([]);
     const [animeBySeason, setAnimeBySeason] = useState([])
     const [open, setOpen] = useState(false);
-    const getAll = useContext(epContext)
     const wrapperRef = useRef(null);
     const [descriptionSuite, setDescriptionSuite] = useState(false)
     const [getGenres, setGetGenres] = useState([])

@@ -2,7 +2,6 @@ import styled from "styled-components"
 import imgki from './assets/ki.png'
 
 const Neon = ({neonContainerWidth, sumDelay1, neonContainerHeight}) => {
-console.log(sumDelay1)
     const Neon1 = styled.img`
     position : absolute;
     height: 0;

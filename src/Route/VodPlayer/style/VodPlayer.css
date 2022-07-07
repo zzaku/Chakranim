@@ -13,6 +13,10 @@
     align-items: center;
 }
 
+.shadows{
+    box-shadow: 0px -58px 50px 45px rgba(0,0,0,0.1);
+}
+
 .watch{
     height: 100%;
     width: 90%;
@@ -71,7 +75,6 @@ h1, h2 {
     justify-content: space-around;
     align-items: center;
     width: 50%;
-    height: 100%;
 }
 
 .cinema-mode{
@@ -79,7 +82,6 @@ h1, h2 {
     justify-content: space-around;
     align-items: center;
     width: auto;
-    height: 15%;
 }
 
 .buttontogotootherep{

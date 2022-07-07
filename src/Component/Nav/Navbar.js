@@ -26,7 +26,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
 
     window.addEventListener('scroll',function(){
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      console.log(scrollTop)
+      
       if(nav.current){
         if(scrollTop === 0){
           nav.current.style.background = "transparent"

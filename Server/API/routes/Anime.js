@@ -52,7 +52,7 @@ const scrapper = setInterval(async () => {
         if(posts.length > 0){
            return await getAllNameOfNewEp(posts)
         }
-    return
+    return console.log("animes récupérés.")
 }, 3600000)
 
 //SWAP ALL PREVIOUS ANIME EP WITH NEW EP
@@ -226,7 +226,7 @@ router.get('/animes/Allgenres', async (req, res) => {
         const genre10 = req.query.genre10;
         const genre11 = req.query.genre11;
         const genre12 = req.query.genre12;
-        const { page = 1, limit = 21 } = req.query;
+        const { page = 1, limit = 34 } = req.query;
         const posts = await Post.find({
             $and: [
                 {

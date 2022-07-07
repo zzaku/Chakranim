@@ -3,7 +3,7 @@
     position: relative;
     height: 100%;
     width: 50%;
-    font-family: "jojo7";
+    font-family: "jojo5";
     flex-direction: row;
     flex-flow: row;
     flex-wrap: wrap;
@@ -13,6 +13,19 @@
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+::-webkit-scrollbar-track {
+    background-color: rgb(196, 196, 196);
+    border-radius: 10px;
+  }
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+  }
 
 .container-display{
     height: 100%;
@@ -125,6 +138,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: "jojo7";
     width: 100%;
     height: 100%;
     color: white;

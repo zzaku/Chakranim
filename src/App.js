@@ -12,29 +12,46 @@ export const epContext = createContext()
 
 function App() {
 
+  const {REACT_APP_IP_KEY} = process.env
   const [notAtHome, setNotAtHome] = useState(false)
-  const [ep, setEp] = useState({current_episode: [], all_episodes: [], name: "", current_link: ""})
-  const [epFilter, setEpFilter] = useState(() => () => {})
   const [search, setSearch] = useState(false)
   const [startSearching, setStartSearching] = useState(false)
   const [allAnimes, setAllAnimes] = useState([])
   const [animeToFind, setAnimeToFind] = useState("")
+  
+  const saveAnime = localStorage.watching;
+  const [ep, setEp] = useState(saveAnime ? JSON.parse(saveAnime) : {current_episode: [], all_episodes: [], name: "", image: ""})
 
   useEffect(() => {
+    localStorage.setItem("watching", JSON.stringify(ep));
+  }, [ep]);
+
+  const [ip, setIP] = useState('');
+
+  //creating function to load ip address from the API
+  const getData = () => {
+    fetch(`https://ipgeolocation.abstractapi.com/v1/?api_key=${process.env.REACT_APP_IP_KEY}`)
+    .then(res => res.json())
+    .then(data => setIP(data.ip_address))
+  }
+ 
+
+  useEffect(() => {
+    getData()
     fetch("http://localhost:4000/VOD/allanimes/check")
     .then(res => res.json())
     .then(data => setAllAnimes(data))
   }, [])
 
   return (
-      <epContext.Provider value={{setEp: setEp, setEpFilter: setEpFilter, setSearch: setSearch, search: search, setStartSearching: setStartSearching, setAnimeToFind: setAnimeToFind}}>
+      <epContext.Provider value={{setEp: setEp, setSearch: setSearch, search: search, setStartSearching: setStartSearching, setAnimeToFind: setAnimeToFind}}>
         <div className="App">
           <Router>
             {!search && <Navbar notAtHome={notAtHome} setNotAtHome={setNotAtHome} />}
             <Search open={search} notAtHome={notAtHome} setNotAtHome={setNotAtHome} startSearching={startSearching} allAnimes={allAnimes} animeToFind={animeToFind} />
           <Routes>
                 <Route path='/' element={<Home allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />  
-                <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} epFilter={epFilter} />} />
+                <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} />} />
                 <Route path='/list/animes' element={<AllAnimes allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />
             </Routes>
           {!startSearching && <Footer />}

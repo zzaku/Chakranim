@@ -6,7 +6,6 @@ import ContentAnime from '../../Anime/ContentAnime';
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@mui/material';
 import ParallaxHover from './Card/Card';
-import Neon from './Neon/Neon';
 import goku from './Neon/assets/kamea.gif'
 import jiren from './Neon/assets/jiren.gif'
 import tpGoku from './Neon/assets/tpGoku.gif'
@@ -27,6 +26,7 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     const [descriptionSuite, setDescriptionSuite] = useState(false)
     const [animeBySeason, setAnimeBySeason] = useState([])
     const refCard = useRef()
+    const cardContainerRef = useRef()
     const neonContainerRef = useRef()
     const gokuRef = useRef()
     const jirenRef = useRef()
@@ -50,7 +50,6 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     
 let sumDelay1
 let sumDelay2
-let sumDelay3 = 0
 
     useEffect(() => {
       
@@ -66,8 +65,7 @@ let sumDelay3 = 0
             .then(buff => parseGIF(buff))
             .then(gif => {
               sumDelay2 = displayGifOneTime(decompressFrames(gif, true));
-              console.log(setDurationFrame(decompressFrames(gif, true)))
-              if(sumDelay2 > 0){
+              if(sumDelay2 > 0 && gokuRef.current){
                   gokuRef.current.src = tpGoku;
                   gokuRef.current.style.height = "auto";
                   gokuRef.current.style.width = "auto";
@@ -158,40 +156,32 @@ let sumDelay3 = 0
         setOpen(true);
       };
 
-      let currentScrollPosition = 0
-      let scrollAmount = 320
-
-      let sCont = cardListRef
-      let hScroll = scrollRightRef
+      const [finalPositionScroll, setFinalPositionScroll] = useState({start: true, end: false})
+      const [currentPose, setCurrentPose] = useState(0)
       
-      //let maxScroll = -sCont.current.offsetWidth + hScroll.current.offsetWidth
-      //console.log(maxScroll)
-
-
       const scrollX = (val) => {
-          currentScrollPosition += (val * scrollAmount)
-          sCont.current.style.scrollLeft = currentScrollPosition + "px"
-          console.log(sCont.current.style.scrollLeft)
-      }
-
-    const displayPreviousButton = (cat) => {
-        if(cat === genres){
-            return 2 > 1 ? <Button ref={scrollRightRef} onClick={() => scrollX(-1)} style={{position: "absolute", height: "38%", left: "3.2rem", color: "white", background: "linear-gradient(90deg,rgba(0,0,0,.8),transparent)", zIndex: 2, marginLeft: "15px"}} variant='text'><ArrowBackIosNewTwoToneIcon sx={{ fontSize: 60 }} /></Button> : null
+        let currentScrollPosition = 0;
+        let scrollAmount = cardContainerRef.current && cardContainerRef.current.scrollWidth * 7
+        let maxScroll = cardListRef.current ? cardListRef.current.scrollWidth : null
+        currentScrollPosition = finalPositionScroll.start && !finalPositionScroll.end ? 0 : currentPose 
+        console.log("le pas :", scrollAmount)
+        console.log("avant :", currentScrollPosition)
+        currentScrollPosition += val * scrollAmount
+        console.log("aprés : ", currentScrollPosition)
+        setCurrentPose(currentScrollPosition)
+        if(currentScrollPosition >= maxScroll - scrollAmount){
+          currentScrollPosition = maxScroll
+          setFinalPositionScroll({start: false, end: true})
+        } else if(currentScrollPosition <= 0){
+          currentScrollPosition = 0
+          setFinalPositionScroll({start: true, end: false})
+        } else {
+          setFinalPositionScroll({start: false, end: false})
         }
-    }
+          cardListRef.current.scrollLeft = currentScrollPosition
 
-
-    const displayNextButton = (cat) => {
-        if(cat === genres){
-            if(genre[0][Object.keys(genre[0])[0]]){
-                if(genre[0][Object.keys(genre[0])[0]].length < 9){
-            
-                } else {
-                    return <Button ref={scrollLeftRef} onClick={() => scrollX(1)} style={{position: "absolute", height: "38%", right: "1.1rem", color: "white", background: "linear-gradient(90deg,transparent,rgba(0,0,0,.8))", zIndex: 2, marginRight: "15px"}} variant='text'><ArrowForwardIosIcon sx={{ fontSize: 60 }} /></Button>
-                }
-            }
+          console.log("max : ", maxScroll)
         }
-    }
 
     return (
       <div className="card">
@@ -205,17 +195,17 @@ let sumDelay3 = 0
             <h1>{DisplayAllCategory}</h1>
             <div ref={neonContainerRef} className='grid-list-container'>
               <div className='animation'>
-                <Neon sumDelay1={sumDelay1 > 0 ? null : sumDelay1} neonContainerHeight={neonContainerRef.current && neonContainerRef.current.offsetHeight} neonContainerWidth={neonContainerRef.current && neonContainerRef.current.offsetWidth} />
-              <div className='animation-gif'>
+                <div className='animation-gif'>
                 <img ref={gokuRef} style={{display: "flex", height: "auto", width: "auto"}} src={goku} />
-                <img ref={jirenRef} style={{display: "flex", height: "auto", width: "auto", webkitTransform: "scaleX(-1)"}} src={jiren} />
+                <img ref={jirenRef} style={{display: "flex", height: "auto", width: "auto", WebkitTransform: "scaleX(-1)"}} src={jiren} />
               </div>
               </div>
-                <div className="list-card snaps-inline" ref={cardListRef}>
-                  {displayPreviousButton(genres)}
+                <div className="list-card" ref={cardListRef}>
+                  {!finalPositionScroll.start ? <Button className='scroll-btn' ref={scrollLeftRef} onClick={() => scrollX(-1)} style={{left: "3.2rem", boxShadow: "rgba(255,255,255, 0.4) -5px 5px, rgba(255,255,255, 0.3) -10px 10px, rgba(255,255,255, 0.2) -15px 15px, rgba(255,255,255, 0.1) -20px 20px, rgba(255,255,255, 0.05) -25px 25px", marginLeft: "3%"}} variant='text'><ArrowBackIosNewTwoToneIcon sx={{ fontSize: 60 }} /></Button> : null}
                   {withoutDoublon[0][genres]
                     ? withoutDoublon[0][genres].map((genre, i) => (
                         <div
+                          ref={cardContainerRef}
                           key={genre._id + i}
                           className="card-container"
                           style={{ cursor: "pointer" }}
@@ -233,7 +223,7 @@ let sumDelay3 = 0
                       ))
                     : 
                     null}
-                  {displayNextButton(genres)}
+                  {!finalPositionScroll.end ? <Button className='scroll-btn' ref={scrollRightRef} onClick={() => scrollX(1)} style={{right: "0", boxShadow: "rgba(255,255,255, 0.4) 5px -5px, rgba(255,255,255, 0.3) 10px -10px, rgba(255,255,255, 0.2) 15px -15px, rgba(255,255,255, 0.1) 20px -20px, rgba(255,255,255, 0.05) 25px -25px", marginRight: "14px"}} variant='none'><ArrowForwardIosIcon sx={{ fontSize: 60 }} /></Button> : null}
                 </div>
               </div>
           </div>
