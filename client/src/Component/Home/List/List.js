@@ -9,7 +9,7 @@ import ParallaxHover from './Card/Card';
 import goku from './Neon/assets/kamea.gif'
 import jiren from './Neon/assets/jiren.gif'
 import tpGoku from './Neon/assets/tpGoku.gif'
-import gohan from './Neon/assets/gohan.gif'
+import songoku from './Neon/assets/songoku.gif'
 import { parseGIF, decompressFrames  } from 'gifuct-js';
 import "./style/List.css"
 
@@ -48,10 +48,11 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     }, [anime])
 
     
-let sumDelay1
-let sumDelay2
-
+    
     useEffect(() => {
+      
+      let sumDelay1
+      let sumDelay2
       
       fetch(goku)
       .then(res => res.arrayBuffer())
@@ -70,7 +71,7 @@ let sumDelay2
                   gokuRef.current.style.height = "auto";
                   gokuRef.current.style.width = "auto";
                   setTimeout(() => {
-                    gokuRef.current.src = gohan;
+                    gokuRef.current.src = songoku;
                 }, sumDelay2-100);
               }
               })
@@ -78,19 +79,12 @@ let sumDelay2
       }
 
       })
-    }, [sumDelay1, sumDelay2, gokuRef.current])
+    }, [gokuRef])
 
     const displayGifOneTime = (array) => {
       if(array[0]){
         let sumDelay = array.map(frame => frame.delay).reduce((a, b) => a + b)
         return sumDelay
-      }
-    }
-    const setDurationFrame = (array) => {
-      if(array[0]){
-        let sumDelay = array.map(frame => frame.delay).reduce((a, b) => a + b)
-        array[0].delay += 40000
-        return array[0]
       }
     }
 
@@ -191,8 +185,8 @@ let sumDelay2
             <div ref={neonContainerRef} className='grid-list-container'>
               <div className='animation'>
                 <div className='animation-gif'>
-                <img ref={gokuRef} style={{display: "flex", height: "auto", width: "auto"}} src={goku} />
-                <img ref={jirenRef} style={{display: "flex", height: "auto", width: "auto", WebkitTransform: "scaleX(-1)"}} src={jiren} />
+                <img alt="goku" ref={gokuRef} style={{display: "flex", height: "auto", width: "auto"}} src={goku} />
+                <img alt="jiren" ref={jirenRef} style={{display: "flex", height: "auto", width: "auto", WebkitTransform: "scaleX(-1)"}} src={jiren} />
               </div>
               </div>
                 <div className="list-card" ref={cardListRef}>

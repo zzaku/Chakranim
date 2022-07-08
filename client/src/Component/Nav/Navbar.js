@@ -1,6 +1,5 @@
 import { NavLink, Nav, Bars, NavMenu } from "./NavbarElements";
 import { FcSearch } from 'react-icons/fc';
-import { TiThList } from 'react-icons/ti';
 import { useContext, useEffect, useRef, useState } from 'react';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useNavigate } from "react-router-dom";
@@ -11,7 +10,7 @@ import { Button, TextField } from "@mui/material";
 const Navbar = ({notAtHome, setNotAtHome}) => {
 
   const open = useContext(epContext)
-  const [appearNav, setAppearNav] = useState(true)
+  const [appearNav] = useState(true)
   const nav = useRef()
   const navigate = useNavigate();
   

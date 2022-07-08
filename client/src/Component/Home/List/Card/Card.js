@@ -62,16 +62,16 @@ const config = {
      test = createRef();
   
     __handleMouseMove({ pageX, pageY, nativeEvent}) {
-      const width = this.props.width;
-      const height = this.props.height;
-      const { scrollTop: scrollTop, scrollLeft: scrollLeft } = document.body;
+      //const width = this.props.width;
+      //const height = this.props.height;
+      const { scrollTop, scrollLeft } = document.body;
       const bounds = this.test.current.getBoundingClientRect();
       const centerX = this.props.width / 2;
       const centerY = this.props.height / 2;
-      const widthMultiplier = 100 / this.props.width;
+      //const widthMultiplier = 100 / this.props.width;
   
-      const offsetX = 0.52 - (pageX - bounds.left - scrollLeft) / width;
-      const offsetY = 0.52 - (pageY - bounds.top - scrollTop) / height;
+      //const offsetX = 0.52 - (pageX - bounds.left - scrollLeft) / width;
+      //const offsetY = 0.52 - (pageY - bounds.top - scrollTop) / height;
   
       const deltaX = (pageX - bounds.left - scrollLeft) - centerX;
       const deltaY = (pageY - bounds.top - scrollTop) - centerY;
@@ -80,10 +80,10 @@ const config = {
       const angleRad = Math.atan2(deltaY, deltaX);
       const angleRaw = angleRad * 180 / Math.PI - 90;
       const angleDeg = angleRaw < 0 ? angleRaw + 360 : angleRaw;
-      const distanceFromCenter = this.__calculateDistance(bounds, nativeEvent.offsetX, nativeEvent.offsetY);
+      //const distanceFromCenter = this.__calculateDistance(bounds, nativeEvent.offsetX, nativeEvent.offsetY);
       const shadowMovement = centerY * 0.25;
       const shadowSize = 120;
-      const alpha = this.__calculateAlphaFromCenter(distanceFromCenter);
+      //const alpha = this.__calculateAlphaFromCenter(distanceFromCenter);
   
       this.__buildState(rotateX, rotateY, shadowMovement, shadowSize, config.scale, angleDeg, 0.4);
     }

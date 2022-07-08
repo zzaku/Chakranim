@@ -2,8 +2,7 @@ import { Grid, Card, CardActionArea, CardMedia, Stack, Pagination, Button, Backd
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewTwoTone from "@mui/icons-material/ArrowBackIosNewTwoTone";
 import ContentAnime from "../../Component/Anime/ContentAnime";
-import { useState, useRef, useEffect, useMemo, useContext } from "react"
-import { epContext } from "../../App";
+import { useState, useRef, useEffect, useMemo } from "react"
 import CircularProgress from '@mui/material/CircularProgress';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
@@ -28,7 +27,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-    let getAll15Animes = `https://chakranime.herokuapp.com/VOD/allanimes?page=${nextPage}`
+    let getAll15Animes = `${process.env.REACT_APP_API_ANIME}/VOD/allanimes?page=${nextPage}`
 
     const getParam = (parameter) => {
       let params = ""
@@ -50,7 +49,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
 
     useEffect(() => {
       if(getGenres[0] && getGenres[0].length > 0){
-          fetch(`https://chakranime.herokuapp.com/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
+          fetch(`${process.env.REACT_APP_API_ANIME}/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
           .then(res => res.json())
           .then(datas => setAnimes(datas))
       } else {
@@ -58,7 +57,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
           .then(res => res.json())
           .then(data => setAnimes(data))
       }
-    }, [nextPage, getGenres])
+    }, [nextPage, getGenres, getAll15Animes])
 
     useEffect(() => {
         if(getGenres[0] && getGenres[0].length > 0){
@@ -145,7 +144,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
         }
         return newArray 
     }
-    withoutDoublon = useMemo(() => filterDoublonAnime(), [animes]) 
+    withoutDoublon = filterDoublonAnime()
     
     return (
         <div className='animes-list'>
@@ -154,7 +153,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
                 <div className="pagination-content">
                     <div className="pagination">
                         <Stack spacing={10}>
-                            <Pagination value={nextPage} count={68} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />
+                            <Pagination value={nextPage} count={69} onChange={(e, value) => setNextPage(value)} variant="outlined" style={{backgroundColor:"white", borderRadius: "15px"}} />
                         </Stack>
                     </div>
                     
@@ -251,7 +250,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
                                 }) 
                             }
                             </Grid> 
-                            {nextPage === 68 ?
+                            {nextPage === 69 ?
                             null
                             :
                             <div className="nextpage">

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -7,9 +7,9 @@ import Stack from '@mui/material/Stack';
 import { cyan } from '@mui/material/colors';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import './style/VodPlayer.css'
 import Backdrop from '@mui/material/Backdrop';
 import { Link } from 'react-router-dom';
+import './style/VodPlayer.css'
 
 const VodPlayer = ({ep, setEp}) => {
 
@@ -99,7 +99,7 @@ const VodPlayer = ({ep, setEp}) => {
     return (
         <div className='container-vod-player'>
             <div ref={backgroundRef} style={{position: 'absolute', height: "100%", width: "100%", backdropFilter: "blur(5px)", opacity: "0.5"}}>
-                <img src={ep.image} style={{display: "flex", height: "90%", width: "100%"}}/>
+                <img alt={ep.name} src={ep.image} style={{display: "flex", height: "90%", width: "100%"}}/>
                 <div className='shadows' style={{display: "flex", height: "10%", width: "100%"}}></div>
             </div>
             <div className='vod'>
@@ -109,7 +109,7 @@ const VodPlayer = ({ep, setEp}) => {
                             <h1>{!ep.current_episode ? null : ep.current_episode[0] && ep.name.split("Saison")[0] + " " + ep.current_episode[0][0].episode}</h1>
                         </div>
                         <div className='iframe-container' ref={iframeContainer}>
-                            {!checked ? next ? <iframe title='VOD' className='iframe' src={!ep.current_episode ? null : ep.current_episode[0] && ep.current_episode[0][0].lien}></iframe> : <iframe className='iframe' title='VOD' src={lecteur[0] && lecteur[0][0].lien}></iframe> : null}
+                            {!checked ? next ? <iframe title='VOD' allowFullScreen className='iframe' src={!ep.current_episode ? null : ep.current_episode[0] && ep.current_episode[0][0].lien}></iframe> : <iframe allowFullScreen className='iframe' title='VOD' src={lecteur[0] && lecteur[0][0].lien}></iframe> : null}
                         </div>
                             <Backdrop
                             style={{width: "100%", height: "100%"}}
@@ -117,7 +117,7 @@ const VodPlayer = ({ep, setEp}) => {
                                 open={checked}
                             >
                                 <div className='iframe-container' ref={iframeContainer}>
-                                    {next ? <iframe className='iframe' src={!ep.current_episode ? null : ep.current_episode[0][0].lien}></iframe> : <iframe className='iframe' src={lecteur[0][0].lien}></iframe>}
+                                    {next ? <iframe className='iframe' title='VOD' allowFullScreen src={!ep.current_episode ? null : ep.current_episode[0][0].lien}></iframe> : <iframe title='VOD' allowFullScreen className='iframe' src={lecteur[0][0].lien}></iframe>}
                                 </div>
                             </Backdrop>
                         <div ref={movieBtnRef} className='watch-content'>
@@ -136,6 +136,7 @@ const VodPlayer = ({ep, setEp}) => {
                                     <ButtonGroup style={{backgroundColor: "black"}} size="large" aria-label="large button group">
                                         {!ep.current_episode ? null : ep.current_episode.map((episode, index) => {  
                                             if(index === 0){
+                                                return null
                                             } else {
                                             return <Button key={episode._id} onClick={() => switchLecteur(episode[0].format_VOD)} style={{color: "white"}} >{!ep.current_episode ? null : ep.current_episode[index-1][0].format_VOD}</Button>
                                             }

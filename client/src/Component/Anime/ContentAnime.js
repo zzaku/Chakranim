@@ -54,7 +54,6 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
     useEffect(() => {
       setSeasonSelected(false)
       setLangueSelected(false)
-      withoutDoublon = [{episode: filterDoublonAnime()}]
     }, [anime])
 
 
@@ -88,7 +87,7 @@ const getNbrOfSeason = () => {
 let nbrSeason = getNbrOfSeason()
 
 let seasonChanged = (otherSeason, langue) => {
-  let testSeason = animeBySeason.filter(elem => elem.saison === otherSeason.saison && elem.langue === langue || elem.saison === otherSeason.saison)[0]
+  let testSeason = animeBySeason.filter(elem => (elem.saison === otherSeason.saison && elem.langue === langue) || (elem.saison === otherSeason.saison))[0]
   if(testSeason){
     setAnime(testSeason)
   }
@@ -104,7 +103,7 @@ return (
         <div className="container-display">
           <div className="container-title-anime">
             <div className="container-background-image-anime">
-              <img width={"auto"} height={"auto"} src={anime.banniere} />
+              <img alt={anime.name} width={"auto"} height={"auto"} src={anime.banniere} />
             </div>
             <div className="container-name-anime">
               <h1>{anime.name}</h1>
@@ -116,15 +115,14 @@ return (
                 <h3> {description} </h3>
               ) : (
                 <h3>
-                  {" "}
-                  {LastPartdescription}{" "}
-                  <a
+                  {LastPartdescription}
+                  <span
                     style={{ color: "cyan", cursor: "pointer" }}
                     onClick={() => setDescriptionSuite(false)}
                   >
-                    {" "}
+                    
                     Afficher la suite
-                  </a>{" "}
+                  </span>
                 </h3>
               )}
             </div>
