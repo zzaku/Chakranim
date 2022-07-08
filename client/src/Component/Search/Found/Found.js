@@ -111,7 +111,7 @@ const Found = ({allAnimes, animeFound, setNotAtHome}) => {
                 <div className='resultat-found'>
                     <h2>Aucun animes trouvé :/</h2>
                 </div>
-                <div style={{width:"100%", justifyContent: "center", height: "0", paddingBottom: "75%", display: "flex"}}><iframe src="https://giphy.com/embed/tRWPEUIpuKAtq" style={{position: "absolute", height: "auto", width: "auto"}} frameBorder="0" className="giphy-embed" allowFullScreen></iframe></div><a href="https://giphy.com/gifs/naruto-gaara-tRWPEUIpuKAtq"></a>
+                <div style={{width:"100%", justifyContent: "center", height: "0", paddingBottom: "75%", display: "flex"}}><iframe title='GIF' src="https://giphy.com/embed/tRWPEUIpuKAtq" style={{position: "absolute", height: "auto", width: "auto"}} frameBorder="0" className="giphy-embed" allowFullScreen></iframe></div><a href="https://giphy.com/gifs/naruto-gaara-tRWPEUIpuKAtq"> </a>
             </div>
             :
             <div className='found-container'>
@@ -122,7 +122,7 @@ const Found = ({allAnimes, animeFound, setNotAtHome}) => {
                 {withoutDoublon.map(anime => {
                     return (
                         <div key={anime._id} className='anime-card' onClick={() => handleAnime(anime)}>
-                            <img style={{display: "flex", height: "100%", width: "100%"}} src={anime.image} />
+                            <img alt={anime.name} style={{display: "flex", height: "100%", width: "100%"}} src={anime.image} />
                         </div> 
                     )
                    

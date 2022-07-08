@@ -5,14 +5,13 @@ import Footer from './Component/Footer/Footer';
 import VodPlayer from './Route/VodPlayer/VodPlayer';
 import AllAnimes from './Route/AllAnimes/AllAnimes';
 import './App.css';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import Search from './Component/Search/Search';
 
 export const epContext = createContext()
 
 function App() {
 
-  const {REACT_APP_IP_KEY} = process.env
   const [notAtHome, setNotAtHome] = useState(false)
   const [search, setSearch] = useState(false)
   const [startSearching, setStartSearching] = useState(false)
@@ -25,20 +24,9 @@ function App() {
   useEffect(() => {
     localStorage.setItem("watching", JSON.stringify(ep));
   }, [ep]);
-
-  const [ip, setIP] = useState('');
-
-  //creating function to load ip address from the API
-  const getData = () => {
-    fetch(`https://ipgeolocation.abstractapi.com/v1/?api_key=${process.env.REACT_APP_IP_KEY}`)
-    .then(res => res.json())
-    .then(data => setIP(data.ip_address))
-  }
- 
-
+  
   useEffect(() => {
-    getData()
-    fetch(`https://chakranime.herokuapp.com/VOD/allanimes/check`)
+    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/allanimes/check`)
     .then(res => res.json())
     .then(data => setAllAnimes(data))
   }, [])

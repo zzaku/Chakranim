@@ -7,18 +7,18 @@ const Home = ({allAnimes, setNotAtHome}) => {
 
     const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance", "Films", "Nouveaux Episodes"], [])
 
-    const [genre1, setGenre1] = useState([{}])
-    const [genre2, setGenre2] = useState([{}])
+    //const [genre1, setGenre1] = useState([{}])
+    //const [genre2, setGenre2] = useState([{}])
     const [genre3, setGenre3] = useState([{}])
     const [genre4, setGenre4] = useState([{}])
-    const [genre5, setGenre5] = useState([{}])
-    const [genre6, setGenre6] = useState([{}])
-    const [genre7, setGenre7] = useState([{}])
+    //const [genre5, setGenre5] = useState([{}])
+    //const [genre6, setGenre6] = useState([{}])
+    //const [genre7, setGenre7] = useState([{}])
     const [genre8, setGenre8] = useState([{}])
     const [genre9, setGenre9] = useState([{}])
-    const [genre10, setGenre10] = useState([{}])
+    //const [genre10, setGenre10] = useState([{}])
     const [genre11, setGenre11] = useState([{}])
-    const [genre12, setGenre12] = useState([{}])
+    //const [genre12, setGenre12] = useState([{}])
     const [genre13, setGenre13] = useState([{}])
     const [lastAnime, setLastAnime] = useState([{}])
     const [ready, setReady] = useState(false)
@@ -37,7 +37,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
         useEffect(() => {
             setReady(true)
             if(ready){
-                fetch(`https://chakranime.herokuapp.com/VOD/animes/Allgenres?genre1=${genres[2]}${getParam(genres[2])}`)
+                fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[2]}${getParam(genres[2])}`)
                 .then(res => res.json())
                 .then(data => setGenre3([{[genres[2]]: data}]))
             }
@@ -46,7 +46,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
         useEffect(() => {
             setReady(true)
             if(ready){
-                fetch(`https://chakranime.herokuapp.com/VOD/animes/Allgenres?genre1=${genres[3]}${getParam(genres[3])}`)
+                fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[3]}${getParam(genres[3])}`)
                 .then(res => res.json())
                 .then(data => setGenre4([{[genres[3]]: data}]))
             }
@@ -56,7 +56,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
         useEffect(() => {
             setReady(true)
             if(ready){
-                fetch(`https://chakranime.herokuapp.com/VOD/animes/Allgenres?genre1=${genres[7]}${getParam(genres[7])}`)
+                fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[7]}${getParam(genres[7])}`)
                 .then(res => res.json())
                 .then(data => setGenre8([{[genres[7]]: data}]))
             }
@@ -65,7 +65,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
         useEffect(() => {
             setReady(true)
             if(ready){
-                fetch(`https://chakranime.herokuapp.com/VOD/animes/Allgenres?genre1=${genres[8]}${getParam(genres[8])}`)
+                fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[8]}${getParam(genres[8])}`)
                 .then(res => res.json())
                 .then(data => setGenre9([{[genres[8]]: data}]))
             }
@@ -74,7 +74,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
         useEffect(() => {
             setReady(true)
             if(ready){
-                fetch(`https://chakranime.herokuapp.com/VOD/animes/Allgenres?genre1=${genres[10]}${getParam(genres[10])}`)
+                fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[10]}${getParam(genres[10])}`)
                 .then(res => res.json())
                 .then(data => setGenre11([{[genres[10]]: data}]))
             }
@@ -84,7 +84,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
         useEffect(() => {
             setReady(true)
             if(ready){
-                fetch(`https://chakranime.herokuapp.com/VOD/animes/type/Allfilm`)
+                fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/type/Allfilm`)
                 .then(res => res.json())
                 .then(data => setGenre13([{[genres[12]]: data}]))
             }
@@ -93,7 +93,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
         useEffect(() => {
             setReady(true)
            if(ready){
-                   fetch(`https://chakranime.herokuapp.com/VOD/anime/recentlyadded?page=1`)
+                   fetch(`${process.env.REACT_APP_API_ANIME}/VOD/anime/recentlyadded?page=1`)
                     .then(res => res.json())
                     .then(data => setLastAnime([{[genres[13]]: data}]))
            }
@@ -110,6 +110,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
                             {lastAnime && genres[13] ? <List allAnimes={allAnimes} genres={genres[13]} genre={lastAnime} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
 
                             
+                            {genre3 && genres[2] ?<List allAnimes={allAnimes} genres={genres[2]} genre={ genre3} setGenre={setGenre3} setNotAtHome={setNotAtHome}/> : null}
                             {genre4 && genres[3] ?<List allAnimes={allAnimes} genres={genres[3]} genre={ genre4} setGenre={setGenre4} setNotAtHome={setNotAtHome}/> : null}
                             
 

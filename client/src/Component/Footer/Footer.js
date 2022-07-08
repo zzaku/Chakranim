@@ -4,11 +4,9 @@ Box,
 Container,
 Row,
 Column,
-FooterLink,
 Heading,
 NetworkContainer,
 } from "./style/FooterStyles";
-import { Link } from "react-router-dom";
 
 const Footer = ({footerRef}) => {
 return (
@@ -19,21 +17,21 @@ return (
 				<Column>
 					<Heading>
 						<a href="https://www.instagram.com/chakranimes/" target="_blank" rel="noreferrer">
-							<img src="https://img.icons8.com/fluency/96/000000/instagram-new.png"/>
+							<img alt="insta" src="https://img.icons8.com/fluency/96/000000/instagram-new.png"/>
 						</a>
 					</Heading>
 				</Column>
 				<Column>
 					<Heading>
 					<a href="https://twitter.com/chakranime" target="_blank" rel="noreferrer">
-						<img src="https://img.icons8.com/color/96/000000/twitter--v1.png"/>
+						<img alt="twitter" src="https://img.icons8.com/color/96/000000/twitter--v1.png"/>
 					</a>
 					</Heading>
 				</Column>
 				<Column>
 					<Heading>
 						<a href="https://github.com/zzaku" target="_blank" rel="noreferrer">
-							<img src="https://img.icons8.com/fluency/96/000000/github.png"/>
+							<img alt="github" src="https://img.icons8.com/fluency/96/000000/github.png"/>
 						</a>
 					</Heading>
 				</Column>

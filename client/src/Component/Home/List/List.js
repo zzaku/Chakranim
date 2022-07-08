@@ -48,10 +48,11 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     }, [anime])
 
     
-let sumDelay1
-let sumDelay2
-
+    
     useEffect(() => {
+      
+      let sumDelay1
+      let sumDelay2
       
       fetch(goku)
       .then(res => res.arrayBuffer())
@@ -78,19 +79,12 @@ let sumDelay2
       }
 
       })
-    }, [sumDelay1, sumDelay2, gokuRef.current])
+    }, [gokuRef])
 
     const displayGifOneTime = (array) => {
       if(array[0]){
         let sumDelay = array.map(frame => frame.delay).reduce((a, b) => a + b)
         return sumDelay
-      }
-    }
-    const setDurationFrame = (array) => {
-      if(array[0]){
-        let sumDelay = array.map(frame => frame.delay).reduce((a, b) => a + b)
-        array[0].delay += 40000
-        return array[0]
       }
     }
 
@@ -191,8 +185,8 @@ let sumDelay2
             <div ref={neonContainerRef} className='grid-list-container'>
               <div className='animation'>
                 <div className='animation-gif'>
-                <img ref={gokuRef} style={{display: "flex", height: "auto", width: "auto"}} src={goku} />
-                <img ref={jirenRef} style={{display: "flex", height: "auto", width: "auto", WebkitTransform: "scaleX(-1)"}} src={jiren} />
+                <img alt="goku" ref={gokuRef} style={{display: "flex", height: "auto", width: "auto"}} src={goku} />
+                <img alt="jiren" ref={jirenRef} style={{display: "flex", height: "auto", width: "auto", WebkitTransform: "scaleX(-1)"}} src={jiren} />
               </div>
               </div>
                 <div className="list-card" ref={cardListRef}>
