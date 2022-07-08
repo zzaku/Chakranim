@@ -6,6 +6,7 @@ const cors = require('cors')
 require('dotenv/config');
 const user = process.env.DB_CONNECTION_USER
 const pass = process.env.DB_CONNECTION_PASSWORD
+const port = process.env.PORT
 
 //Import Routes
 const postsRoute = require('./routes/Anime')
@@ -33,4 +34,4 @@ postsRoute.scrap
 
 
 //Listening to the server
-app.listen(4000)
+app.listen(port || 4000)

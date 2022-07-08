@@ -28,7 +28,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-    let getAll15Animes = `http://localhost:4000/VOD/allanimes?page=${nextPage}`
+    let getAll15Animes = `${process.env.REACT_APP_API_ANIME}/VOD/allanimes?page=${nextPage}`
 
     const getParam = (parameter) => {
       let params = ""
@@ -50,7 +50,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
 
     useEffect(() => {
       if(getGenres[0] && getGenres[0].length > 0){
-          fetch(`http://localhost:4000/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
+          fetch(`${process.env.REACT_APP_API_ANIME}/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
           .then(res => res.json())
           .then(datas => setAnimes(datas))
       } else {
