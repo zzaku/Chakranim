@@ -38,7 +38,7 @@ function App() {
 
   useEffect(() => {
     getData()
-    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/allanimes/check`)
+    fetch(`https://chakranime.herokuapp.com/VOD/allanimes/check`)
     .then(res => res.json())
     .then(data => setAllAnimes(data))
   }, [])
