@@ -1,4 +1,45 @@
 .Navigation {
+    display: flex;
     position: fixed;
     width: 100vw;
+}
+
+.backToMainMenu{
+    display: flex;
+    height: auto;
+    width: 20%;
+    justify-content: start;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+}
+
+.search-button{
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    margin-right: 25%;
+    align-items: center;
+    cursor: pointer;
+}
+
+.search-input{
+    display: flex;
+    height: auto;
+    width: auto;
+    margin-left: 2%;
+    border-radius: 200px 200px 200px 200px;
+}
+
+.text-field > label{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.text-field > div > input{
+    display: flex;
+    text-align: start;
+    width: 400px;
+    margin-left: 5%;
 }

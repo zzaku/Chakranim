@@ -1,20 +1,36 @@
 
 .display-ep-anime{
-    display: flex;
+    position: relative;
     height: 100%;
     width: 50%;
-    font-family: "jojo7";
-    flex-direction: column;
+    font-family: "jojo5";
+    flex-direction: row;
+    flex-flow: row;
+    flex-wrap: wrap;
     background-color: rgb(0, 0, 0);
     justify-content: center;
     align-items: center;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+::-webkit-scrollbar-track {
+    background-color: rgb(196, 196, 196);
+    border-radius: 10px;
+  }
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+  }
 
 .container-display{
     height: 100%;
     width: 100%;
-    display: flex;
+    position: relative;
     flex-direction: column;
 }
 
@@ -37,7 +53,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: rgb(20, 194, 150);
+    color: white;
 }
 
 .container-info-anime{
@@ -47,7 +63,7 @@
     align-items: center;
     width: 100%;
     height: auto;
-    color: rgb(20, 194, 150);
+    color: white;
 }
 
 .container-context-anime{
@@ -64,7 +80,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    color: rgb(20, 194, 150);
+    color: white;
 }
 
 .container-moreinfo-anime{
@@ -74,7 +90,7 @@
     align-items: center;
     width: 100%;
     height: auto;
-    color: rgb(20, 194, 150);
+    color: white;
 }
 
 .container-content-info-anime{
@@ -85,7 +101,32 @@
     align-items: center;
 }
 
+.container-current-saison-anime{
+    display: flex;
+    height: auto;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .container-saison-anime{
+    display: flex;
+    height: auto;
+    width: 30%;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttonGroup-saison{
+    display: flex;
+    height: auto;
+    width: auto;
+    margin-left: 5%;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-langue{
     display: flex;
     height: 100%;
     width: 100%;
@@ -95,27 +136,45 @@
 
 .container-vod-anime{
     display: flex;
-    justify-content: center;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
+    font-family: "jojo7";
     width: 100%;
     height: 100%;
-    color: rgb(20, 194, 150);
-    overflow-x: scroll;
-    overflow-y: hidden;
+    color: white;
+    margin-top: 10%;
+    overflow-x: unset;
 }
 
 .container-episode-anime{
     display: flex;
-    height: 100%;
+    height: auto;
     width: 100%;
-    justify-content: flex-start;
-    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-flow: row;
+    flex-wrap: wrap;
 }
 
 .vod-anime{
-    width: 100%;
+    width: auto;
     height: auto;
     flex-direction: column;
+}
+
+.vod-cards{
+    border-radius: 2px;
+    display: inline-block;
+    height: 300px;
+    margin: 1rem;
+    position: relative;
+    width: 300px;
+}
+
+.card-shadow:hover {
+    box-shadow: 0 14px 28px rgba(255, 255, 255, 0.25), 0 10px 10px rgba(255, 255, 255, 0.22);
+  }
+  
+.card-shadow {
+    box-shadow: 0 3px 6px rgba(255, 255, 255, 0.16), 0 3px 6px rgba(255, 255, 255, 0.23);
 }

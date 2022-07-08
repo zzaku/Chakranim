@@ -1,0 +1,37 @@
+.found{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    margin-top: 10%;
+    background: transparent
+}
+
+.found-container{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.resultat-found{
+    display: flex;
+    height: auto;
+    width: 100%;
+    justify-content: center;
+}
+
+.found-container-list{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    overflow-x: hidden;
+}
+
+.anime-card{
+    display: flex;
+    height: auto;
+    width: 12%;
+    margin: 5px 0 5px 5px;
+}

@@ -57,7 +57,7 @@ display: flex;
 align-items: center;
 margin-right: 24px;
 
-@media screen and (max-width: 968) {
+@media screen and (max-width: 968px) {
     display: none;
 }
 `

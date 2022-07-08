@@ -1,0 +1,92 @@
+.container-vod-player{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+}
+
+.vod{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.shadows{
+    box-shadow: 0px -58px 50px 45px rgba(0,0,0,0.1);
+}
+
+.watch{
+    height: 100%;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+}
+
+.watch-container{
+    margin-top: 5%;
+    height: 80%;
+    width: 92.5%;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+    
+}
+
+h1, h2 {
+    color: white;
+}
+
+.iframe-container{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.iframe{
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.watch-content{
+    display: flex;
+    width: 100%;
+    height: 20%;
+    justify-content: start;
+    align-items: center;
+    margin-left: 1em;
+}
+
+.lecteur-container{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: 100%;
+}
+
+.otherEpisode-content{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 50%;
+}
+
+.cinema-mode{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: auto;
+}
+
+.buttontogotootherep{
+    display: flex;
+    height: 50%;
+    justify-content: space-around;
+    align-items: center;
+}

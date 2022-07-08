@@ -47,7 +47,7 @@
 
 .card{
     height: 100%;
-    width: 100%;
+    width: auto;
 }
 
 .grid-container{
@@ -59,10 +59,36 @@
     color: white;
 }
 
-.list-card{
+.grid-list-container{
     height: 100%;
     width: 100%;
+    position: relative;;
+}
+
+.animation-gif{
     display: flex;
+    justify-content: space-between;
+    height: 50%;
+    width: 100%;
+}
+
+.list-card{
+    --spacer: 3rem;
+    height: 100%;
+    width: 100%;
+    padding: 8rem var(--spacer) 1rem var(--spacer);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 14%;
+    overflow: hidden;
+    scroll-behavior: smooth;
+}
+
+
+.animation{
+    position: absolute;
+    height: 50%;
+    width: 100%;
 }
 
 h1{
@@ -75,13 +101,41 @@ h1{
     height: 100%;
     display: flex;
     flex-direction: column;
+    
 }
 
 .card-container{
     display: flex;
-    width: 80%;
+    width: 100%;
     height: 360px;
-    margin-left: 3px;
-    margin-right: 3px;
     box-sizing: border-box;
+}
+
+.list-card > button{
+    position: absolute;
+    height: 360px;
+    color: white; 
+    background: "transparent";
+    z-index: 2;
+}
+
+@media screen and (max-width: 968px) {
+    .card{
+        height: 35%;
+    }
+
+    .list-card{
+        overflow-x: scroll;
+        overflow-y: hidden;
+        padding-left: 0;
+    }
+
+    .card-container{
+        height: 100%;
+    }
+
+    .list-card > button{
+        display: none;
+    }
+    
 }

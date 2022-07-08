@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 
 export const Box = styled.div`
-padding: 80px 60px;
+display: flex;
+margin: 5% 0 20px;
 background: black;
-position: absolute;
+flex-direction: column;
+justify-content: center;
 width: 100%;
-
+height: auto;
 
 @media (max-width: 1000px) {
 	padding: 70px 30px;
@@ -15,24 +17,34 @@ width: 100%;
 export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
+	width: 100%;
 	justify-content: center;
-	max-width: 1000px;
-	margin: 0 auto;
 	/* background: red; */
 `
 
 export const Column = styled.div`
 display: flex;
+flex-direction: row;
+justify-content: space-around;
+
+`;
+
+export const NetworkContainer = styled.div`
+display: flex;
 flex-direction: column;
-text-align: left;
-margin-left: 60px;
+width: 100%;
+height: auto;
+justify-content: center;
+
+@media (max-width: 1000px) {
+	grid-template-columns: repeat(auto-fill,
+						minmax(200px, 1fr));
+}
 `;
 
 export const Row = styled.div`
-display: grid;
-grid-template-columns: repeat(auto-fill,
-						minmax(185px, 1fr));
-grid-gap: 200px;
+display: flex;
+justify-content: space-around;
 
 @media (max-width: 1000px) {
 	grid-template-columns: repeat(auto-fill,
