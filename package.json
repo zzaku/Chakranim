@@ -23,7 +23,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "cd client && npm start"
+    "start": "cd client && npm start",
+    "build": "cd client && npm start build",
+    "test": "cd client && npm start test",
+    "eject": "cd client && npm start eject"
   },
   "eslintConfig": {
     "extends": [
