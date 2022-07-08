@@ -18,14 +18,14 @@ return (
 			<Row>
 				<Column>
 					<Heading>
-						<a href="https://www.instagram.com/enzo.mkd/" target="_blank" rel="noreferrer">
+						<a href="https://www.instagram.com/chakranimes/" target="_blank" rel="noreferrer">
 							<img src="https://img.icons8.com/fluency/96/000000/instagram-new.png"/>
 						</a>
 					</Heading>
 				</Column>
 				<Column>
 					<Heading>
-					<a href="https://twitter.com/Zkuu_" target="_blank" rel="noreferrer">
+					<a href="https://twitter.com/chakranime" target="_blank" rel="noreferrer">
 						<img src="https://img.icons8.com/color/96/000000/twitter--v1.png"/>
 					</a>
 					</Heading>

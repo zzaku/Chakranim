@@ -44,6 +44,7 @@ router.get('/allanimes/length', async (req, res) => {
 
 //CHECK AND SCRAP NEW ANIMES
 const scrapper = setInterval(async () => {
+    console.log(await isThereNewAnime())
     const newData = await isThereNewAnime()
         const scrap = await pageScraper.pageScraper(browserInstance, newData);
         const posts = await Post.find({
@@ -53,7 +54,7 @@ const scrapper = setInterval(async () => {
            return await getAllNameOfNewEp(posts)
         }
     return console.log("animes récupérés.")
-}, 3600000)
+}, 10800000)
 
 //SWAP ALL PREVIOUS ANIME EP WITH NEW EP
 const getAllNameOfNewEp = async (episodes) => {
@@ -311,7 +312,7 @@ router.post('/allanimes', async (req, res) => {
 
 
 //DELETE ALL ANIME
-router.delete('/allanimes', async (req, res) => {
+/*router.delete('/allanimes', async (req, res) => {
     try{
         const removeAll = await Post.remove()
         res.json(removeAll)
@@ -329,7 +330,7 @@ router.delete('/anime/:postId', async (req, res) => {
     }catch(err){
         res.json({message: err})
     }
-});
+});*/
 
 
 module.exports = {

@@ -38,7 +38,7 @@ function App() {
 
   useEffect(() => {
     getData()
-    fetch("http://localhost:4000/VOD/allanimes/check")
+    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/allanimes/check`)
     .then(res => res.json())
     .then(data => setAllAnimes(data))
   }, [])

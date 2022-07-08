@@ -1,5 +1,5 @@
 const axios = require('axios').default;
-const time = require('./node_modules/puppeteer/lib/cjs/puppeteer/common/LifecycleWatcher')
+
 const scraperObject = {
     url: 'https://vostfree.tv',
     async scraper(browser, previousScrappedAnime){
@@ -86,30 +86,6 @@ const scraperObject = {
         let pagePromise = (link, nombre_ep) => new Promise(async(resolve, reject) => {
 
 			let newPage = await browser.newPage();
-            await newPage.setRequestInterception(true);
-            const rejectRequestPattern = [
-                "googlesyndication.com",
-                "/*.doubleclick.net",
-                "/*.amazon-adsystem.com",
-                "/*.adnxs.com",
-                "/*.dirtyleague.com",
-                "/*.advnotreviews.com",
-                "/*.skiptheadz.com",
-                "/*.clkv4.com",
-                "/*.cuntempire.com",
-                "/*.adblockultra.com",
-                "/*.fr.stop-bot.com",
-                "/*.adblockerapp.com",
-                "/*.fastd.s3.amazonaws.com",
-                "/*.advnotacademy.com",
-                "/*.install.beststreamsearch.com",
-                "/*.mainsextube.com",
-                "/*.adzshield.com",
-                "/*.extyoneplus-3.com",
-                "/*.indefinitelytonsil.com",
-                "/*.indefinitelytonsil.com",
-                "/*.clkv4.extyoneplus-3.com/click?seat=2112827&i="
-              ];
               await newPage.goto(link);
               await newPage.setDefaultNavigationTimeout(0);
             await newPage.waitForSelector('#player-tabs > div.tab-blocks > div:nth-child(1) > div > div.new_player_top > div.new_player_next');
@@ -117,18 +93,8 @@ const scraperObject = {
             let select = await newPage.$("div.jq-selectbox-wrapper > div")
             await newPage.waitForSelector('div.jq-selectbox-wrapper > div')
             await select.click();
-            newPage.on("request", (request) => {
-                if (rejectRequestPattern.find((pattern) => request.url().match(pattern))) {
-                    request.abort();
-                  } else request.continue();
-              });
             let fromStart = await newPage.$("div.jq-selectbox__dropdown > ul > li")
             await fromStart.click();
-            newPage.on("request", (request) => {
-                if (rejectRequestPattern.find((pattern) => request.url().match(pattern))) {
-                    request.abort();
-                  } else request.continue();
-              });
             await newPage.waitForTimeout(1000)
             let anime = await newPage.$$eval('#player-tabs > div.tab-blocks > div:nth-child(1) > div > div.new_player_top > div.new_player_selector_box > div.jq-selectbox-wrapper > select > option', async(ep) => {
                 let datas = [];

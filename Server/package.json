@@ -1,0 +1,14 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "API & Scraper - Animes",
+  "scripts": {
+    "start": "cd API && npm start"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "keywords": [],
+  "author": "Enzo Makked",
+  "license": "ISC"
+}

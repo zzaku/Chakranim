@@ -164,10 +164,7 @@ let sumDelay2
         let scrollAmount = cardContainerRef.current && cardContainerRef.current.scrollWidth * 7
         let maxScroll = cardListRef.current ? cardListRef.current.scrollWidth : null
         currentScrollPosition = finalPositionScroll.start && !finalPositionScroll.end ? 0 : currentPose 
-        console.log("le pas :", scrollAmount)
-        console.log("avant :", currentScrollPosition)
         currentScrollPosition += val * scrollAmount
-        console.log("aprés : ", currentScrollPosition)
         setCurrentPose(currentScrollPosition)
         if(currentScrollPosition >= maxScroll - scrollAmount){
           currentScrollPosition = maxScroll
@@ -179,8 +176,6 @@ let sumDelay2
           setFinalPositionScroll({start: false, end: false})
         }
           cardListRef.current.scrollLeft = currentScrollPosition
-
-          console.log("max : ", maxScroll)
         }
 
     return (

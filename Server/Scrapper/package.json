@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "Api-Anime",
   "main": "Scrapper.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Enzo Makked",
   "license": "ISC",
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "@cliqz/adblocker-puppeteer": "^1.23.8",
     "axios": "^0.27.2",
