@@ -9,7 +9,7 @@ import ParallaxHover from './Card/Card';
 import goku from './Neon/assets/kamea.gif'
 import jiren from './Neon/assets/jiren.gif'
 import tpGoku from './Neon/assets/tpGoku.gif'
-import gohan from './Neon/assets/gohan.gif'
+import songoku from './Neon/assets/songoku.gif'
 import { parseGIF, decompressFrames  } from 'gifuct-js';
 import "./style/List.css"
 
@@ -70,7 +70,7 @@ let sumDelay2
                   gokuRef.current.style.height = "auto";
                   gokuRef.current.style.width = "auto";
                   setTimeout(() => {
-                    gokuRef.current.src = gohan;
+                    gokuRef.current.src = songoku;
                 }, sumDelay2-100);
               }
               })
