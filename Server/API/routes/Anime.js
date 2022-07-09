@@ -1,44 +1,118 @@
 const express = require('express');
+const jwt = require('jsonwebtoken')
 const Post = require('../models/Post');
 const router = express.Router();
 const pageScraper = require('../../Scrapper/pageController');
 const browserObject = require('../../Scrapper/browser');
 const isThereNewAnime = require('../../Scrapper/addNewAnime')
 const browserInstance = browserObject.startBrowser();
+require('dotenv/config');
+
+
+const token = process.env.ACCESS_TOKEN_SECRET
+const refresh = process.env.REFRESH_TOKEN_SECRET
+const key = process.env.SECRET_KEY
 
 let cacheTime;
 let datas
+
+const user = {
+    ip: "",
+    name: "user"
+}
+
+const generateAcessToken = (user) => {
+    return jwt.sign(user, token, {expiresIn: "1800s"})
+}
+const generateRefreshToken = (user) => {
+    return jwt.sign(user, refresh, {expiresIn: "1y"})
+}
+
+router.post('/user/refreshToken', async (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const tokenSend = authHeader && authHeader.split(' ')[1]
+
+    if(!tokenSend){
+        return res.sendStatus(401);
+    }
+
+    jwt.verify(tokenSend, refresh, (err, user) => {
+        if(err){
+            return res.sendStatus(401);
+        }
+        delete user.iat;
+        delete user.exp;
+        const refreshedToken = generateAcessToken(user);
+        res.send({
+            accessToken: refreshedToken,
+        })
+    });
+});
+
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const tokenSend = authHeader && authHeader.split(' ')[1]
+
+    if(!tokenSend){
+        return res.sendStatus(401);
+    }
+
+    jwt.verify(tokenSend, token, (err, user) => {
+        if(err){
+            return res.sendStatus(401);
+        }
+        req.user = user
+        next();
+    });
+}
+
+router.post('/user', async (req, res) => {
+
+    if(req.body.key !== key){
+        res.status(401).send("invalid credentials")
+        return ;
+    }
+
+    const accessToken = generateAcessToken(user)
+    const refreshToken = generateRefreshToken(user)
+    res.send({
+        accessToken, 
+        refreshToken
+    })
+});
+
+
 //GET BACK ALL 9 ANIMES
-router.get('/allanimes', async (req, res) => {
+router.get('/allanimes', authenticateToken, async (req, res) => {
     try{
         const { page = 1, limit = 15 } = req.query;
         const posts = await Post.find()
         .sort({$natural:-1})
         .limit(limit * 1)
         .skip((page - 1) * limit);
-        res.json(posts)
+        res.status(200).json(posts)
     }catch(err){
         res.json({message: err})
     }
 });
 
 //GET BACK ALL ANIMES
-router.get('/allanimes/check', async (req, res) => {
+router.get('/allanimes/check', authenticateToken, async (req, res) => {
     try{
         const posts = await Post.find()
-        res.json(posts)
+        res.status(200).json(posts)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
 //GET BACK LENGTH OF ANIMES LIST 
-router.get('/allanimes/length', async (req, res) => {
+router.get('/allanimes/length', authenticateToken, async (req, res) => {
     try{
         const posts = await Post.find()
-        res.json(posts.length)
+        res.status(200).json(posts.length)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
@@ -77,29 +151,29 @@ const getAllNameOfNewEp = async (episodes) => {
 }
 
 //GET BACK LAST 10 ANIME
-router.get('/anime/recentlyadded', async (req, res) => {
+router.get('/anime/recentlyadded', authenticateToken,  async (req, res) => {
     try{
         const { page = 1, limit = 21 } = req.query;
         const post = await Post.find({}).sort({$natural:-1}).limit(limit * 1)
         .skip((page - 1) * limit);
-        res.json(post)
+        res.status(200).json(post)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
 //GET BACK SPECIFIC ANIME
-router.get('/anime/:postId', async (req, res) => {
+router.get('/anime/:postId', authenticateToken, async (req, res) => {
     try{
         const post = await Post.findById(req.params.postId)
-        res.json(post)
+        res.status(200).json(post)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
 //GET ANIMES SERIE
-router.get('/animes/type/serie', async (req, res) => {
+router.get('/animes/type/serie', authenticateToken, async (req, res) => {
     try{
         const { page = 1, limit = 9 } = req.query;
         const posts = await Post.find({
@@ -111,14 +185,14 @@ router.get('/animes/type/serie', async (req, res) => {
         })
         .limit(limit * 1)
         .skip((page - 1) * limit);
-        res.json(posts)
+        res.status(200).json(posts)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
 //GET ANIMES FILM
-router.get('/animes/type/film', async (req, res) => {
+router.get('/animes/type/film', authenticateToken, async (req, res) => {
     try{
         const { page = 1, limit = 9 } = req.query;
         const posts = await Post.find({
@@ -126,14 +200,14 @@ router.get('/animes/type/film', async (req, res) => {
             })
         .limit(limit * 1)
         .skip((page - 1) * limit);
-        res.json(posts)
+        res.status(200).json(posts)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
 //GET ALL ANIMES FILM WITHOUT PAGINATION
-router.get('/animes/type/Allfilm', async (req, res) => {
+router.get('/animes/type/Allfilm', authenticateToken, async (req, res) => {
     try{
         const filmornot = req.query.filmornot;
         const { page = 1, limit = 21 } = req.query;
@@ -142,14 +216,14 @@ router.get('/animes/type/Allfilm', async (req, res) => {
             })
         .limit(limit * 1)
         .skip((page - 1) * limit);
-        res.json(posts)
+        res.status(200).json(posts)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
 //GET BACK ANIME BY GENRE
-router.get('/Allanimes/genres', async (req, res) => {
+router.get('/Allanimes/genres', authenticateToken, async (req, res) => {
     try{
         const genre1 = req.query.genre1;
         const genre2 = req.query.genre2;
@@ -206,14 +280,14 @@ router.get('/Allanimes/genres', async (req, res) => {
         })
         .limit(limit * 1)
         .skip((page - 1) * limit);
-        res.json(posts)
+        res.status(200).json(posts)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
 //GET BACK ALL ANIMES BY GENRE WITHOUT PAGINATION
-router.get('/animes/Allgenres', async (req, res) => {
+router.get('/animes/Allgenres', authenticateToken, async (req, res) => {
     try{
         const genre1 = req.query.genre1;
         const genre2 = req.query.genre2;
@@ -270,14 +344,14 @@ router.get('/animes/Allgenres', async (req, res) => {
         })
         .limit(limit * 1)
         .skip((page - 1) * limit);
-        res.json(posts)
+        res.status(200).json(posts)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
 //SUBMIT AN ANIME
-router.post('/allanimes', async (req, res) => {
+router.post('/allanimes', authenticateToken, async (req, res) => {
     const data = {
         name: req.body.name,
         date: req.body.date,
@@ -303,37 +377,37 @@ router.post('/allanimes', async (req, res) => {
 
     try{
         const savedPost = await post.save();
-        res.json(savedPost);
+        res.status(200).json(savedPost);
     }catch(err) {
-        res.json({message : err});
+        res.status(401).json({message : err});
     }
 
 });
 
 
 //DELETE ALL ANIME
-/*router.delete('/allanimes', async (req, res) => {
+router.delete('/allanimes', authenticateToken, async (req, res) => {
     try{
         const removeAll = await Post.remove()
-        res.json(removeAll)
+        res.status(200).json(removeAll)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
 });
 
 
 //DELETE SPECIFIC ANIME
-router.delete('/anime/:postId', async (req, res) => {
+router.delete('/anime/:postId', authenticateToken, async (req, res) => {
     try{
         const removeOne = await Post.remove({_id: req.params.postId})
-        res.json(removeOne)
+        res.status(200).json(removeOne)
     }catch(err){
-        res.json({message: err})
+        res.status(401).json({message: err})
     }
-});*/
+});
 
 
 module.exports = {
     router: router,
-    scrap: scrapper
+    scrap: scrapper,
 }

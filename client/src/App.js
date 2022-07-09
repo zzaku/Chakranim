@@ -21,11 +21,29 @@ function App() {
   const saveAnime = localStorage.watching;
   const [ep, setEp] = useState(saveAnime ? JSON.parse(saveAnime) : {current_episode: [], all_episodes: [], name: "", image: ""})
 
+  const key = {
+    key: `${process.env.REACT_APP_SECRET_KEY}`
+  }
+
+  const body_Key = {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      key: `${process.env.REACT_APP_SECRET_KEY}`
+    }),
+  };
+
   useEffect(() => {
     localStorage.setItem("watching", JSON.stringify(ep));
   }, [ep]);
   
   useEffect(() => {
+    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/user`, body_Key)
+    .then(res => res.json())
+    .then(key => console.log(key))
     fetch(`${process.env.REACT_APP_API_ANIME}/VOD/allanimes/check`)
     .then(res => res.json())
     .then(data => setAllAnimes(data))
