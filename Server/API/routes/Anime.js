@@ -98,6 +98,7 @@ router.get('/allanimes', authenticateToken, async (req, res) => {
 });
 
 //GET BACK ALL ANIMES
+
 router.get('/allanimes/check', authenticateToken, async (req, res) => {
     try{
         const posts = await Post.find()
