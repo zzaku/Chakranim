@@ -36,6 +36,8 @@ let customFetcher = async (url, config = {}) => {
     }
 
     config["headers"] = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json', 
         Authorization: `Bearer ${token ? token : null}`
     }
 
