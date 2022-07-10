@@ -74,7 +74,7 @@ function App() {
   
   useEffect(() => {
     getToken()
-    getAllAnimes()
+    //getAllAnimes()
 
     .catch(err => console.log(err))
   }, [])

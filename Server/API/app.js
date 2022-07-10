@@ -13,7 +13,9 @@ const postsRoute = require('./routes/Anime')
 
 
 //Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'https://chakranimes.vercel.app'
+}));
 app.use(bodyParser.urlencoded({extended: true, parameterLimit: 1000000, limit: '10000kb'}))
 app.use(bodyParser.json())
 app.use('/vod', postsRoute.router);

@@ -24,6 +24,7 @@ const user = {
 const generateAcessToken = (user) => {
     return jwt.sign(user, token, {expiresIn: "1800s"})
 }
+
 const generateRefreshToken = (user) => {
     return jwt.sign(user, refresh, {expiresIn: "1y"})
 }
@@ -128,7 +129,7 @@ const scrapper = setInterval(async () => {
            return await getAllNameOfNewEp(posts)
         }
     return console.log("animes récupérés.")
-}, 10800000)
+}, 180000)
 
 //SWAP ALL PREVIOUS ANIME EP WITH NEW EP
 const getAllNameOfNewEp = async (episodes) => {
