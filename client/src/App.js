@@ -74,8 +74,8 @@ function App() {
   }
  }
   
-  useEffect((e) => {
-    getToken(e)
+  useEffect(() => {
+    getToken()
     getAllAnimes()
 
     .catch(err => console.log(err))

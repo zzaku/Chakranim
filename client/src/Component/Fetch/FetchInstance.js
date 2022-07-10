@@ -31,10 +31,10 @@ let customFetcher = async (url, config = {}) => {
     const user = jwt_decode(token)
     const isExpired = Dayjs.unix(user.exp).diff(Dayjs()) < 1;
 
+    console.log(isExpired)
     if(isExpired){
         token = await refreshToken(refreshedToken)
     }
-    console.log(isExpired)
 
     config["headers"] = {
         Authorization: `Bearer ${token ? token : null}`
