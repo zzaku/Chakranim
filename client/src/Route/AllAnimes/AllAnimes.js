@@ -9,10 +9,11 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import customFetcher from "../../Component/Fetch/FetchInstance";
 import "./style/AllAnimes.css"
 
 
-const AllAnimes = ({allAnimes, setNotAtHome}) => {
+const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
 
     let withoutDoublon = [{}] 
     const [nextPage, setNextPage] = useState(1)
@@ -21,6 +22,7 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
     const [animeBySeason, setAnimeBySeason] = useState([])
     const [open, setOpen] = useState(false);
     const wrapperRef = useRef(null);
+  
     const [descriptionSuite, setDescriptionSuite] = useState(false)
     const [getGenres, setGetGenres] = useState([])
     const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance"], [])
@@ -42,22 +44,34 @@ const AllAnimes = ({allAnimes, setNotAtHome}) => {
   }
 
     useEffect(() => {
-        if(anime.desc){
+        if(anime?.desc){
         setDescriptionSuite(anime.desc.split("Acteur")[0].length < 400 ? false : true)
         }
     }, [anime])
 
+    let getByGenre = async () => {
+        let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
+        if(response.status === 200){
+            setAnimes(data)
+          }
+    }
+
+    let getAllByPagination = async () => {
+        let {response, data} = await customFetcher(getAll15Animes)
+        if(response.status === 200){
+            setAnimes(data)
+          }
+    }
+
     useEffect(() => {
-      if(getGenres[0] && getGenres[0].length > 0){
-          fetch(`${process.env.REACT_APP_API_ANIME}/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
-          .then(res => res.json())
-          .then(datas => setAnimes(datas))
-      } else {
-          fetch(getAll15Animes)
-          .then(res => res.json())
-          .then(data => setAnimes(data))
-      }
-    }, [nextPage, getGenres, getAll15Animes])
+            if(getGenres[0] && getGenres[0].length > 0){
+                getByGenre()
+            } else {
+                getAllByPagination()
+            }
+            console.log(anime)
+
+    }, [nextPage, getGenres, getAll15Animes, instance.headers])
 
     useEffect(() => {
         if(getGenres[0] && getGenres[0].length > 0){

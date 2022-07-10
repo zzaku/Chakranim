@@ -85,7 +85,7 @@ const getNbrOfSeason = () => {
 }
 
 let nbrSeason = getNbrOfSeason()
-
+console.log(animeBySeason)
 let seasonChanged = (otherSeason, langue) => {
   let testSeason = animeBySeason.filter(elem => (elem.saison === otherSeason.saison && elem.langue === langue) || (elem.saison === otherSeason.saison))[0]
   if(testSeason){

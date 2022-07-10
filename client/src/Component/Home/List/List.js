@@ -127,7 +127,7 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
         return newArray 
     }
     withoutDoublon = [{[genres]: filterDoublonAnime()}]
-
+    
     const handleClose = () => {
         setOpen(false);
         setDescriptionSuite(false)
