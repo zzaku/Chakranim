@@ -71,7 +71,7 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
             }
             console.log(anime)
 
-    }, [nextPage, getGenres, getAll15Animes, instance.headers])
+    }, [nextPage, getGenres, getAll15Animes])
 
     useEffect(() => {
         if(getGenres[0] && getGenres[0].length > 0){
