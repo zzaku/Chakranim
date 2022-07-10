@@ -37,8 +37,6 @@ function App() {
   const jwtRefreshed = localStorage.refreshToken;
   const [refreshToken, setRefreshToken] = useState(localStorage.getItem("refreshToken"))
 ///////////////////////////////////////////////////////////
-  
-  const [instance, setInstance] = useState({url: `${process.env.REACT_APP_API_ANIME}/VOD/allanimes/check`, headers: {}}) 
 
   const body_Key = {
     method: "POST",
@@ -47,7 +45,7 @@ function App() {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      key: `w9z$C&F)J@McQfTjWnZr4u7x!A%D*G-KaPdRgUkXp2s5v8y/B?E(H+MbQeThVmYq3t6w9z$C&F)J@NcRfUjXnZr4u7x!A%D*G-KaPdSgVkYp3s5v8y/B?E(H+MbQeThWmZq4t7w9z$C&F)J@NcRfUjXn2r5u8x/A%D*G-KaPdSgVkYp3s6v9y$B&E(H+MbQeThWmZq4t7w!z%C*F-J@NcRfUjXn2r5u8x/A?D(G+KbPdSgVkYp3s6v9y$B&E)H@M`
+      key: process.env.REACT_APP_SECRET_KEY
     }),
   };
 
@@ -89,9 +87,9 @@ function App() {
             {!search && <Navbar notAtHome={notAtHome} setNotAtHome={setNotAtHome} />}
             <Search open={search} notAtHome={notAtHome} setNotAtHome={setNotAtHome} startSearching={startSearching} allAnimes={allAnimes} animeToFind={animeToFind} />
           <Routes>
-                <Route path='/' element={<Home instance={instance} allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />  
+                <Route path='/' element={<Home allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />  
                 <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} />} />
-                <Route path='/list/animes' element={<AllAnimes instance={instance} token={token} setToken={setToken} refreshToken={refreshToken} setRefreshToken={setRefreshToken} allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />
+                <Route path='/list/animes' element={<AllAnimes token={token} setToken={setToken} refreshToken={refreshToken} setRefreshToken={setRefreshToken} allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />
             </Routes>
           {!startSearching && <Footer />}
         </Router>

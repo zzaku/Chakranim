@@ -11,7 +11,7 @@ let originalRequest = async (url, config) => {
 
 let refreshToken = async (refreshToken) => {
 
-    let response = await fetch(`${process.env.REACT_APP_API_ANIME}/VOD/user/refreshToken`, {
+    let response = await fetch(`http://localhost:4000/VOD/user/refreshToken`, {
         method: "POST",
         headers: {
         'Accept': 'application/json',
