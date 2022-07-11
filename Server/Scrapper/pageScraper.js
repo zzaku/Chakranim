@@ -1,9 +1,9 @@
 const axios = require('axios').default;
+const isThereNbrEp = require('./addNewAnime')
 
 const scraperObject = {
     url: 'https://vostfree.tv',
-    async scraper(browser, previousScrappedAnime){
-        //console.log(previousScrappedAnime)
+    async scraper(browser){
         let page = await browser.newPage();
 		console.log(`Navigating to ${this.url}...`);
 		// Navigate to the selected page
@@ -17,9 +17,12 @@ const scraperObject = {
 		await page.waitForSelector('#dle-content > div.movie-poster');
         await page.waitForSelector("#dle-content > div.navigation > a:nth-child(3) > span");   
         let sections = await page.$$eval("#dle-content > div.navigation > div > a", list => {let tab = []; list.map(elem => tab.push(parseInt(elem.textContent))); return tab.slice(-1)[0]})
-        async function verify(scrapped){  
+        async function verify(scrapped){
             for (let i = scrapped.length - 1; i >= 0; i--) {
-                  for(let alreadyGet of previousScrappedAnime[0]){
+
+                let previousScrappedAnime = await isThereNbrEp(encodeURIComponent(scrapped[i].name))
+
+                for(let alreadyGet of previousScrappedAnime[0]){
                         if(
                             scrapped[i].name === alreadyGet.name && scrapped[i].langue === alreadyGet.langue && 
                             scrapped[i].saison === alreadyGet.saison 
@@ -272,7 +275,7 @@ const scraperObject = {
                     if(elems[link].nbr_episode >= 200){
                         currentPageData2 = await pagePromiseEpSupThan450(elems[link].link)
                     } 
-                    suite ? await axios.post('http://localhost:4000/vod/allanimes/', {
+                    suite ? await axios.post('https://chakranimes.herokuapp.com/vod/allanimes/', {
                         name: currentPageData1[0].name,
                         desc: currentPageData1[0].desc,
                         image: currentPageData1[0].image,
@@ -291,7 +294,7 @@ const scraperObject = {
                         date: currentPageData1[0].date
                     }) 
                     : 
-                    await axios.post('http://localhost:4000/vod/allanimes/', {
+                    await axios.post('https://chakranimes.herokuapp.com/vod/allanimes/', {
                         name: currentPageData1[0].name,
                         desc: currentPageData1[0].desc,
                         image: currentPageData1[0].image,

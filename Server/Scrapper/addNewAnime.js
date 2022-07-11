@@ -5,9 +5,9 @@ puppeteer.use(AdblockerPlugin());
 const fs = require('fs');
 require('events').EventEmitter.defaultMaxListeners = 200;
 
-module.exports = async function isThereNewAnime () {
+module.exports = async function isThereNewAnime (name) {
   let data = []
-  await axios.get('http://localhost:4000/vod/allanimes/check/').then(response => data.push(response.data))
+  await axios.get(`https://chakranimes.herokuapp.com/vod/animes?name=${name}`).then(response => data.push(response.data))
   return data
 };
 

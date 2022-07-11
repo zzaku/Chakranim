@@ -4,7 +4,6 @@ const Post = require('../models/Post');
 const router = express.Router();
 const pageScraper = require('../../Scrapper/pageController');
 const browserObject = require('../../Scrapper/browser');
-const isThereNewAnime = require('../../Scrapper/addNewAnime')
 const browserInstance = browserObject.startBrowser();
 require('dotenv/config');
 
@@ -84,7 +83,7 @@ router.post('/user', async (req, res) => {
 
 
 //GET BACK ALL 9 ANIMES
-router.get('/allanimes', authenticateToken, async (req, res) => {
+router.get('/allanimes', async (req, res) => {
     try{
         const { page = 1, limit = 15 } = req.query;
         const posts = await Post.find()
@@ -97,22 +96,14 @@ router.get('/allanimes', authenticateToken, async (req, res) => {
     }
 });
 
-//GET BACK ALL ANIMES
-
-/*router.get('/allanimes/check', authenticateToken, async (req, res) => {
-    try{
-        const posts = await Post.find()
-        res.status(200).json(posts)
-    }catch(err){
-        res.status(401).json({message: err})
-    }
-});*/
-
 //GET BACK LENGTH OF ANIMES LIST 
-router.get('/allanimes/length', authenticateToken, async (req, res) => {
+router.get('/animes', async (req, res) => {
     try{
-        const posts = await Post.find()
-        res.status(200).json(posts.length)
+        const name = req.query.name;
+        const posts = await Post.find({
+            name: name,
+            })
+        res.status(200).json(posts)
     }catch(err){
         res.status(401).json({message: err})
     }
@@ -120,9 +111,7 @@ router.get('/allanimes/length', authenticateToken, async (req, res) => {
 
 //CHECK AND SCRAP NEW ANIMES
 const scrapper = setInterval(async () => {
-    console.log(await isThereNewAnime())
-    const newData = await isThereNewAnime()
-        const scrap = await pageScraper.pageScraper(browserInstance, newData);
+        const scrap = await pageScraper.pageScraper(browserInstance);
         const posts = await Post.find({
             newEp: {$exists: true}
     })
@@ -130,7 +119,7 @@ const scrapper = setInterval(async () => {
            return await getAllNameOfNewEp(posts)
         }
     return console.log("animes récupérés.")
-}, 180000)
+}, 14400000)
 
 //SWAP ALL PREVIOUS ANIME EP WITH NEW EP
 const getAllNameOfNewEp = async (episodes) => {
@@ -153,7 +142,7 @@ const getAllNameOfNewEp = async (episodes) => {
 }
 
 //GET BACK LAST 10 ANIME
-router.get('/anime/recentlyadded', authenticateToken,  async (req, res) => {
+router.get('/anime/recentlyadded',  async (req, res) => {
     try{
         const { page = 1, limit = 21 } = req.query;
         const post = await Post.find({}).sort({$natural:-1}).limit(limit * 1)
@@ -165,7 +154,7 @@ router.get('/anime/recentlyadded', authenticateToken,  async (req, res) => {
 });
 
 //GET BACK SPECIFIC ANIME
-router.get('/anime/:postId', authenticateToken, async (req, res) => {
+router.get('/anime/:postId', async (req, res) => {
     try{
         const post = await Post.findById(req.params.postId)
         res.status(200).json(post)
@@ -175,7 +164,7 @@ router.get('/anime/:postId', authenticateToken, async (req, res) => {
 });
 
 //GET ANIMES SERIE
-router.get('/animes/type/serie', authenticateToken, async (req, res) => {
+router.get('/animes/type/serie', async (req, res) => {
     try{
         const { page = 1, limit = 9 } = req.query;
         const posts = await Post.find({
@@ -194,7 +183,7 @@ router.get('/animes/type/serie', authenticateToken, async (req, res) => {
 });
 
 //GET ANIMES FILM
-router.get('/animes/type/film', authenticateToken, async (req, res) => {
+router.get('/animes/type/film', async (req, res) => {
     try{
         const { page = 1, limit = 9 } = req.query;
         const posts = await Post.find({
@@ -209,7 +198,7 @@ router.get('/animes/type/film', authenticateToken, async (req, res) => {
 });
 
 //GET ALL ANIMES FILM WITHOUT PAGINATION
-router.get('/animes/type/Allfilm', authenticateToken, async (req, res) => {
+router.get('/animes/type/Allfilm', async (req, res) => {
     try{
         const filmornot = req.query.filmornot;
         const { page = 1, limit = 21 } = req.query;
@@ -225,7 +214,7 @@ router.get('/animes/type/Allfilm', authenticateToken, async (req, res) => {
 });
 
 //GET BACK ANIME BY GENRE
-router.get('/Allanimes/genres', authenticateToken, async (req, res) => {
+router.get('/Allanimes/genres', async (req, res) => {
     try{
         const genre1 = req.query.genre1;
         const genre2 = req.query.genre2;
@@ -289,7 +278,7 @@ router.get('/Allanimes/genres', authenticateToken, async (req, res) => {
 });
 
 //GET BACK ALL ANIMES BY GENRE WITHOUT PAGINATION
-router.get('/animes/Allgenres', authenticateToken, async (req, res) => {
+router.get('/animes/Allgenres', async (req, res) => {
     try{
         const genre1 = req.query.genre1;
         const genre2 = req.query.genre2;
@@ -353,7 +342,7 @@ router.get('/animes/Allgenres', authenticateToken, async (req, res) => {
 });
 
 //SUBMIT AN ANIME
-router.post('/allanimes', authenticateToken, async (req, res) => {
+router.post('/allanimes', async (req, res) => {
     const data = {
         name: req.body.name,
         date: req.body.date,
@@ -388,7 +377,7 @@ router.post('/allanimes', authenticateToken, async (req, res) => {
 
 
 //DELETE ALL ANIME
-router.delete('/allanimes', authenticateToken, async (req, res) => {
+router.delete('/allanimes', async (req, res) => {
     try{
         const removeAll = await Post.remove()
         res.status(200).json(removeAll)
@@ -399,7 +388,7 @@ router.delete('/allanimes', authenticateToken, async (req, res) => {
 
 
 //DELETE SPECIFIC ANIME
-router.delete('/anime/:postId', authenticateToken, async (req, res) => {
+router.delete('/anime/:postId', async (req, res) => {
     try{
         const removeOne = await Post.remove({_id: req.params.postId})
         res.status(200).json(removeOne)

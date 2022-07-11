@@ -1,17 +1,22 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "description": "API & Scraper - Animes",
+  "name": "api-scraper",
+  "version": "1.1.0",
+  "description": "",
+  "main": "app.js",
   "scripts": {
-    "start": "cd API && npm start"
+    "start": "node app.js"
   },
-  "engines": {
-    "node": "16.x"
-  },
-  "keywords": [],
-  "author": "Enzo Makked",
+  "author": "Zakuu",
   "license": "ISC",
   "dependencies": {
-    "jsonwebtoken": "^8.5.1"
+    "axios": "^0.27.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.4.4",
+    "puppeteer-extra": "^3.3.4",
+    "puppeteer-extra-plugin-adblocker": "^2.13.4",
+    "puppeteer-extra-plugin-stealth": "^2.11.0"
   }
 }

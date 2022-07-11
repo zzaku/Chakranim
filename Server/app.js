@@ -9,24 +9,22 @@ const pass = process.env.DB_CONNECTION_PASSWORD
 const port = process.env.PORT
 
 //Import Routes
-const postsRoute = require('./routes/Anime')
+const postsRoute = require('./API/routes/Anime')
 
 
 //Middlewares
 app.use(cors({
-  origin: 'https://chakranimes.vercel.app'
+  origin: ['https://chakranimes.vercel.app', 'https://chakranimes.herokuapp.com']
 }));
 app.use(bodyParser.urlencoded({extended: true, parameterLimit: 1000000, limit: '10000kb'}))
 app.use(bodyParser.json())
 app.use('/vod', postsRoute.router);
 
-
-
 //Connect to DB
 mongoose.connect(
     `mongodb+srv://${user}:${pass}@cluster0.rjm7e3x.mongodb.net/Chakranim`,
      {useNewUrlParser: true},
-      () => console.log('connected to DB!')
+      () => console.log('connected to DB !')
     );
 
 
