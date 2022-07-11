@@ -65,13 +65,6 @@ function App() {
   }
  }
 
- /*let getAllAnimes = async () => {
-  let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/allanimes/check`)
-  if(response.status === 200){
-    setAllAnimes(response.data)
-  }
- }*/
-  
   useEffect(() => {
     getToken()
     //getAllAnimes()
