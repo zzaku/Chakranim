@@ -50,17 +50,15 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
     }, [anime])
 
     let getByGenre = async () => {
-        let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
-        if(response.status === 200){
-            setAnimes(data)
-          }
+        fetch(`${process.env.REACT_APP_API_ANIME}/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`)
+        .then(res => res.json())
+        .then(data => setAnimes(data))
     }
 
     let getAllByPagination = async () => {
-        let {response, data} = await customFetcher(getAll15Animes)
-        if(response.status === 200){
-            setAnimes(data)
-          }
+        fetch(getAll15Animes)
+        .then(res => res.json())
+        .then(data => setAnimes(data))
     }
 
     useEffect(() => {

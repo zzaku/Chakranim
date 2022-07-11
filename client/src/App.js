@@ -65,9 +65,16 @@ function App() {
   }
  }
 
+ let getAllAnimes =  () => {
+  fetch(`${process.env.REACT_APP_API_ANIME}/VOD/allanimes/check`)
+  .then(res => res.json())
+  .then(data => setAllAnimes(data))
+  
+ }
+  
   useEffect(() => {
     getToken()
-    //getAllAnimes()
+    getAllAnimes()
 
     .catch(err => console.log(err))
   }, [])

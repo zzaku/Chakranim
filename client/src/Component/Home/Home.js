@@ -48,52 +48,45 @@ const Home = ({allAnimes, setNotAtHome}) => {
         }, [ready, genres])
 
                 let getByGenre3 = async () => {
-                    let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[2]}${getParam(genres[2])}`)
-                    if(response.status === 200){
-                        setGenre3([{[genres[2]]: data}])
-                    }
-                }
+                    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[2]}${getParam(genres[2])}`)
+                    .then(res => res.json())
+                    .then(data => setGenre3([{[genres[2]]: data}]))
+                  }
                 
                 let getByGenre4 = async () => {
-                    let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[3]}${getParam(genres[3])}`)
-                    if(response.status === 200){
-                        setGenre4([{[genres[3]]: data}])
-                    }
-                }
+                    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[3]}${getParam(genres[3])}`)
+                    .then(res => res.json())
+                    .then(data => setGenre4([{[genres[3]]: data}]))
+                  }
         
                 let getByGenre8 = async () => {
-                    let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[7]}${getParam(genres[7])}`)
-                    if(response.status === 200){
-                        setGenre8([{[genres[7]]: data}])
-                    }
-                }
+                    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[7]}${getParam(genres[7])}`)
+                    .then(res => res.json())
+                    .then(data => setGenre8([{[genres[7]]: data}]))
+                  }
 
                 let getByGenre9 = async () => {
-                    let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[8]}${getParam(genres[8])}`)
-                    if(response.status === 200){
-                        setGenre9([{[genres[8]]: data}])
-                    }
-                }
+                    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[8]}${getParam(genres[8])}`)
+                    .then(res => res.json())
+                    .then(data => setGenre9([{[genres[8]]: data}]))
+                  }
 
                 let getByGenre12 = async () => {
-                    let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[11]}${getParam(genres[11])}`)
-                    if(response.status === 200){
-                        setGenre12([{[genres[11]]: data}])
-                    }
+                    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[11]}${getParam(genres[11])}`)
+                    .then(res => res.json())
+                    .then(data => setGenre12([{[genres[11]]: data}]))
                 }
 
                 let getByGenre13 = async () => {
-                    let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/animes/type/Allfilm`)
-                    if(response.status === 200){
-                        setGenre13([{[genres[12]]: data}])
-                    }
+                    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/type/Allfilm`)
+                    .then(res => res.json())
+                    .then(data => setGenre13([{[genres[12]]: data}]))
                 }
 
                 let getByLastAnime = async () => {
-                    let {response, data} = await customFetcher(`${process.env.REACT_APP_API_ANIME}/VOD/anime/recentlyadded?page=1`)
-                    if(response.status === 200){
-                        setLastAnime([{[genres[13]]: data}])
-                    }
+                    fetch(`${process.env.REACT_APP_API_ANIME}/VOD/anime/recentlyadded?page=1`)
+                    .then(res => res.json())
+                    .then(data => setLastAnime([{[genres[13]]: data}]))
                 }
 
         
