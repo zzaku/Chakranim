@@ -75,6 +75,7 @@ function App() {
   useEffect(() => {
     getToken()
     getAllAnimes()
+
   }, [])
 
  
