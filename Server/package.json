@@ -12,7 +12,6 @@
   "author": "Enzo Makked",
   "license": "ISC",
   "dependencies": {
-    "jsonwebtoken": "^8.5.1",
-    "puppeteer": "^15.3.2"
+    "jsonwebtoken": "^8.5.1"
   }
 }

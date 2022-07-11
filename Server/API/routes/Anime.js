@@ -99,14 +99,14 @@ router.get('/allanimes', authenticateToken, async (req, res) => {
 
 //GET BACK ALL ANIMES
 
-router.get('/allanimes/check', authenticateToken, async (req, res) => {
+/*router.get('/allanimes/check', authenticateToken, async (req, res) => {
     try{
         const posts = await Post.find()
         res.status(200).json(posts)
     }catch(err){
         res.status(401).json({message: err})
     }
-});
+});*/
 
 //GET BACK LENGTH OF ANIMES LIST 
 router.get('/allanimes/length', authenticateToken, async (req, res) => {
