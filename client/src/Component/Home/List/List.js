@@ -131,6 +131,7 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     const handleClose = () => {
         setOpen(false);
         setDescriptionSuite(false)
+        setAnimeBySeason([])
         setAnime(null)
       };
 
