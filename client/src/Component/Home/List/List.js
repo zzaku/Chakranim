@@ -141,7 +141,7 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
         let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
 console.log(firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck)
         setAnime(myAnime)
-        fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent(firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck)}`)
+        fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent((firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck).trim())}`)
         .then(res => res.json())
         .then(data => setAnimeBySeason(data))
         setOpen(true);
