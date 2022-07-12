@@ -136,19 +136,12 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
 
       const handleToggle = (myAnime) => {
         setAnime(myAnime)
-        setAnimeBySeason(allAnimes.filter(nameOfAnime => {
-          let firstPart = nameOfAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
-          let secondPart = nameOfAnime.name.split(" ").length > 1 ? nameOfAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-          let thirdPart = nameOfAnime.name.split(" ").length > 2 ? nameOfAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-
-          let firstPartToCheck = myAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
-          let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-          let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-
-          return firstPart + " " + secondPart + " " + thirdPart === firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck
-      }))
+        fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent(myAnime.name)}`)
+        .then(res => res.json())
+        .then(data => setAnimeBySeason(data))
         setOpen(true);
       };
+      console.log(animeBySeason)
 
       const [finalPositionScroll, setFinalPositionScroll] = useState({start: true, end: false})
       const [currentPose, setCurrentPose] = useState(0)

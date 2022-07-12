@@ -96,13 +96,24 @@ router.get('/allanimes', async (req, res) => {
     }
 });
 
-//GET BACK LENGTH OF ANIMES LIST 
+//GET BACK ANIME BY NAME
 router.get('/animes', async (req, res) => {
     try{
         const name = req.query.name;
         const posts = await Post.find({
             name: name,
             })
+        res.status(200).json(posts)
+    }catch(err){
+        res.status(401).json({message: err})
+    }
+});
+
+//GET BACK ALL ANIMES BY NAME
+router.get('/animes/allSeason', async (req, res) => {
+    try{
+        const name = req.query.name;
+        const posts = await Post.find({ name: { "$regex": name, "$options": "i" } })
         res.status(200).json(posts)
     }catch(err){
         res.status(401).json({message: err})
