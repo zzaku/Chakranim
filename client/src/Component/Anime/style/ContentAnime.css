@@ -2,7 +2,7 @@
 .display-ep-anime{
     position: relative;
     height: 100%;
-    width: 100%;
+    width: 55%;
     font-family: "jojo5";
     flex-direction: row;
     flex-flow: row;
@@ -182,5 +182,9 @@
 @media screen and (max-width: 968px) {
     .vod-anime{
         width: 50%;
+    }
+
+    .display-ep-anime{
+        width: 100%;
     }
 }
