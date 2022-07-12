@@ -18,6 +18,8 @@ function App() {
   const [startSearching, setStartSearching] = useState(false)
   const [allAnimes, setAllAnimes] = useState([])
   const [animeToFind, setAnimeToFind] = useState("")
+  const [animeFound, setAnimeFound] = useState([])
+  const [loading, setLoading] = useState(true)
 
 ////local storage ep
   const saveAnime = localStorage.watching;
@@ -67,16 +69,16 @@ function App() {
   
   useEffect(() => {
     getToken()
-    
+
   }, [])
 
  
   return (
-      <epContext.Provider value={{setEp: setEp, token: token, setToken: setToken, refreshToken: refreshToken, setRefreshToken: setRefreshToken, setSearch: setSearch, search: search, setStartSearching: setStartSearching, setAnimeToFind: setAnimeToFind}}>
+      <epContext.Provider value={{setEp: setEp, token: token, setToken: setToken, refreshToken: refreshToken, setRefreshToken: setRefreshToken, setSearch: setSearch, search: search, setStartSearching: setStartSearching, animeToFind: animeToFind, setAnimeToFind: setAnimeToFind, setAnimeFound: setAnimeFound, loading: loading, setLoading: setLoading}}>
         <div className="App">
           <Router>
             {!search && <Navbar notAtHome={notAtHome} setNotAtHome={setNotAtHome} />}
-            <Search open={search} notAtHome={notAtHome} setNotAtHome={setNotAtHome} startSearching={startSearching} allAnimes={allAnimes} animeToFind={animeToFind} />
+            <Search open={search} notAtHome={notAtHome} setNotAtHome={setNotAtHome} startSearching={startSearching} allAnimes={allAnimes} animeFound={animeFound} />
           <Routes>
                 <Route path='/' element={<Home allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />  
                 <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} />} />

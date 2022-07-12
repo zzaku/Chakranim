@@ -2,7 +2,7 @@
 .display-ep-anime{
     position: relative;
     height: 100%;
-    width: 50%;
+    width: 100%;
     font-family: "jojo5";
     flex-direction: row;
     flex-flow: row;
@@ -112,8 +112,8 @@
 .container-saison-anime{
     display: flex;
     height: auto;
-    width: 30%;
-    justify-content: center;
+    width: 50%;
+    justify-content: space-around;
     align-items: center;
 }
 
@@ -177,4 +177,10 @@
   
 .card-shadow {
     box-shadow: 0 3px 6px rgba(255, 255, 255, 0.16), 0 3px 6px rgba(255, 255, 255, 0.23);
+}
+
+@media screen and (max-width: 968px) {
+    .vod-anime{
+        width: 50%;
+    }
 }

@@ -82,10 +82,10 @@ router.post('/user', async (req, res) => {
 });
 
 
-//GET BACK ALL 9 ANIMES
+//GET BACK ALL 12 ANIMES
 router.get('/allanimes', async (req, res) => {
     try{
-        const { page = 1, limit = 15 } = req.query;
+        const { page = 1, limit = 12 } = req.query;
         const posts = await Post.find()
         .sort({$natural:-1})
         .limit(limit * 1)
@@ -239,7 +239,7 @@ router.get('/Allanimes/genres', async (req, res) => {
         const genre10 = req.query.genre10;
         const genre11 = req.query.genre11;
         const genre12 = req.query.genre12;
-        const { page = 1, limit = 15 } = req.query;
+        const { page = 1, limit = 12 } = req.query;
         const posts = await Post.find({
             $and: [
                 {
@@ -303,7 +303,7 @@ router.get('/animes/Allgenres', async (req, res) => {
         const genre10 = req.query.genre10;
         const genre11 = req.query.genre11;
         const genre12 = req.query.genre12;
-        const { page = 1, limit = 34 } = req.query;
+        const { page = 1, limit = 21 } = req.query;
         const posts = await Post.find({
             $and: [
                 {

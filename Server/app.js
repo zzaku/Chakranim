@@ -14,7 +14,7 @@ const postsRoute = require('./API/routes/Anime')
 
 //Middlewares
 app.use(cors({
-  origin: ['https://chakranimes.vercel.app', 'https://chakranimes.herokuapp.com']
+  origin: "*"
 }));
 app.use(bodyParser.urlencoded({extended: true, parameterLimit: 1000000, limit: '10000kb'}))
 app.use(bodyParser.json())

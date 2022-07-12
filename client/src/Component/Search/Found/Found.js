@@ -1,8 +1,10 @@
 import './style/Found.css'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Backdrop } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress';
+import { ThreeDots } from "react-loader-spinner"
 import ContentAnime from '../../Anime/ContentAnime'
+import { epContext } from '../../../App';
 
 const Found = ({allAnimes, animeFound, setNotAtHome}) => {
 
@@ -12,6 +14,7 @@ const Found = ({allAnimes, animeFound, setNotAtHome}) => {
     const [descriptionSuite, setDescriptionSuite] = useState(false)
     let withoutDoublon = []
     const wrapperRef = useRef();
+    const loader = useContext(epContext)
 
     useEffect(() => {
         if(anime.desc){
@@ -79,59 +82,128 @@ const Found = ({allAnimes, animeFound, setNotAtHome}) => {
 
     const handleClose = () => {
         setOpen(false);
+        setAnimeBySeason([])
         setAnime([])
     };
 
     const handleAnime = (myAnime) => {
+        let firstPartToCheck = myAnime.name.split(" ")[0]
+        let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1] : ""
+        let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2] : ""
+        console.log(firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck)
         setAnime(myAnime)
-        setAnimeBySeason(allAnimes.filter(nameOfAnime => {
-            let firstPart = nameOfAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
-            let secondPart = nameOfAnime.name.split(" ").length > 1 ? nameOfAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-            let thirdPart = nameOfAnime.name.split(" ").length > 2 ? nameOfAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-  
-            let firstPartToCheck = myAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
-            let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-            let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-  
-            return firstPart + " " + secondPart + " " + thirdPart === firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck
-        }))
-        setOpen(true)
+        fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent((firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck).trim())}`)
+        .then(res => res.json())
+        .then(data => setAnimeBySeason(data))
+        setOpen(true);
     }
 
     return (
-        <div className="found">
+      <div className="found">
+        {!loader.loading ? (
+          <>
             <Backdrop
-                sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
-                open={open} 
+              sx={{
+                color: "#fff",
+                zIndex: (theme) => theme.zIndex.drawer + 100,
+              }}
+              open={open}
             >
-                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
+              {anime ? (
+                <ContentAnime
+                  wrapperRef={wrapperRef}
+                  anime={anime}
+                  setAnime={setAnime}
+                  animeBySeason={animeBySeason}
+                  descriptionSuite={descriptionSuite}
+                  setDescriptionSuite={setDescriptionSuite}
+                  setOpen={setOpen}
+                  setNotAtHome={setNotAtHome}
+                />
+              ) : (
+                <CircularProgress color="inherit" />
+              )}
             </Backdrop>
-            {withoutDoublon.length === 0 ? 
-            <div className='found-container'>
-                <div className='resultat-found'>
-                    <h2>Aucun animes trouvé :/</h2>
+            {withoutDoublon.length === 0 ? (
+              <div className="found-container">
+                <div className="resultat-found">
+                  <h2>Aucun animes trouvé :/</h2>
                 </div>
-                <div style={{width:"100%", justifyContent: "center", height: "0", paddingBottom: "75%", display: "flex"}}><iframe title='GIF' src="https://giphy.com/embed/tRWPEUIpuKAtq" style={{position: "absolute", height: "auto", width: "auto"}} frameBorder="0" className="giphy-embed" allowFullScreen></iframe></div><a href="https://giphy.com/gifs/naruto-gaara-tRWPEUIpuKAtq"> </a>
-            </div>
-            :
-            <div className='found-container'>
-                <div className='resultat-found'>
-                    <h2>Résultats : {withoutDoublon.length} {withoutDoublon.length > 1 ? "animés trouvés" : "animé trouvé"}</h2>
+                <div
+                  style={{
+                    width: "100%",
+                    justifyContent: "center",
+                    height: "0",
+                    paddingBottom: "75%",
+                    display: "flex",
+                  }}
+                >
+                  <iframe
+                    title="GIF"
+                    src="https://giphy.com/embed/tRWPEUIpuKAtq"
+                    style={{
+                      position: "absolute",
+                      height: "auto",
+                      width: "auto",
+                    }}
+                    frameBorder="0"
+                    className="giphy-embed"
+                    allowFullScreen
+                  ></iframe>
                 </div>
-                <div className='found-container-list'> 
-                {withoutDoublon.map(anime => {
+                <a href="https://giphy.com/gifs/naruto-gaara-tRWPEUIpuKAtq">
+                  {" "}
+                </a>
+              </div>
+            ) : (
+              <div className="found-container">
+                <div className="resultat-found">
+                  <h2>
+                    Résultats : {withoutDoublon.length}{" "}
+                    {withoutDoublon.length > 1
+                      ? "animés trouvés"
+                      : "animé trouvé"}
+                  </h2>
+                </div>
+                <div className="found-container-list">
+                  {withoutDoublon.map((anime) => {
                     return (
-                        <div key={anime._id} className='anime-card' onClick={() => handleAnime(anime)}>
-                            <img alt={anime.name} style={{display: "flex", height: "100%", width: "100%"}} src={anime.image} />
-                        </div> 
-                    )
-                   
-                })
-                }
+                      <div
+                        key={anime._id}
+                        className="anime-card"
+                        onClick={() => handleAnime(anime)}
+                      >
+                        <img
+                          alt={anime.name}
+                          style={{
+                            display: "flex",
+                            height: "100%",
+                            width: "100%",
+                          }}
+                          src={anime.image}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
-            </div>}
-        </div>
-    )
+              </div>
+            )}
+          </>
+        ) : (
+            <div className="loading">
+                <div className="loading-container">
+                    <ThreeDots
+                        style={{alignItems: "center"}}
+                        height="50%"
+                        width="100"
+                        color='cyan'
+                        ariaLabel='loading'
+                    />
+                </div>
+            </div>
+        )}
+      </div>
+    );
 }
 
 export default Found

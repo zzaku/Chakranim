@@ -3,7 +3,7 @@ import ArrowBackIosNewTwoToneIcon from '@mui/icons-material/ArrowBackIosNewTwoTo
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import ContentAnime from '../../Anime/ContentAnime';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { Button } from '@mui/material';
 import ParallaxHover from './Card/Card';
 import goku from './Neon/assets/kamea.gif'
@@ -12,6 +12,7 @@ import tpGoku from './Neon/assets/tpGoku.gif'
 import songoku from './Neon/assets/songoku.gif'
 import { parseGIF, decompressFrames  } from 'gifuct-js';
 import "./style/List.css"
+import { epContext } from '../../../App';
 
 
 const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
@@ -25,6 +26,7 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     const [anime, setAnime] = useState(null);
     const [descriptionSuite, setDescriptionSuite] = useState(false)
     const [animeBySeason, setAnimeBySeason] = useState([])
+    const loader = useContext(epContext)
     const refCard = useRef()
     const cardContainerRef = useRef()
     const neonContainerRef = useRef()
@@ -136,15 +138,15 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
       };
 
       const handleToggle = (myAnime) => {
-
-        let firstPartToCheck = myAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
-        let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-        let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-console.log(firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck)
+        
+        let firstPartToCheck = myAnime.name.split(" ")[0]
+        let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1] : ""
+        let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2] : ""
+        loader.setLoading(true)
         setAnime(myAnime)
-        fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent((firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck).trim())}`)
+        fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent((firstPartToCheck + " " + secondPartToCheck).trim())}`)
         .then(res => res.json())
-        .then(data => setAnimeBySeason(data))
+        .then(data => setAnimeBySeason(data) + loader.setLoading(false))
         setOpen(true);
       };
 

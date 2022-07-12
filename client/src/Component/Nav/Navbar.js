@@ -37,6 +37,14 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
       
     });
 
+    const launchSearching = (animeToFind) => {
+      open.setLoading(true)
+      fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent((animeToFind).trim())}`)
+      .then(res => res.json())
+      .then(data => open.setAnimeFound(data) + open.setLoading(false))
+      navigate("/Search/Animes")
+    }
+
     return(
         <> {!open.search ? <> {appearNav ? 
           <Nav ref={nav} className="Navigation">
@@ -68,12 +76,12 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
             <> {appearNav ? 
               <Nav ref={nav} className="Navigation">
                     <div className="backToMainMenu" onClick={() => open.setSearch(false)}>
-                      <Button onClick={() => open.setStartSearching(false) + navigate("/")}  style={{display: "flex", height: "auto", width: "30%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}}><KeyboardBackspaceIcon style={{display: "flex", justifyContent: "center", alignItems: "center", color: "white"}} fontSize="large" /></Button>
+                      <Button onClick={() => open.setStartSearching(true)} style={{display: "flex", height: "auto", width: "30%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}}><KeyboardBackspaceIcon style={{display: "flex", justifyContent: "center", alignItems: "center", color: "white"}} fontSize="large" /></Button>
                     </div>
                     <div className="search-button" style={{height: "100%", width: "50%"}}>
-                          <Button onClick={() => open.setSearch(true)} style={{display: "flex", height: "auto", width: "11%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}} ><FcSearch style={{display: "flex", justifyContent: "center", alignItems: "center"}} size={"40px"} cursor="pointer" /></Button>
+                          <Button onClick={() => launchSearching(open.animeToFind)} style={{display: "flex", height: "auto", width: "11%", background: "transparent", border: "2px cyan solid", borderRadius: "200px 200px 200px 200px", boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)"}} ><FcSearch style={{display: "flex", justifyContent: "center", alignItems: "center"}} size={"40px"} cursor="pointer" /></Button>
                           <div className="search-input">
-                            <TextField onChange={(val) => open.setStartSearching(true) + open.setAnimeToFind(val.target.value) + navigate("/Search/Animes")} autoComplete="off" className="text-field" style={{background: "white", color: "black", borderRadius: "200px 200px 200px 200px"}} id="standard" label="Recherche ton anime" variant="standard" />
+                            <TextField onChange={(val) => open.setStartSearching(true) + open.setAnimeToFind(val.target.value)} autoComplete="off" className="text-field" style={{background: "white", color: "black", borderRadius: "200px 200px 200px 200px"}} id="standard" label="Recherche ton anime" variant="standard" />
                           </div>
                     </div>
                 </Nav>

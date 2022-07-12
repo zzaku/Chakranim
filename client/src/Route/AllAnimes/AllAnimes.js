@@ -2,7 +2,7 @@ import { Grid, Card, CardActionArea, CardMedia, Stack, Pagination, Button, Backd
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewTwoTone from "@mui/icons-material/ArrowBackIosNewTwoTone";
 import ContentAnime from "../../Component/Anime/ContentAnime";
-import { useState, useRef, useEffect, useMemo } from "react"
+import { useState, useRef, useEffect, useMemo, useContext } from "react"
 import CircularProgress from '@mui/material/CircularProgress';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
@@ -11,6 +11,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import customFetcher from "../../Component/Fetch/FetchInstance";
 import "./style/AllAnimes.css"
+import { epContext } from "../../App";
 
 
 const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
@@ -22,7 +23,7 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
     const [animeBySeason, setAnimeBySeason] = useState([])
     const [open, setOpen] = useState(false);
     const wrapperRef = useRef(null);
-  
+    const loader = useContext(epContext) 
     const [descriptionSuite, setDescriptionSuite] = useState(false)
     const [getGenres, setGetGenres] = useState([])
     const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance"], [])
@@ -98,22 +99,22 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
 
     const handleClose = () => {
         setOpen(false);
+        setAnimeBySeason([])
         setAnime([])
       };
 
       const handleToggle = (myAnime) => {
+
+          
+          let firstPartToCheck = myAnime.name.split(" ")[0]
+          let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1] : ""
+          let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2] : ""
+          
+        loader.setLoading(true)
         setAnime(myAnime)
-        setAnimeBySeason(allAnimes.filter(nameOfAnime => {
-            let firstPart = nameOfAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
-            let secondPart = nameOfAnime.name.split(" ").length > 1 ? nameOfAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-            let thirdPart = nameOfAnime.name.split(" ").length > 2 ? nameOfAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-
-            let firstPartToCheck = myAnime.name.split(" ")[0].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase()
-            let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-            let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2].replaceAll("-", " ").replaceAll(".", " ").toUpperCase().toUpperCase() : ""
-
-            return firstPart + " " + secondPart + " " + thirdPart === firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck
-        }))
+        fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent((firstPartToCheck + " " + secondPartToCheck).trim())}`)
+        .then(res => res.json())
+        .then(data => setAnimeBySeason(data) + loader.setLoading(false))
         setOpen(!open);
       };
 
@@ -179,7 +180,7 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
                                 selectOnFocus
                                 clearOnBlur
                                 onChange={(event, newValue) => setGetGenres([newValue])}
-                                disableCloseOnSelect={true}
+                                disableCloseOnSelect={false}
                                 getOptionLabel={(option) => option}
                                 renderOption={(props, option, { selected }) => (
                                     <li {...props} >
@@ -214,14 +215,14 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
                         }
                             
                             <Backdrop
-                                sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
+                                sx={{ color: "#fff", width: "100%", zIndex: (theme) => theme.zIndex.drawer + 100 }}
                                 open={open} 
                                 >
                                 {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} open={open} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
                             </Backdrop>
                             
                                
-                            <Grid className="grid" container spacing={2} padding="2%">
+                            <Grid className="grid-list" container spacing={2} padding="2%">
                             {getGenres[0] && getGenres[0].length > 0 ?
                             withoutDoublon.map((anime, i) => {
                                 return(

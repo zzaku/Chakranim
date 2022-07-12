@@ -2,6 +2,7 @@ import './style/ContentAnime.css'
 import Overlay from './Overlay/Overlay';
 import { Link } from 'react-router-dom';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import { Circles } from "react-loader-spinner"
 import { epContext } from '../../App';
 import { useContext, useEffect, useMemo, useRef } from 'react';
 import { useState } from 'react';
@@ -19,7 +20,7 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
     if(LastPartdescriptionTemp){if(LastPartdescriptionTemp[LastPartdescriptionTemp.length-1] === ""){LastPartdescriptionTemp.pop()}}
     let middleDesc = LastPartdescriptionTemp && Math.trunc((LastPartdescriptionTemp.length-1) / 2) + 1
     let LastPartdescription = anime.desc && anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") + "..."
-
+console.log(openSearch.loading)
     //const [lecteur, setLecteur] = useState({Lecteur: sibnet})
     const allLinks = useMemo(() => [anime.links, anime.nextLinks], [anime])
     const seasonRef = useRef()
@@ -161,29 +162,42 @@ return (
                   saison : {anime.saison && anime.saison}
                 </h3>
               )}
-              {nbrSeason[0] ? (<div ref={seasonRef} className="container-saison-anime">
-              
-                    <h3 id="Saison"> Autre saison</h3>
-                    <div className='buttonGroup-saison'>
-                    {nbrSeason.map((elem, i) => {
-                      return (
-                        <div key={elem._id + i}>
-                            <ButtonGroup style={{backgroundColor: "black"}} size="large" aria-label="large button group">
-                              {elem.saison === "00" ? null : (
-                                <Button
-                                  onClick={() => setSeasonSelected(true) + seasonChanged(elem, anime.langue)}
-                                  value={"season"}
-                                >
-                                  {elem.saison}
-                                </Button>
-                              )}
-                            </ButtonGroup>
-                        </div>
-                      );
-                    })}
-                  </div>
-               </div>
-              ) : null}
+              <div ref={seasonRef} className="container-saison-anime">
+                <h3 id="Saison"> Autre saison :</h3>
+                {!openSearch.loading ? nbrSeason[0] ? (
+                    <>
+                      <div className='buttonGroup-saison'>
+                      { nbrSeason.map((elem, i) => {
+                        return (
+                          <div key={elem._id + i}>
+                              <ButtonGroup style={{backgroundColor: "black"}} size="large" aria-label="large button group">
+                                {elem.saison === "00" ? null : (
+                                  <Button
+                                    onClick={() => setSeasonSelected(true) + seasonChanged(elem, anime.langue)}
+                                    value={"season"}
+                                  >
+                                    {elem.saison}
+                                  </Button>
+                                )}
+                              </ButtonGroup>
+                          </div>
+                        );
+                      })}
+                    </div>
+                </>
+                ) 
+                : 
+                <h3 id="Saison">indisponible</h3>
+                :
+                <Circles
+                    style={{alignItems: "center"}}
+                    height="50"
+                    width="100"
+                    color='cyan'
+                    ariaLabel='loading'
+                />
+              }
+              </div>
             </div>
             <div className="container-langue">
               <h3 style={{ fontSize: "20px", color: "cyan" }}>

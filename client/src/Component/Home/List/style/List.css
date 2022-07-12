@@ -125,13 +125,23 @@ h1{
     }
 
     .list-card{
+        padding: 3rem var(--spacer) 8rem var(--spacer);
+        grid-auto-columns: 32%;
         overflow-x: scroll;
         overflow-y: hidden;
         padding-left: 0;
     }
 
+    .animation-gif{
+        height: 98%;
+    }
+
+    .list-card::-webkit-scrollbar{
+        display: none;
+    }
+
     .card-container{
-        height: 100%;
+        height: 180px;
     }
 
     .list-card > button{
