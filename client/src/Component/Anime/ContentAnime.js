@@ -6,9 +6,10 @@ import { Circles } from "react-loader-spinner"
 import { epContext } from '../../App';
 import { useContext, useEffect, useMemo, useRef } from 'react';
 import { useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, useMediaQuery } from '@mui/material';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 
-const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSuite, descriptionSuite2, setDescriptionSuite, setOpen, setNotAtHome}) => {
+const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSuite, setDescriptionSuite, setOpen, setNotAtHome}) => {
 
     let withoutDoublon = [{}]
     const setEp = useContext(epContext)
@@ -24,6 +25,7 @@ console.log(openSearch.loading)
     //const [lecteur, setLecteur] = useState({Lecteur: sibnet})
     const allLinks = useMemo(() => [anime.links, anime.nextLinks], [anime])
     const seasonRef = useRef()
+    const mobile = useMediaQuery('(max-width:968px)');
    
       const filterDoublonAnime = () => {
         let newArray = [];
@@ -102,6 +104,11 @@ const onLangueChanged = () => {
 return (
       <div className="display-ep-anime" ref={wrapperRef}>
         <div className="container-display">
+          <div className='back'>
+            <div className='back-container'>
+              <Button onClick={() => setOpen(false)}><KeyboardDoubleArrowDownIcon /></Button>
+            </div>
+          </div>
           <div className="container-title-anime">
             <div className="container-background-image-anime">
               <img alt={anime.name} width={"auto"} height={"auto"} src={anime.banniere} />
@@ -110,6 +117,7 @@ return (
               <h1>{anime.name}</h1>
             </div>
           </div>
+          <div className='info-anime'>
           <div className="container-info-anime">
             <div className="container-desc-anime">
               {!descriptionSuite ? (
@@ -140,37 +148,39 @@ return (
                 Distribution<br></br>
                 {distribution}
               </h3>
-              <p style={{ width: "40%", fontSize: "20px", color: "cyan" }}>
+              <h3 style={{ width: "50%", color: "cyan" }}>
                 date : {anime.date}
-              </p>
+              </h3>
             </div>
           </div>
+          </div>
+          <div className='moreinfo-anime'>
           <div className="container-moreinfo-anime">
             <div className="container-content-info-anime">
-              <p style={{ fontSize: "20px" }}>
+              <h3>
                 genre : {anime.genre && anime.genre.slice(1).join(", ")}
-              </p>
-              <p style={{ width: "30%", fontSize: "20px" }}>
+              </h3>
+              <h3 style={{ width: "30%"}}>
                 durée: {anime.duree && anime.duree.replace(" ", "").trim()}
-              </p>
+              </h3>
             </div>
             <div ref={seasonRef} className="container-current-saison-anime">
               {anime.saison === "Film" ? (
-                <h3 style={{ fontSize: "20px", color: "cyan" }}>Film :</h3>
+                <h4 style={{color: "cyan" }}>Film :</h4>
               ) : (
-                <h3 style={{ fontSize: "20px", color: "cyan" }}>
+                <h4 style={{color: "cyan" }}>
                   saison : {anime.saison && anime.saison}
-                </h3>
+                </h4>
               )}
               <div ref={seasonRef} className="container-saison-anime">
-                <h3 id="Saison"> Autre saison :</h3>
+                <h4 id="Saison"> Autre saison :</h4>
                 {!openSearch.loading ? nbrSeason[0] ? (
                     <>
                       <div className='buttonGroup-saison'>
                       { nbrSeason.map((elem, i) => {
                         return (
                           <div key={elem._id + i}>
-                              <ButtonGroup style={{backgroundColor: "black"}} size="large" aria-label="large button group">
+                              <ButtonGroup className='season-btn' style={{backgroundColor: "black"}} size={mobile ? "small" : "large"} aria-label="large button group">
                                 {elem.saison === "00" ? null : (
                                   <Button
                                     onClick={() => setSeasonSelected(true) + seasonChanged(elem, anime.langue)}
@@ -187,7 +197,7 @@ return (
                 </>
                 ) 
                 : 
-                <h3 id="Saison">indisponible</h3>
+                <h4 id="Saison">indisponible</h4>
                 :
                 <Circles
                     style={{alignItems: "center"}}
@@ -200,15 +210,16 @@ return (
               </div>
             </div>
             <div className="container-langue">
-              <h3 style={{ fontSize: "20px", color: "cyan" }}>
+              <h4 style={{color: "cyan" }}>
                 langue : {anime.langue}
-              </h3>
+              </h4>
               {testLangue ? <Button onClick={() => setLangueSelected(true) + onLangueChanged(anime.saison, anime.langue === "VF" ? "VOSTFR" : "VF")}>
                 {anime.langue === "VF"
                   ? "regarder en VOSTFR"
                   : "regarder en VF"}
               </Button> : null}
             </div>
+          </div>
           </div>
           <div className="container-vod-anime">
             {anime.saison === "Film" ? null : <h2>Liste des épisodes</h2>}

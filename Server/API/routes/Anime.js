@@ -142,11 +142,12 @@ const getAllNameOfNewEp = async (episodes) => {
         })
         const fixNewVersion = await Post.updateMany(
             {name: episode.name, langue: episode.langue, saison: episode.saison, newEp: {$exists: true}},
-            { $unset: { newEp: "" } }
-        )
-        const addFieldToNewVersion = await Post.update(
-            {name: episode.name, langue: episode.langue, saison: episode.saison, newEp: {$exists: false}},
             { $set: { "nouveau": true } }
+        )
+
+        const addFieldToNewVersion = await Post.updateMany(
+            {name: episode.name, langue: episode.langue, saison: episode.saison, newEp: {$exists: false}},
+            { $unset: { newEp: "" } }
         )
     }
     console.log("correction appliqué.")

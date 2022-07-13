@@ -121,7 +121,8 @@ h1{
 
 @media screen and (max-width: 968px) {
     .card{
-        height: 35%;
+        height: 100%;
+        margin-left: 15px;
     }
 
     .list-card{
@@ -133,7 +134,7 @@ h1{
     }
 
     .animation-gif{
-        height: 98%;
+        display: none;
     }
 
     .list-card::-webkit-scrollbar{

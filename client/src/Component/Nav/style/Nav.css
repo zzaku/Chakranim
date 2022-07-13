@@ -43,3 +43,18 @@
     width: 400px;
     margin-left: 5%;
 }
+
+.mobile-search{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+@media screen and (max-width: 968px) {
+    .search-button{
+        margin-right: 2%;
+    }
+    .search-input{
+        width: 100%;
+    }
+}

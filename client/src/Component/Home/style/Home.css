@@ -44,6 +44,7 @@
 
 @media screen and (max-width: 968px) {
     .list-container{
+        margin-left: 0;
         grid-template-rows: repeat(7, 300px);
     }
 }

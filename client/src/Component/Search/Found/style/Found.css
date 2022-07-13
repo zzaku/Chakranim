@@ -51,3 +51,9 @@
     align-self: center;
     justify-content: center;
 }
+
+@media screen and (max-width: 968px) {
+    .anime-card{
+        width: 31%;
+    }
+}

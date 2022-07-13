@@ -1,0 +1,9 @@
+.swiper > div:nth-child(3){
+    display: flex;
+    height: auto;
+    width: auto;
+    background-color: white;
+    border-radius: 15px;
+    opacity: 0.8;
+    margin-top: 20%;
+}
