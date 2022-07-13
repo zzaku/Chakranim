@@ -1,3 +1,12 @@
+@font-face {
+    src: url("../../../../fonts/autoradiographic1.ttf");
+    font-family: "autoradiographic1";
+}
+
+@font-face {
+    src: url("../../../../fonts/autoradiographic2.ttf");
+    font-family: "autoradiographic2";
+}
 
 .display-ep-anime{
     position: relative;
@@ -41,7 +50,7 @@
     height: 5%;
     width: 100%;
     background-color: white;
-    opacity: 0.3;
+    opacity: 0.5;
 }
 
 .back-container{
@@ -222,6 +231,11 @@
 @media screen and (max-width: 968px) {
     .vod-anime{
         width: 50%;
+    }
+
+    .container-info-anime{
+        font-family: "autoradiographic1";
+        font-size: 17px;
     }
 
     .display-ep-anime{

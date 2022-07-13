@@ -90,3 +90,32 @@ h1, h2 {
     justify-content: space-around;
     align-items: center;
 }
+
+
+@media screen and (max-width: 968px) {
+    .watch-content{
+        flex-direction: column  ;
+    }
+
+    .otherEpisode-content{
+        width: 100%;
+        height: 40%;
+    }
+    .otherEpisode-content > DIV{
+        width: 100%;
+        height: 100%;
+    }
+    .otherEpisode-content > div > a{
+        width: 100%;
+        height: 100%;
+    }
+    .otherEpisode-content > div > a > button{
+        width: 100%;
+        height: 100%;
+    }
+
+    .lecteur-container{
+        flex-direction: row;
+        font-size: 50%;
+    }
+}

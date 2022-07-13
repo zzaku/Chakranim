@@ -107,7 +107,7 @@ return (
         {mobile &&
           <div className='back'>
             <div className='back-container'>
-               <Button onClick={() => setOpen(false)}><KeyboardDoubleArrowDownIcon /></Button>
+               <Button onClick={() => setOpen(false)}><KeyboardDoubleArrowDownIcon fontSize='large' /></Button>
             </div>
           </div>
           }
@@ -120,21 +120,22 @@ return (
             </div>
           </div>
           <div className='info-anime'>
+          {!mobile ? 
           <div className="container-info-anime">
             <div className="container-desc-anime">
               {!descriptionSuite ? (
-                <span> {description} </span>
+                <h4> {description} </h4>
               ) : (
-                <span>
+                <h4>
                   {LastPartdescription}
-                  <span
+                  <h4
                     style={{ color: "cyan", cursor: "pointer" }}
                     onClick={() => setDescriptionSuite(false)}
                   >
                     
                     Afficher la suite
-                  </span>
-                </span>
+                  </h4>
+                </h4>
               )}
             </div>
             <div className="container-context-anime">
@@ -155,6 +156,43 @@ return (
               </h4>
             </div>
           </div>
+          :
+          <div className="container-info-anime">
+          <div className="container-desc-anime">
+            {!descriptionSuite ? (
+              <span> {description} </span>
+            ) : (
+              <span>
+                {LastPartdescription}
+                <span
+                  style={{ color: "cyan", cursor: "pointer" }}
+                  onClick={() => setDescriptionSuite(false)}
+                >
+                  
+                  Afficher la suite
+                </span>
+              </span>
+            )}
+          </div>
+          <div className="container-context-anime">
+            <span
+              style={{
+                display: "flex",
+                height: "100%",
+                width: "100%",
+                marginBlockEnd: 0,
+                color: "white",
+              }}
+            >
+              Distribution<br></br>
+              {distribution}
+            </span>
+            <span style={{ width: "50%", color: "cyan" }}>
+              date : {anime.date}
+            </span>
+          </div>
+        </div>
+          }
           </div>
           <div className='moreinfo-anime'>
           <div className="container-moreinfo-anime">

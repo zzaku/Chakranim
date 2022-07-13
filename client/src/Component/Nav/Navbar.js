@@ -40,7 +40,8 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
       
     });
 
-    const launchSearching = (animeToFind) => {
+    const launchSearching = (e, animeToFind) => {
+      e.preventDefault()
       open.setLoading(true)
       fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent((animeToFind).trim())}`)
       .then(res => res.json())
@@ -147,28 +148,25 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                       style={{ height: "100%", width: "50%" }}
                     >
                       <Button
+                        className="search-btn"
                         onClick={() => launchSearching(open.animeToFind)}
                         style={{
                           display: "flex",
                           height: "auto",
-                          width: "11%",
+                          width: "auto",
                           background: "transparent",
                           border: "2px cyan solid",
+                          justifyContent: "flex-start",
                           borderRadius: "200px 200px 200px 200px",
                           boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)",
                         }}
                       >
-                        <FcSearch
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                          size={"40px"}
-                          cursor="pointer"
-                        />
+                        <div style={{display: "flex", width: "100%", height: "100%", borderRadius: "15px", fontSize: "6.5px", marginLeft: "0"}}>
+                          <h4>rechercher</h4>
+                        </div>
                       </Button>
-                      <div className="search-input">
+                      <form className="search-input" onSubmit={(e) => launchSearching(e, open.animeToFind)}>
+                      <div className="search-input-container">
                         <TextField
                           onChange={(val) =>
                             open.setStartSearching(true) +
@@ -186,6 +184,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                           variant="standard"
                         />
                       </div>
+                      </form>
                     </div>
                   </div>
                 ) : (
@@ -233,15 +232,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                           boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)",
                         }}
                       >
-                        <FcSearch
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                          size={"40px"}
-                          cursor="pointer"
-                        />
+                        <h3>Lancer la recherche</h3>
                       </Button>
                       <div className="search-input">
                         <TextField

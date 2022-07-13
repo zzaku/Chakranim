@@ -31,6 +31,12 @@
     border-radius: 200px 200px 200px 200px;
 }
 
+.search-input-container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
 .text-field > label{
     display: flex;
     width: 100%;
@@ -53,6 +59,7 @@
 @media screen and (max-width: 968px) {
     .search-button{
         margin-right: 2%;
+        width: 50px;
     }
     .search-input{
         width: 100%;

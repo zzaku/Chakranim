@@ -143,4 +143,8 @@
     .previouspage{
         bottom: unset;
     }
+    
+    .layout-coontainer{
+        margin-top: 15%;
+    }
 }

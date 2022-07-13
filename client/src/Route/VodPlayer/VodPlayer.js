@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Backdrop from '@mui/material/Backdrop';
 import { Link } from 'react-router-dom';
 import './style/VodPlayer.css'
+import { useMediaQuery } from '@mui/material';
 
 const VodPlayer = ({ep, setEp}) => {
 
@@ -21,6 +22,7 @@ const VodPlayer = ({ep, setEp}) => {
     const modeCineRef = useRef()
     const movieBtnRef = useRef()
     const otherEpisodeRef = useRef()
+    const mobile = useMediaQuery('(max-width:968px)')
     let currentEp = !ep.current_episode ? null : ep.current_episode[0] && ep.current_episode[0][0].episode
     let epMax = !ep.current_episode ? null : ep.current_episode[0] && ep.all_episode[ep.all_episode.length-1][0].episode
     let epMin = !ep.current_episode ? null : ep.current_episode[0] && ep.all_episode[0][0].episode
@@ -133,7 +135,7 @@ const VodPlayer = ({ep, setEp}) => {
                                     },
                                 }}
                                 >
-                                    <ButtonGroup style={{backgroundColor: "black"}} size="large" aria-label="large button group">
+                                    <ButtonGroup style={{backgroundColor: "black"}} size={!mobile ? "large" : "small"} aria-label="large button group">
                                         {!ep.current_episode ? null : ep.current_episode.map((episode, index) => {  
                                             if(index === 0){
                                                 return null
@@ -147,13 +149,14 @@ const VodPlayer = ({ep, setEp}) => {
                             <div ref={otherEpisodeRef} className='otherEpisode-content'>
                                 <Stack spacing={2} direction="row"  className='buttontogotootherep'>
                                     <Link to={`/watch/${!ep.current_episode ? null : ep.current_episode[0] && ep.name.split("Saison")[0].replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${urlEp && urlEpPrevious && ( urlEp  + urlEpPrevious ).replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
-                                    {currentEp === epMin ? null : <ColorButton onClick={() => goToPreviousEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true)} variant="contained">Episode précédent</ColorButton>}
+                                    {currentEp === epMin ? null : <ColorButton size={!mobile ? "large" : "small"} onClick={() => goToPreviousEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true)} variant="contained"><span>Episode précédent</span></ColorButton>}
                                     </Link>
                                     <Link to={`/watch/${!ep.current_episode ? null : ep.current_episode[0] && ep.name.split("Saison")[0].replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${urlEp && urlEpPrevious && (urlEp + urlEpNext).replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
-                                    {currentEp === epMax ? null : <ColorButton onClick={() => goToNextEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true)} variant="contained">Episode suivant</ColorButton>}
+                                    {currentEp === epMax ? null : <ColorButton size={!mobile ? "large" : "small"} onClick={() => goToNextEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true)} variant="contained"><span>Episode suivant</span></ColorButton>}
                                     </Link>
                                 </Stack>
                             </div>
+                            {!mobile &&
                             <div ref={modeCineRef} className='cinema-mode'>
                             <FormControlLabel
                                 style={{color: "white", backgroundColor: "transparent", borderRadius: "12px", paddingLeft: "10px", border: `2px ${cyan[400]} solid`}}
@@ -164,6 +167,7 @@ const VodPlayer = ({ep, setEp}) => {
                                 onChange={() => setChecked(checked === true ? false : true) + setModCinema()}
                                 />
                             </div>
+                            }
                         </div>
                     </div>
                 </div>
