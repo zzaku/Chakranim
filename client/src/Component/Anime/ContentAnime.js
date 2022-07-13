@@ -104,11 +104,13 @@ const onLangueChanged = () => {
 return (
       <div className="display-ep-anime" ref={wrapperRef}>
         <div className="container-display">
+        {mobile &&
           <div className='back'>
             <div className='back-container'>
-              <Button onClick={() => setOpen(false)}><KeyboardDoubleArrowDownIcon /></Button>
+               <Button onClick={() => setOpen(false)}><KeyboardDoubleArrowDownIcon /></Button>
             </div>
           </div>
+          }
           <div className="container-title-anime">
             <div className="container-background-image-anime">
               <img alt={anime.name} width={"auto"} height={"auto"} src={anime.banniere} />
@@ -121,9 +123,9 @@ return (
           <div className="container-info-anime">
             <div className="container-desc-anime">
               {!descriptionSuite ? (
-                <h3> {description} </h3>
+                <span> {description} </span>
               ) : (
-                <h3>
+                <span>
                   {LastPartdescription}
                   <span
                     style={{ color: "cyan", cursor: "pointer" }}
@@ -132,11 +134,11 @@ return (
                     
                     Afficher la suite
                   </span>
-                </h3>
+                </span>
               )}
             </div>
             <div className="container-context-anime">
-              <h3
+              <h4
                 style={{
                   display: "flex",
                   height: "100%",
@@ -147,10 +149,10 @@ return (
               >
                 Distribution<br></br>
                 {distribution}
-              </h3>
-              <h3 style={{ width: "50%", color: "cyan" }}>
+              </h4>
+              <h4 style={{ width: "50%", color: "cyan" }}>
                 date : {anime.date}
-              </h3>
+              </h4>
             </div>
           </div>
           </div>
