@@ -153,27 +153,16 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                         onClick={() => launchSearching(open.animeToFind)}
                         style={{
                           display: "flex",
-                          height: "auto",
+                          height: "80%",
                           width: "auto",
                           background: "transparent",
                           border: "2px cyan solid",
-                          justifyContent: "flex-start",
+                          justifyContent: "center",
                           borderRadius: "200px 200px 200px 200px",
                           boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)",
                         }}
                       >
-                        <div
-                          style={{
-                            display: "flex",
-                            width: "100%",
-                            height: "100%",
-                            borderRadius: "15px",
-                            fontSize: "6.5px",
-                            marginLeft: "0",
-                          }}
-                        >
                           <FcSearch />
-                        </div>
                       </Button>
                       <form
                         className="search-input"
@@ -237,10 +226,11 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                         onClick={() => launchSearching(open.animeToFind)}
                         style={{
                           display: "flex",
-                          height: "auto",
+                          height: "100%",
                           width: "11%",
                           background: "transparent",
                           border: "2px cyan solid",
+                          justifyContent: "center",
                           borderRadius: "200px 200px 200px 200px",
                           boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)",
                         }}

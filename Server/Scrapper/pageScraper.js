@@ -22,7 +22,7 @@ const scraperObject = {
 
                 let previousScrappedAnime = await isThereNbrEp(encodeURIComponent(scrapped[i].name))
 
-                if(previousScrappedAnime.length === 0){
+                if(previousScrappedAnime[0].length === 0){
                     scrapped[i].newAnime = true
                 } else {
                     for(let alreadyGet of previousScrappedAnime[0]){
