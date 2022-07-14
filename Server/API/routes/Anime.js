@@ -130,7 +130,7 @@ const scrapper = setInterval(async () => {
            return await getAllNameOfNewEp(posts)
         }
     return console.log("animes récupérés.")
-}, 14400000)
+}, 600000)
 
 //SWAP ALL PREVIOUS ANIME EP WITH NEW EP
 const getAllNameOfNewEp = async (episodes) => {

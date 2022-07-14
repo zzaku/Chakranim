@@ -22,25 +22,30 @@ const scraperObject = {
 
                 let previousScrappedAnime = await isThereNbrEp(encodeURIComponent(scrapped[i].name))
 
-                for(let alreadyGet of previousScrappedAnime[0]){
-                        if(
-                            scrapped[i].name === alreadyGet.name && scrapped[i].langue === alreadyGet.langue && 
-                            scrapped[i].saison === alreadyGet.saison 
-                            && (scrapped[i].nbr_episode === alreadyGet.nombre_episode || scrapped[i].nbr_episode === alreadyGet.nombre_episode_final)
-                            ){
-                                 scrapped[i].needtoremove = true
-                        } else if(
-                            scrapped[i].name === alreadyGet.name && scrapped[i].langue === alreadyGet.langue && 
-                            scrapped[i].saison === alreadyGet.saison 
-                            && (scrapped[i].nbr_episode !== alreadyGet.nombre_episode || scrapped[i].nbr_episode !== alreadyGet.nombre_episode_final)
-                            ){
-                                            scrapped[i].newEp = true
-                        } else {
-                            continue;
-                    }
-                 }
+                if(previousScrappedAnime.length === 0){
+                    scrapped[i].newAnime = true
+                } else {
+                    for(let alreadyGet of previousScrappedAnime[0]){
+                            if(
+                                scrapped[i].name === alreadyGet.name && scrapped[i].langue === alreadyGet.langue && 
+                                scrapped[i].saison === alreadyGet.saison 
+                                && (scrapped[i].nbr_episode === alreadyGet.nombre_episode || scrapped[i].nbr_episode === alreadyGet.nombre_episode_final)
+                                ){
+                                     scrapped[i].needtoremove = true
+                            } else if(
+                                scrapped[i].name === alreadyGet.name && scrapped[i].langue === alreadyGet.langue && 
+                                scrapped[i].saison === alreadyGet.saison 
+                                && (scrapped[i].nbr_episode !== alreadyGet.nombre_episode || scrapped[i].nbr_episode !== alreadyGet.nombre_episode_final)
+                                ){
+                                                scrapped[i].newEp = true
+    
+                            } else {
+                                                continue;
+                        }
+                     }
                 }
-              scrappedVerified = scrapped.filter(elem => !elem.needtoremove)
+            }
+              let scrappedVerified = scrapped.filter(elem => !elem.needtoremove)
               return scrappedVerified
           }
 
@@ -115,7 +120,7 @@ const scraperObject = {
                 let nombre_episode = ep.length;
                 let isThereNbrEp = document.querySelector("#dle-content > div.watch-top > div > div > div > div.slide-poster > div")
                 let nbrEp2 = isThereNbrEp ? parseInt(document.querySelector("#dle-content > div.watch-top > div > div > div > div.slide-poster > div").textContent.split(' ')[1]) : 0
-                let duree = document.querySelector("div.slide-info > p:nth-child(3) > b").textContent.trim()
+                let duree = document.querySelector("div.slide-info > p:nth-child(3) > b") ? document.querySelector("div.slide-info > p:nth-child(3) > b").textContent.trim() : document.querySelector("div.slide-info > p:nth-child(2) > b") ? document.querySelector("div.slide-info > p:nth-child(2) > b").textContent.trim() : document.querySelector("div.slide-info > p:nth-child(1) > b") ? document.querySelector("div.slide-info > p:nth-child(1) > b").textContent.trim() : ""
                 let date = document.querySelector("div.slide-middle > ul:nth-child(2) > li > b:nth-child(2) > a").textContent
                 function delay(time) {
                     return new Promise(function(resolve) { 
@@ -270,6 +275,7 @@ const scraperObject = {
                     let currentPageData2;
                     let suite = elems[link].nbr_episode >= 300
                     let newEp = elems[link].newEp
+                    let newAnime = elems[link].newAnime
                     currentPageData1 = await pagePromise(elems[link].link, elems[link].nbr_episode);
                     await page.waitForTimeout(getRandomFloat(1, 5))
                     if(elems[link].nbr_episode >= 200){

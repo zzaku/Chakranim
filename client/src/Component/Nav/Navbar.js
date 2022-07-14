@@ -232,8 +232,9 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                           boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)",
                         }}
                       >
-                        <h3>Lancer la recherche</h3>
+                        <h4>rechercher</h4>
                       </Button>
+                      <form className="search-input" onSubmit={(e) => launchSearching(e, open.animeToFind)}>
                       <div className="search-input">
                         <TextField
                           onChange={(val) =>
@@ -252,6 +253,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                           variant="standard"
                         />
                       </div>
+                      </form>
                     </div>
                   </>
                 )}
