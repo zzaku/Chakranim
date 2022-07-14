@@ -162,7 +162,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                           boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)",
                         }}
                       >
-                          <FcSearch />
+                          <FcSearch size="60%" />
                       </Button>
                       <form
                         className="search-input"
@@ -235,7 +235,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                           boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)",
                         }}
                       >
-                        <FcSearch />
+                        <FcSearch size="60%" />
                       </Button>
                       <form
                         className="search-input"
