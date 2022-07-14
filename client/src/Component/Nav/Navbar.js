@@ -67,7 +67,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
             {" "}
             {appearNav ? (
               <>
-                {onMobile ? 
+                {onMobile ? (
                   <MobileNavbar
                     state={state}
                     setState={setState}
@@ -76,36 +76,37 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                     setSearch={open.setSearch}
                     setOnMobile={setOnMobile}
                   />
-                :
-                <Nav ref={nav} className="Navigation">
-                  {notAtHome ? (
-                    <NavLink to={"/"}>
-                      <div
-                        className="goBack"
-                        onClick={() => setNotAtHome(false)}
-                      >
-                        <KeyboardBackspaceIcon fontSize="large" />
-                      </div>
-                    </NavLink>
-                  ) : (
-                    <NavLink to={"/"}>
-                      <h1>Chakranime</h1>
-                    </NavLink>
-                  )}
-                  <NavMenu
-                    style={{ justifyContent: "space-around", width: "50%" }}
-                  >
-                    {seeAllAnimes}
-                  </NavMenu>
-                  {!onMobile ? <Bars
-                    onClick={() =>
-                      setOnMobile(true) + setState({ right: true })
-                    }
-                  />
-                  :
-                  null}
-                  {search}
-                </Nav>}
+                ) : (
+                  <Nav ref={nav} className="Navigation">
+                    {notAtHome ? (
+                      <NavLink to={"/"}>
+                        <div
+                          className="goBack"
+                          onClick={() => setNotAtHome(false)}
+                        >
+                          <KeyboardBackspaceIcon fontSize="large" />
+                        </div>
+                      </NavLink>
+                    ) : (
+                      <NavLink to={"/"}>
+                        <h1>Chakranime</h1>
+                      </NavLink>
+                    )}
+                    <NavMenu
+                      style={{ justifyContent: "space-around", width: "50%" }}
+                    >
+                      {seeAllAnimes}
+                    </NavMenu>
+                    {!onMobile ? (
+                      <Bars
+                        onClick={() =>
+                          setOnMobile(true) + setState({ right: true })
+                        }
+                      />
+                    ) : null}
+                    {search}
+                  </Nav>
+                )}
               </>
             ) : null}
           </>
@@ -161,29 +162,41 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                           boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)",
                         }}
                       >
-                        <div style={{display: "flex", width: "100%", height: "100%", borderRadius: "15px", fontSize: "6.5px", marginLeft: "0"}}>
-                          <h4>rechercher</h4>
+                        <div
+                          style={{
+                            display: "flex",
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: "15px",
+                            fontSize: "6.5px",
+                            marginLeft: "0",
+                          }}
+                        >
+                          <FcSearch />
                         </div>
                       </Button>
-                      <form className="search-input" onSubmit={(e) => launchSearching(e, open.animeToFind)}>
-                      <div className="search-input-container">
-                        <TextField
-                          onChange={(val) =>
-                            open.setStartSearching(true) +
-                            open.setAnimeToFind(val.target.value)
-                          }
-                          autoComplete="off"
-                          className="text-field"
-                          style={{
-                            background: "white",
-                            color: "black",
-                            borderRadius: "200px 200px 200px 200px",
-                          }}
-                          id="standard"
-                          label="Recherche ton anime"
-                          variant="standard"
-                        />
-                      </div>
+                      <form
+                        className="search-input"
+                        onSubmit={(e) => launchSearching(e, open.animeToFind)}
+                      >
+                        <div className="search-input-container">
+                          <TextField
+                            onChange={(val) =>
+                              open.setStartSearching(true) +
+                              open.setAnimeToFind(val.target.value)
+                            }
+                            autoComplete="off"
+                            className="text-field"
+                            style={{
+                              background: "white",
+                              color: "black",
+                              borderRadius: "200px 200px 200px 200px",
+                            }}
+                            id="standard"
+                            label="Recherche ton anime"
+                            variant="standard"
+                          />
+                        </div>
                       </form>
                     </div>
                   </div>
@@ -232,27 +245,30 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                           boxShadow: "2.8px 5.6px 5.6px hsl(0deg 0% 85%)",
                         }}
                       >
-                        <h4>rechercher</h4>
+                        <FcSearch />
                       </Button>
-                      <form className="search-input" onSubmit={(e) => launchSearching(e, open.animeToFind)}>
-                      <div className="search-input">
-                        <TextField
-                          onChange={(val) =>
-                            open.setStartSearching(true) +
-                            open.setAnimeToFind(val.target.value)
-                          }
-                          autoComplete="off"
-                          className="text-field"
-                          style={{
-                            background: "white",
-                            color: "black",
-                            borderRadius: "200px 200px 200px 200px",
-                          }}
-                          id="standard"
-                          label="Recherche ton anime"
-                          variant="standard"
-                        />
-                      </div>
+                      <form
+                        className="search-input"
+                        onSubmit={(e) => launchSearching(e, open.animeToFind)}
+                      >
+                        <div className="search-input">
+                          <TextField
+                            onChange={(val) =>
+                              open.setStartSearching(true) +
+                              open.setAnimeToFind(val.target.value)
+                            }
+                            autoComplete="off"
+                            className="text-field"
+                            style={{
+                              background: "white",
+                              color: "black",
+                              borderRadius: "200px 200px 200px 200px",
+                            }}
+                            id="standard"
+                            label="Recherche ton anime"
+                            variant="standard"
+                          />
+                        </div>
                       </form>
                     </div>
                   </>
