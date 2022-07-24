@@ -12,6 +12,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import customFetcher from "../../Component/Fetch/FetchInstance";
 import "./style/AllAnimes.css"
 import { epContext } from "../../App";
+import ParallaxHover from "../../Component/Home/List/Card/Card";
 
 
 const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
@@ -162,7 +163,7 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
     return (
         <div className='animes-list'>
             <div className='list-container-anime'>
-                <div className="layout-coontainer">
+                <div className="layout-container">
                 <div className="pagination-content">
                     <div className="pagination">
                         <Stack spacing={10}>
@@ -222,45 +223,29 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
                             </Backdrop>
                             
                                
-                            <Grid className="grid-list" container spacing={2} padding="2%">
-                            {getGenres[0] && getGenres[0].length > 0 ?
-                            withoutDoublon.map((anime, i) => {
+                            <Grid className="grid-list" container spacing={2} padding="2%"> 
+                            {withoutDoublon.map((anime, i) => {
                                 return(
-                                        <Grid key={anime._id + i} item xs={4} md={2} onClick={() => handleToggle(anime)}>
-                                            <div className="card-content">
-                                                <Card sx={{ maxWidth: "auto"}}>
-                                                    <CardActionArea >
-                                                        <CardMedia
-                                                            component="img"
-                                                            height="auto"
-                                                            image={anime.image}
-                                                            alt="green iguana"
-                                                        />
-                                                    </CardActionArea>
-                                                </Card>
+                                            <div className="card-content" onClick={() => handleToggle(anime)}>
+                                                <ParallaxHover width={"400"} height={"400"} yRotate={0}>
+                                                    <div style={{display: "flex", height: "100%", width: "100%"}}>
+                                                        {anime.newAnime && <div className='new-anime'><h2>Nouveauté</h2></div>}
+                                                        {anime.nouveau_Episode && <div className='new-ep'><h2>Nouveaux episodes</h2></div>}
+                                                        <Card sx={{ maxWidth: "auto"}}>
+                                                            <CardActionArea >
+                                                                <CardMedia
+                                                                    component="img"
+                                                                    height="auto"
+                                                                    image={anime.image}
+                                                                    alt="green iguana"
+                                                                />
+                                                            </CardActionArea>
+                                                        </Card>
+                                                    </div>
+                                                </ParallaxHover>
                                             </div>         
-                                        </Grid>
                                     )
                                 })
-                            :
-                            withoutDoublon.map((anime, i) => {
-                                return(
-                                        <Grid key={anime._id + i} item xs={4} md={2} onClick={() => handleToggle(anime)}>
-                                            <div className="card-content">
-                                                <Card sx={{ maxWidth: "auto"}}>
-                                                    <CardActionArea >
-                                                        <CardMedia
-                                                            component="img"
-                                                            height="auto"
-                                                            image={anime.image}
-                                                            alt="green iguana"
-                                                        />
-                                                    </CardActionArea>
-                                                </Card>
-                                            </div>
-                                        </Grid>
-                                    )
-                                }) 
                             }
                             </Grid> 
                             {nextPage === 69 ?

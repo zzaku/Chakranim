@@ -121,32 +121,34 @@ router.get('/animes/allSeason', async (req, res) => {
 });
 
 //CHECK AND SCRAP NEW ANIMES
-const scrapper = setInterval(async () => {
+const scrapper = async () => {
         const scrap = await pageScraper.pageScraper(browserInstance);
         const posts = await Post.find({
             newEp: {$exists: true}
     })
         if(posts.length > 0){
            return await getAllNameOfNewEp(posts)
+        } else {
+            
         }
     return console.log("animes récupérés.")
-}, 600000)
+}
 
 //SWAP ALL PREVIOUS ANIME EP WITH NEW EP
 const getAllNameOfNewEp = async (episodes) => {
 
-    console.log("suppression des anciennes versions des animes et ajout des nouvelles versions...")
+    console.log("Suppression des anciennes versions des animes et ajout des nouvelles versions...")
     for(episode of episodes){
         const delOldVersionAnime = await Post.remove({
             name: episode.name, langue: episode.langue, saison: episode.saison, newEp: {$exists: false}
         })
         const fixNewVersion = await Post.updateMany(
             {name: episode.name, langue: episode.langue, saison: episode.saison, newEp: {$exists: true}},
-            { $set: { "nouveau": true } }
+            { $set: { "nouveau_Episode": true } }
         )
 
         const addFieldToNewVersion = await Post.updateMany(
-            {name: episode.name, langue: episode.langue, saison: episode.saison, newEp: {$exists: false}},
+            {name: episode.name, langue: episode.langue, saison: episode.saison, newEp: {$exists: true}},
             { $unset: { newEp: "" } }
         )
     }
@@ -372,7 +374,10 @@ router.post('/allanimes', async (req, res) => {
         saison: req.body.saison,
         nombre_episode: req.body.nombre_episode,
         nombre_episode_final: req.body.nombre_episode_final,
+        newAnime: req.body.newAnime,
+        nouveau_Episode: req.body.nouveau_Episode,
         newEp: req.body.newEp,
+        score: req.body.score,
         need_suite: req.body.need_suite,
         lastPart: req.body.lastPart
     }

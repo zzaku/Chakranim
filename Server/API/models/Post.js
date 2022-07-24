@@ -46,6 +46,18 @@ const PostSchema = mongoose.Schema({
         type: Boolean,
         required: false,
     },  
+    nouveau_Episode: {
+        type: Boolean,
+        required: false,
+    },  
+    newAnime: {
+        type: Boolean,
+        required: false,
+    },  
+    score: {
+        type: Number,
+        required: false,
+    },  
     saison: {
         type: String,
         required: true,

@@ -24,6 +24,7 @@ const scraperObject = {
 
                 if(previousScrappedAnime[0].length === 0){
                     scrapped[i].newAnime = true
+                    scrapped[i].nouveau_Episode = false
                 } else {
                     for(let alreadyGet of previousScrappedAnime[0]){
                             if(
@@ -38,6 +39,8 @@ const scraperObject = {
                                 && (scrapped[i].nbr_episode !== alreadyGet.nombre_episode || scrapped[i].nbr_episode !== alreadyGet.nombre_episode_final)
                                 ){
                                                 scrapped[i].newEp = true
+                                                scrapped[i].newAnime = false
+                                                scrapped[i].nouveau_Episode = false
     
                             } else {
                                                 continue;
@@ -275,7 +278,8 @@ const scraperObject = {
                     let currentPageData2;
                     let suite = elems[link].nbr_episode >= 300
                     let newEp = elems[link].newEp
-                    let newAnime = elems[link].newAnime
+                    let newAnimeAvailable = elems[link].newAnime
+                    let nouveau_Episode_Available = elems[link].nouveau_Episode
                     currentPageData1 = await pagePromise(elems[link].link, elems[link].nbr_episode);
                     await page.waitForTimeout(getRandomFloat(1, 5))
                     if(elems[link].nbr_episode >= 200){
@@ -295,6 +299,8 @@ const scraperObject = {
                         lastPart: currentPageData2[0].lastPart,
                         nextLinks: currentPageData2[0].nextLinks,
                         links: currentPageData1[0].links,
+                        nouveau_Episode: nouveau_Episode_Available,
+                        newAnime: newAnimeAvailable ? true : false,
                         newEp: newEp,
                         duree: currentPageData1[0].duree,
                         date: currentPageData1[0].date
@@ -314,6 +320,8 @@ const scraperObject = {
                         lastPart: false,
                         nextLinks: null,
                         links: currentPageData1[0].links,
+                        nouveau_Episode: nouveau_Episode_Available,
+                        newAnime: newAnimeAvailable,
                         newEp: newEp,
                         duree: currentPageData1[0].duree,
                         date: currentPageData1[0].date

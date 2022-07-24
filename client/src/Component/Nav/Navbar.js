@@ -55,6 +55,10 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                             <h2>Touts les animes</h2>
                           </NavLink>
 
+    const login =  <NavLink to={"/connexion"}>
+                      <h2>Se connecer</h2>
+                    </NavLink>
+
     const search =  <NavMenu style={{justifyContent: "space-around", width: "50%"}}>
                       <FcSearch size={"40px"} cursor="pointer" onClick={() => open.setSearch(true)}/>
                     </NavMenu>
@@ -96,6 +100,11 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                       style={{ justifyContent: "space-around", width: "50%" }}
                     >
                       {seeAllAnimes}
+                    </NavMenu>
+                    <NavMenu
+                      style={{ justifyContent: "space-around", width: "50%" }}
+                    >
+                      {login}
                     </NavMenu>
                     {!onMobile ? (
                       <Bars

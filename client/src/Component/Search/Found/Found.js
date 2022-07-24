@@ -6,7 +6,7 @@ import { ThreeDots } from "react-loader-spinner"
 import ContentAnime from '../../Anime/ContentAnime'
 import { epContext } from '../../../App';
 
-const Found = ({allAnimes, animeFound, setNotAtHome}) => {
+const Found = ({animeFound, setNotAtHome}) => {
 
     const [anime, setAnime] = useState([])
     const [open, setOpen] = useState(false)
@@ -172,16 +172,21 @@ const Found = ({allAnimes, animeFound, setNotAtHome}) => {
                         key={anime._id}
                         className="anime-card"
                         onClick={() => handleAnime(anime)}
+                        style={{cursor: "pointer"}}
                       >
-                        <img
-                          alt={anime.name}
-                          style={{
-                            display: "flex",
-                            height: "100%",
-                            width: "100%",
-                          }}
-                          src={anime.image}
-                        />
+                        <div style={{display: "flex", height: "100%", width: "100%"}}>
+                          {anime.newAnime && <div className='new-anime'><h2>Nouveauté</h2></div>}
+                          {anime.nouveau_Episode && <div className='new-ep'><h2>Nouveaux episodes</h2></div>}
+                          <img
+                            alt={anime.name}
+                            style={{
+                              display: "flex",
+                              height: "100%",
+                              width: "100%",
+                            }}
+                            src={anime.image}
+                          />
+                        </div>
                       </div>
                     );
                   })}

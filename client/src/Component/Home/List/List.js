@@ -198,15 +198,19 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
                           key={genre._id + i}
                           className="card-container"
                           style={{ cursor: "pointer" }}
-                          onClick={() => handleToggle(genre)}
+                          onClick={() => handleToggle(genre) + console.log(genre)}
                         >
-                          <ParallaxHover width={"700"} height={"700"} refCard={refCard} >
-                            <img
-                              alt={"carde-anime: " + genre.name}
-                              className="posters"
-                              style={{ height: "100%", width: "100%" }}
-                              src={genre.image && genre.image}
-                            />
+                          <ParallaxHover width={"700"} height={"700"} yRotate={500} refCard={refCard} >
+                            <div style={{display: "flex", height: "100%", width: "100%"}}>
+                              {genre.newAnime && <div className='new-anime'><h2>Nouveauté</h2></div>}
+                              {genre.nouveau_Episode && <div className='new-ep'><h2>Nouveaux episodes</h2></div>}
+                              <img
+                                alt={"carde-anime: " + genre.name}
+                                className="posters"
+                                style={{ height: "100%", width: "100%" }}
+                                src={genre.image && genre.image}
+                              />
+                            </div>
                           </ParallaxHover>
                         </div>
                       ))

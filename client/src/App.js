@@ -7,9 +7,11 @@ import AllAnimes from './Route/AllAnimes/AllAnimes';
 import './App.css';
 import { createContext, useEffect, useState } from 'react';
 import Search from './Component/Search/Search';
-import customFetcher from './Component/Fetch/FetchInstance';
+import Login from "./Route/Login/Login"
+import { AuthProvider } from './Component/Context/AuthContext';
 
 export const epContext = createContext()
+export const log = createContext()
 
 function App() {
 
@@ -74,20 +76,23 @@ function App() {
 
  
   return (
+    <AuthProvider >
       <epContext.Provider value={{setEp: setEp, token: token, setToken: setToken, refreshToken: refreshToken, setRefreshToken: setRefreshToken, setSearch: setSearch, search: search, setStartSearching: setStartSearching, animeToFind: animeToFind, setAnimeToFind: setAnimeToFind, setAnimeFound: setAnimeFound, loading: loading, setLoading: setLoading}}>
         <div className="App">
           <Router>
             {!search && <Navbar notAtHome={notAtHome} setNotAtHome={setNotAtHome} />}
             <Search open={search} notAtHome={notAtHome} setNotAtHome={setNotAtHome} startSearching={startSearching} allAnimes={allAnimes} animeFound={animeFound} />
-          <Routes>
+            <Routes>
                 <Route path='/' element={<Home allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />  
                 <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} />} />
                 <Route path='/list/animes' element={<AllAnimes token={token} setToken={setToken} refreshToken={refreshToken} setRefreshToken={setRefreshToken} allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />
+                <Route path='/connexion' element={<Login />} />
             </Routes>
           {!startSearching && <Footer />}
-        </Router>
-      </div>
-    </epContext.Provider>
+          </Router>
+        </div>
+      </epContext.Provider>
+    </AuthProvider>
   );
 }
 

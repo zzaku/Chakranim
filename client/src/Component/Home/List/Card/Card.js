@@ -20,7 +20,7 @@ const config = {
       super(props);
       this.state = {
         rotateX: 0,
-        rotateY: 500,
+        rotateY: this.props.yRotate,
         shadowMovement: 0,
         shadowSize: 0,
         scale: 1,
@@ -89,7 +89,7 @@ const config = {
     }
   
     __handleMouseLeave() {
-      this.__buildState(0, 500, 0, 0, 1, 0, 0);
+      this.__buildState(0, this.props.yRotate, 0, 0, 1, 0, 0);
     }
   
     __renderChildren(children) {

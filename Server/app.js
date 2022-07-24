@@ -24,12 +24,12 @@ app.use('/vod', postsRoute.router);
 mongoose.connect(
     `mongodb+srv://${user}:${pass}@cluster0.rjm7e3x.mongodb.net/Chakranim`,
      {useNewUrlParser: true},
-      () => console.log('connected to DB !')
+      () => console.log('Connected to DB !')
     );
 
 
 //Scrap Data
-postsRoute.scrap
+setInterval(postsRoute.scrap, 14400000)
 
 
 
