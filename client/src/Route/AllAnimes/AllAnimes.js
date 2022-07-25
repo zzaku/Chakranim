@@ -10,6 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import customFetcher from "../../Component/Fetch/FetchInstance";
+import {useMediaQuery} from "@mui/material";
 import "./style/AllAnimes.css"
 import { epContext } from "../../App";
 import ParallaxHover from "../../Component/Home/List/Card/Card";
@@ -30,6 +31,7 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
     const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance"], [])
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
+    const mobile = useMediaQuery('(max-width:968px)')
 
     let getAll15Animes = `${process.env.REACT_APP_API_ANIME}/VOD/allanimes?page=${nextPage}`
 
@@ -227,10 +229,12 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
                             {withoutDoublon.map((anime, i) => {
                                 return(
                                             <div className="card-content" onClick={() => handleToggle(anime)}>
+                                                {anime.newAnime && <div className='new-anime-mobile' style={{display: mobile ? "" : "none"}}><h2>Nouveauté</h2></div>}
+                                                {anime.nouveau_Episode && <div className='new-ep-mobile' style={{display: mobile ? "" : "none"}}><h2>Nouveaux episodes</h2></div>}
                                                 <ParallaxHover width={"400"} height={"400"} yRotate={0}>
                                                     <div style={{display: "flex", height: "100%", width: "100%"}}>
-                                                        {anime.newAnime && <div className='new-anime'><h2>Nouveauté</h2></div>}
-                                                        {anime.nouveau_Episode && <div className='new-ep'><h2>Nouveaux episodes</h2></div>}
+                                                        {anime.newAnime && <div className='new-anime' style={{display: mobile ? "none" : ""}}><h2>Nouveauté</h2></div>}
+                                                        {anime.nouveau_Episode && <div className='new-ep' style={{display: mobile ? "none" : ""}}><h2>Nouveaux episodes</h2></div>}
                                                         <Card sx={{ maxWidth: "auto"}}>
                                                             <CardActionArea >
                                                                 <CardMedia

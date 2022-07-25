@@ -11,6 +11,7 @@ import jiren from './Neon/assets/jiren.gif'
 import tpGoku from './Neon/assets/tpGoku.gif'
 import songoku from './Neon/assets/songoku.gif'
 import { parseGIF, decompressFrames  } from 'gifuct-js';
+import { useMediaQuery } from '@mui/material';
 import "./style/List.css"
 import { epContext } from '../../../App';
 
@@ -32,6 +33,7 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     const neonContainerRef = useRef()
     const gokuRef = useRef()
     const jirenRef = useRef()
+    const mobile = useMediaQuery('(max-width:968px)')
 
     let categorie = genres.includes("é") ? genres.replace("é", "e")
         : genres.includes("è") ? genres.replaceAll("è", "e")
@@ -200,10 +202,12 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
                           style={{ cursor: "pointer" }}
                           onClick={() => handleToggle(genre) + console.log(genre)}
                         >
+                          {genre.newAnime && <div className='new-anime-mobile' style={{display: mobile ? "" : "none"}}><h2>Nouveauté</h2></div>}
+                          {genre.nouveau_Episode && <div className='new-ep-mobile' style={{display: mobile ? "" : "none"}}><h2>Nouveaux episodes</h2></div>}
                           <ParallaxHover width={"700"} height={"700"} yRotate={500} refCard={refCard} >
                             <div style={{display: "flex", height: "100%", width: "100%"}}>
-                              {genre.newAnime && <div className='new-anime'><h2>Nouveauté</h2></div>}
-                              {genre.nouveau_Episode && <div className='new-ep'><h2>Nouveaux episodes</h2></div>}
+                              {genre.newAnime && <div className='new-anime' style={{display: mobile ? "none" : ""}}><h2>Nouveauté</h2></div>}
+                              {genre.nouveau_Episode && <div className='new-ep' style={{display: mobile ? "none" : ""}}><h2>Nouveaux episodes</h2></div>}
                               <img
                                 alt={"carde-anime: " + genre.name}
                                 className="posters"

@@ -27,7 +27,7 @@ function Connexion({setRegister}){
         try{
             load.setLoading(true)
             setError('')
-            await signin(auth, userConnect.pseudo, userConnect.mdp)
+            signin(auth, userConnect.pseudo, userConnect.mdp)
             .then(res => {
                 setConnexion({successConnexion: 'Connexion reussis !'});
                 setTimeout(() => {

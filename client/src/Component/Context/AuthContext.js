@@ -1,7 +1,7 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { db, auth } from "../Firebase/Firebase";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import { async } from "@firebase/util";
 
 const AuthContext = createContext()
@@ -12,28 +12,30 @@ export const useAuth = () => {
 
 export const AuthProvider = ({children}) => {
     
-    const userCollectionRef = collection(db, "Users")
-    
-////////local storage currentUserID
+  
+  ////////local storage currentUserID
   const userAccount = localStorage.user;
   const [currentUserID, setCurrentUserID] = useState(userAccount ? JSON.parse(userAccount) : {apiKey: "", appName: "", createdAt: "", email: "", emailVerified: null, isAnonymous: null, lastLoginAt: "", providerData: [], stsTokenManager: {}, uid: ""})
   
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(currentUserID));
   }, [currentUserID]);
-///////////////////////////////////////////////////////////
-
-////////local storage currentUserID
+  ///////////////////////////////////////////////////////////
+  
+  ////////local storage currentUserID
   const userAccountInfos = localStorage.userInfos;
   const [currentUser, setCurrentUser] = useState(userAccountInfos ? JSON.parse(userAccountInfos) : {})
   
   useEffect(() => {
     localStorage.setItem("userInfos", JSON.stringify(currentUser));
   }, [currentUser]);
-///////////////////////////////////////////////////////////
-
-
-//////INSERTION DES DONNEES UTILISATEUR DANS LA BASE DE DONNEE ET RECUPERATION DES DONNEES//////
+  ///////////////////////////////////////////////////////////
+  
+  
+//////////INSERTION DES DONNEES UTILISATEUR DANS LA BASE DE DONNEE ET RECUPERATION DES DONNEES//////
+/**/
+/**/   const userCollectionRef = collection(db, "Users")
+/**/   const userInfosRef = currentUserID && query(collection(db, "Users"), where("mail", "==", currentUserID.email)) 
 /**/
 /**/   const addInfosUser = async (infos) => {
 /**/         await addDoc(userCollectionRef, infos)
@@ -41,27 +43,31 @@ export const AuthProvider = ({children}) => {
 /**/
 /**/    useEffect(() => {
 /**/        const getUser = async () => {
-/**/            const data = await getDocs(userCollectionRef);
-/**/            setCurrentUser(data.docs.map(doc => ({...doc.data(), id: doc.id})))
+/**/                  const data = await getDocs(userInfosRef);
+/**/                    setCurrentUser(data.docs.map(doc => ({...doc.data(), id: doc.id})))
 /**/        }
-/**/
-/**/        getUser();
+/**/              getUser();
 /**/    }, [currentUserID])
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-//////INSCRIPTION ET CONNEXION//////////////////////////////////////////////////////////////////
+//////SIGNUP, LOGIN AND LOGOUT//////////////////////////////////////////////////////////////////
 /**/    const signup = async (auth, email, password) => {
 /**/      
 /**/        const fetchSignup = await createUserWithEmailAndPassword(auth, email, password)
-/**/        return fetchSignup
-/**/    }
+/**/            return fetchSignup
+/**/        }
 /**/
-/**/    const signin = async (auth, email, password) => {
-/**/        const fetchSignin = await signInWithEmailAndPassword(auth, email, password)
-/**/        return fetchSignin
-/**/     }
+/**/        const signin = async (auth, email, password) => {
+/**/            const fetchSignin = await signInWithEmailAndPassword(auth, email, password)
+/**/            return fetchSignin
+/**/        }
+/**/
+/**/        const signout = async () => {
+/**/          const fetchSignout = await signOut(auth)
+/**/          return fetchSignout
+/**/        }
 /**/
 /**/    useEffect(() => {
 /**/
@@ -69,7 +75,9 @@ export const AuthProvider = ({children}) => {
 /**/                if(user){
 /**/                    setCurrentUserID(user)
 /**/                    
-/**/                }
+/**/                } else {
+/**/                     setCurrentUserID(null)
+}
 /**/        })
 /**/
 /**/    }, [])
@@ -78,8 +86,12 @@ export const AuthProvider = ({children}) => {
 
     const value = {
         currentUserID,
+        setCurrentUserID,
+        currentUser,
+        setCurrentUser,
         signup,
         signin,
+        signout,
         addInfosUser
     }
     

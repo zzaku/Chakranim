@@ -7,6 +7,7 @@ import { epContext } from "../../App";
 import './style/Nav.css'
 import { Button, TextField, useMediaQuery } from "@mui/material";
 import MobileNavbar from "./Mobile Navbar/MobileNavbar"
+import { useAuth } from "../Context/AuthContext";
 
 const Navbar = ({notAtHome, setNotAtHome}) => {
 
@@ -15,6 +16,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
   const [onMobile, setOnMobile] = useState(false)
   const mobile = useMediaQuery('(max-width:968px)');
   const nav = useRef()
+  const {currentUserID, setCurrentUserID, setCurrentUser, signout} = useAuth()
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -40,6 +42,13 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
       
     });
 
+    const logOut = () => {
+      signout().then(res => {
+        setCurrentUser(null)
+        setCurrentUserID(null)
+      })
+    }
+
     const launchSearching = (e, animeToFind) => {
       e.preventDefault()
       open.setLoading(true)
@@ -55,7 +64,15 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                             <h2>Touts les animes</h2>
                           </NavLink>
 
-    const login =  <NavLink to={"/connexion"}>
+    const login = currentUserID ?
+                      <>
+                    <NavLink to={"/myAccount"}>
+                      <h2>Mon compte</h2>
+                    </NavLink>
+                    <Button onClick={() => logOut()} >Me déconnecter</Button>
+                    </>
+                    :
+                    <NavLink to={"/connexion"}>
                       <h2>Se connecer</h2>
                     </NavLink>
 

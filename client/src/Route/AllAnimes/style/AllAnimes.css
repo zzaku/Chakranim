@@ -78,11 +78,51 @@
     top: 50%;
 }
 
+.new-anime-mobile{
+    position: absolute;
+    display: flex;
+    z-index: 50;
+    height: 25%;
+    width: 85%;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 6px;
+    opacity: 0.7;
+    right: 10%;
+    top: 50%;
+    font-size: 10px;
+}
+
+.new-ep-mobile{
+    position: absolute;
+    display: flex;
+    z-index: 50;
+    height: 25%;
+    width: 85%;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    border-radius: 6px;
+    opacity: 0.7;
+    right: 5%;
+    top: 50%;
+    font-size: 10px;
+}
+
 .new-anime > h2{
     color: red;
 }
 
 .new-ep > h2{
+    color: white;
+}
+
+.new-anime-mobile > h2{
+    color: red;
+}
+
+.new-ep-mobile > h2{
     color: white;
 }
 
@@ -171,8 +211,8 @@
 
 @media screen and (max-width: 968px) {
     .grid-container:nth-child(2){
-        width: calc(100% + 10%);
-        margin-left: -20px;
+        width: calc(100% + 20%);
+        margin-left: -5px;
     }
 
     .nextpage{
@@ -185,5 +225,9 @@
     
     .layout-container{
         margin-top: 15%;
+    }
+    
+    .card-content{
+        width: 21%;
     }
 }

@@ -28,7 +28,7 @@ function Inscription({setRegister}){
         try{
             load.setLoading(true)
             setError('')
-            const signUp = signup(auth, user.mail, user.password)
+            signup(auth, user.mail, user.password)
             .then(res => {
                 setInscription({successInscription: 'inscription reussis !'});
                 addInfosUser({prenom: user.prenom, 
