@@ -2,6 +2,7 @@ import { Alert } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { epContext } from '../../../App'
 import { useAuth } from '../../../Component/Context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 import '../style/Login.css'
 import { auth } from '../../../Component/Firebase/Firebase'
 
@@ -11,7 +12,8 @@ function Inscription({setRegister}){
     const [user, setUser] = useState({})
     const [inscription, setInscription] = useState({})
     const [error, setError] = useState("")
-    const {signup, currentUserID} = useAuth()
+    const {signup, currentUserID, addInfosUser} = useAuth()
+    const navigate = useNavigate()
     const patternMail = '[a-zA-Z0-9._\-]+@[a-zA-Z0-9._\-]+\.[a-zA-Z]{2,10}'
     const patternPhone = '[0-9]{10}'
 
@@ -26,7 +28,24 @@ function Inscription({setRegister}){
         try{
             load.setLoading(true)
             setError('')
-            await signup(auth, user.mail, user.password)
+            const signUp = signup(auth, user.mail, user.password)
+            .then(res => {
+                setInscription({successInscription: 'inscription reussis !'});
+                addInfosUser({prenom: user.prenom, 
+                    nom: user.nom, 
+                    pseudo: user.pseudo, 
+                    mail: user.mail, 
+                    phone: user.tel, 
+                    adresse: user.adresse})
+                setTimeout(() => {
+                    navigate('/')
+                }, 1000) 
+            })
+            .catch((error) => {
+                setInscription({successInscription: ''})
+                const errorMessage = error.message;
+                setError(errorMessage === "Firebase: Error (auth/email-already-in-use)." && "Adresse mail déja utilisé !")
+            })
         } catch {
             setError("failed to create an account")
         }
@@ -38,10 +57,9 @@ function Inscription({setRegister}){
         <div className="login">
                         <div className="heading">
                             {inscription.pseudoExisting && <div>pseudo existe déja !</div>}
-                            {inscription.successInscription && <div>inscription reussi !</div>}
-                            <div className='error-container' style={{display: "flex", height: "auto", width: "auto"}}>{error && <Alert variant='danger'>{error}</Alert>}</div>
+                            {inscription.successInscription && <div style={{display: "flex", height: "auto", width: "auto"}}><Alert severity='success'>{inscription.successInscription}</Alert></div>}
+                            {error && <div className='error-container' style={{display: "flex", height: "auto", width: "auto"}}><Alert variant='danger'>{error}</Alert></div>}
                             <h4 style={{color: 'white', margin: "0"}}>Inscription</h4>
-                                <h3 style={{color: 'white'}}>{currentUserID.email}</h3>
                                 <div className="form" style={{height:'100%'}}>
                                    <form action=''>
 

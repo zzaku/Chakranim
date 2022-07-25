@@ -4,6 +4,7 @@ import { useAuth } from '../../../Component/Context/AuthContext';
 import { auth } from '../../../Component/Firebase/Firebase';
 import { epContext } from '../../../App';
 import { Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import '../style/Login.css'
 
 function Connexion({setRegister}){
@@ -12,6 +13,8 @@ function Connexion({setRegister}){
     const {signin} = useAuth()
     const [error, setError] = useState("")
     const [userConnect, setUserConnect] = useState({})
+    const navigate = useNavigate()
+    const [connexion, setConnexion] = useState({})
 
     function onChangeUserConnected(e){
         const name = e.target.name;
@@ -25,8 +28,19 @@ function Connexion({setRegister}){
             load.setLoading(true)
             setError('')
             await signin(auth, userConnect.pseudo, userConnect.mdp)
+            .then(res => {
+                setConnexion({successConnexion: 'Connexion reussis !'});
+                setTimeout(() => {
+                    navigate('/')
+                }, 1000) 
+            })
+            .catch((error) => {
+                setConnexion({successConnexion: ''});
+                const errorMessage = error.message;
+                setError(errorMessage === "Firebase: Error (auth/user-not-found)." ? "Cette adresse mail n'est liée à aucun compte !" : errorMessage === "Firebase: Error (auth/wrong-password)." && "Adresse mail ou mot de passe incorrect !")
+            })
         } catch {
-            setError("pseudo ou mot de passe incorect")
+            setError("Connexion échoué !")
         }
 
         load.setLoading(false)
@@ -36,7 +50,8 @@ function Connexion({setRegister}){
             <div className="login">
                             <div className="heading">
                             {/*submitted && childConnected.connected ? <div><ToastApprouved/></div>  : submitted && !childConnected.connected ? <div><Toast/></div> : null*/}
-                            <div className='error-container' style={{display: "flex", height: "auto", width: "auto"}}>{error && <Alert variant='danger'>{error}</Alert>}</div>
+                            {error && <div className='error-container' style={{display: "flex", height: "auto", width: "auto"}}><Alert variant='danger'>{error}</Alert></div>}
+                            {connexion.successConnexion && <div className='success-container' style={{display: "flex", height: "auto", width: "auto"}}><Alert severity='success'>{connexion.successConnexion}</Alert></div>}
                                 <h2>Connexion</h2>
                                 <div className="form" style={{height:'auto'}}>
                                     <form onSubmit={submitConnect}>

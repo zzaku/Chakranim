@@ -1,7 +1,8 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { db, auth } from "../Firebase/Firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
+import { async } from "@firebase/util";
 
 const AuthContext = createContext()
 
@@ -10,13 +11,34 @@ export const useAuth = () => {
 }
 
 export const AuthProvider = ({children}) => {
-
-    const [currentUser, setCurrentUser] = useState()
+    
     const userCollectionRef = collection(db, "Users")
-    const [currentUserID, setCurrentUserID] = useState()
+    
+////////local storage currentUserID
+  const userAccount = localStorage.user;
+  const [currentUserID, setCurrentUserID] = useState(userAccount ? JSON.parse(userAccount) : {apiKey: "", appName: "", createdAt: "", email: "", emailVerified: null, isAnonymous: null, lastLoginAt: "", providerData: [], stsTokenManager: {}, uid: ""})
+  
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(currentUserID));
+  }, [currentUserID]);
+///////////////////////////////////////////////////////////
+
+////////local storage currentUserID
+  const userAccountInfos = localStorage.userInfos;
+  const [currentUser, setCurrentUser] = useState(userAccountInfos ? JSON.parse(userAccountInfos) : {})
+  
+  useEffect(() => {
+    localStorage.setItem("userInfos", JSON.stringify(currentUser));
+  }, [currentUser]);
+///////////////////////////////////////////////////////////
 
 
 //////INSERTION DES DONNEES UTILISATEUR DANS LA BASE DE DONNEE ET RECUPERATION DES DONNEES//////
+/**/
+/**/   const addInfosUser = async (infos) => {
+/**/         await addDoc(userCollectionRef, infos)
+/**/     }
+/**/
 /**/    useEffect(() => {
 /**/        const getUser = async () => {
 /**/            const data = await getDocs(userCollectionRef);
@@ -24,19 +46,21 @@ export const AuthProvider = ({children}) => {
 /**/        }
 /**/
 /**/        getUser();
-/**/    }, [])
+/**/    }, [currentUserID])
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 //////INSCRIPTION ET CONNEXION//////////////////////////////////////////////////////////////////
-/**/    const signup = (auth, email, password) => {
+/**/    const signup = async (auth, email, password) => {
 /**/      
-/**/        return createUserWithEmailAndPassword(auth, email, password)
+/**/        const fetchSignup = await createUserWithEmailAndPassword(auth, email, password)
+/**/        return fetchSignup
 /**/    }
 /**/
-/**/    const signin = (auth, email, password) => {
-/**/        return signInWithEmailAndPassword(auth, email, password)
+/**/    const signin = async (auth, email, password) => {
+/**/        const fetchSignin = await signInWithEmailAndPassword(auth, email, password)
+/**/        return fetchSignin
 /**/     }
 /**/
 /**/    useEffect(() => {
@@ -55,7 +79,8 @@ export const AuthProvider = ({children}) => {
     const value = {
         currentUserID,
         signup,
-        signin
+        signin,
+        addInfosUser
     }
     
     console.log("donées de l'user : ", currentUser)
