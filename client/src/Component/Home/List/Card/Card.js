@@ -138,7 +138,7 @@ const config = {
       });
   
       return (
-        <div ref={this.test} style={{ transformStyle: 'preserve-3d', height: "100%", width: "100%", display: "flex"}}>
+        <div ref={this.test} style={{ transformStyle: 'preserve-3d', height: "100%", width: "100%", position: "relative", display: "flex"}}>
           <figure className='ph-wrapper' style={{stylesWrapper, height: "100%", width: "100%", display: "flex"}} onMouseMove={this.__handleMouseMove.bind(this)} onMouseLeave={this.__handleMouseLeave.bind(this)}>
             <div className='ph-shadow' style={stylesShadow} />
             <div className='ph-layers'>

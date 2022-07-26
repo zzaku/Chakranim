@@ -21,7 +21,6 @@ const ContentAnime = ({anime, setAnime, animeBySeason, wrapperRef, descriptionSu
     if(LastPartdescriptionTemp){if(LastPartdescriptionTemp[LastPartdescriptionTemp.length-1] === ""){LastPartdescriptionTemp.pop()}}
     let middleDesc = LastPartdescriptionTemp && Math.trunc((LastPartdescriptionTemp.length-1) / 2) + 1
     let LastPartdescription = anime.desc && anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") + "..."
-console.log(openSearch.loading)
     //const [lecteur, setLecteur] = useState({Lecteur: sibnet})
     const allLinks = useMemo(() => [anime.links, anime.nextLinks], [anime])
     const seasonRef = useRef()
@@ -88,7 +87,6 @@ const getNbrOfSeason = () => {
 }
 
 let nbrSeason = getNbrOfSeason()
-console.log(animeBySeason)
 let seasonChanged = (otherSeason, langue) => {
   let testSeason = animeBySeason.filter(elem => (elem.saison === otherSeason.saison && elem.langue === langue) || (elem.saison === otherSeason.saison))[0]
   if(testSeason){

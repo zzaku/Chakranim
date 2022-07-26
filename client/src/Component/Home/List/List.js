@@ -12,6 +12,10 @@ import tpGoku from './Neon/assets/tpGoku.gif'
 import songoku from './Neon/assets/songoku.gif'
 import { parseGIF, decompressFrames  } from 'gifuct-js';
 import { useMediaQuery } from '@mui/material';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import AddToQueueIcon from '@mui/icons-material/AddToQueue';
+import AddToQueueTwoToneIcon from '@mui/icons-material/AddToQueueTwoTone';
 import "./style/List.css"
 import { epContext } from '../../../App';
 
@@ -33,6 +37,10 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
     const neonContainerRef = useRef()
     const gokuRef = useRef()
     const jirenRef = useRef()
+    const [isfaved, setIsfaved] = useState(false)
+    const [favAdded, setFavAdded] = useState(false)
+    const [toWatchLater, setToWatchLater] = useState(false)
+    const [animeId, setAnimeId] = useState("")
     const mobile = useMediaQuery('(max-width:968px)')
 
     let categorie = genres.includes("é") ? genres.replace("é", "e")
@@ -174,6 +182,9 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
           cardListRef.current.scrollLeft = currentScrollPosition
         }
 
+        const addFav = () => {
+          setFavAdded(true)
+        }
     return (
       <div className="card">
         <Backdrop
@@ -204,8 +215,10 @@ const List = ({allAnimes, genre, genres, setNotAtHome}) =>{
                         >
                           {genre.newAnime && <div className='new-anime-mobile' style={{display: mobile ? "" : "none"}}><h2>Nouveauté</h2></div>}
                           {genre.nouveau_Episode && <div className='new-ep-mobile' style={{display: mobile ? "" : "none"}}><h2>Nouveaux episodes</h2></div>}
+                          <div className={'fav'} onMouseOver={() => setIsfaved(true) + setAnimeId(genre._id)} onMouseOut={() => setIsfaved(favAdded ? true : false)} onClick={() => addFav()}><Button >{isfaved && animeId === genre._id ? <BookmarkIcon /> : <BookmarkBorderIcon className='faved'/>}</Button></div>
+                          <div className={'to-watch-later'} onMouseOver={() => setToWatchLater(true) + setAnimeId(genre._id)} onMouseOut={() => setToWatchLater(false)}><Button >{toWatchLater && animeId === genre._id ? <AddToQueueTwoToneIcon/> : <AddToQueueIcon className='faved'/>}</Button></div>
                           <ParallaxHover width={"700"} height={"700"} yRotate={500} refCard={refCard} >
-                            <div style={{display: "flex", height: "100%", width: "100%"}}>
+                            <div style={{position: "absolute", height: "100%", width: "100%"}}>
                               {genre.newAnime && <div className='new-anime' style={{display: mobile ? "none" : ""}}><h2>Nouveauté</h2></div>}
                               {genre.nouveau_Episode && <div className='new-ep' style={{display: mobile ? "none" : ""}}><h2>Nouveaux episodes</h2></div>}
                               <img

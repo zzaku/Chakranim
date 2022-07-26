@@ -93,8 +93,6 @@ export const AuthProvider = ({children}) => {
         signout,
         addInfosUser
     }
-    
-    console.log("donées de l'user : ", currentUser)
 
     return (
         <AuthContext.Provider value={value}>
