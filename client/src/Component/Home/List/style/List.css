@@ -104,6 +104,13 @@ h1{
     
 }
 
+.login-popup{
+    width: 50%;
+    height: 50%;
+    border-radius: 15%;
+    display: flex;
+}
+
 .card-container{
     position: relative;
     display: flex;
