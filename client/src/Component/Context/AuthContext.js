@@ -55,15 +55,15 @@ export const AuthProvider = ({children}) => {
 /**/   const setPreferences = async (data, idPref) => {
 /**/          const userSetPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", currentUser[0].id, "Preferences", idPref)
 /**/          await updateDoc(userSetPreferencesRef, data)
-/**/          getPref()
-/**/
-/**/          onSnapshot(userSetPreferencesRef, async (doc) => {
+/**/          await onSnapshot(userSetPreferencesRef, async (doc) => {
 /**/              if(doc.data()){
 /**/                  if(doc.data().favorite === false && doc.data().to_watch_later === false){
 /**/                      await deleteDoc(userSetPreferencesRef);
 /**/                  }
 /**/              }
 /**/          });
+/**/          getPref()
+/**/
 /**/     }
 /**/
 /**/
@@ -73,6 +73,7 @@ export const AuthProvider = ({children}) => {
 /**/                  setCurrentUser(data.docs.map(doc => ({...doc.data(), id: doc.id})))
 /**/        }
 /**/              getUser();
+                  getPref()
 /**/    }, [currentUserID])
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

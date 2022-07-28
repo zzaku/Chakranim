@@ -177,6 +177,25 @@ router.get('/anime/:postId', async (req, res) => {
     }
 });
 
+//GET BACK SERVERAL ANIME BY ID
+router.get('/list/animes', async (req, res) => {
+    try{
+        const animeId = req.query.animeId;
+        let reqId = (req) => {
+            let tabReq = req.split(",")
+            return tabReq
+        }
+
+        let posts = await Post.find().where('_id').in(reqId(animeId)).exec();
+
+        console.log(animeId)
+        console.log(posts)
+        res.status(200).json(posts)
+    }catch(err){
+        res.status(401).json({message: err})
+    }
+});
+
 //GET ANIMES SERIE
 router.get('/animes/type/serie', async (req, res) => {
     try{
