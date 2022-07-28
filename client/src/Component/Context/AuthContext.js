@@ -1,7 +1,8 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth"
 import { db, auth } from "../Firebase/Firebase";
-import { collection, getDocs, addDoc, query, where, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc } from "firebase/firestore";
+import { async } from "@firebase/util";
 
 const AuthContext = createContext()
 
@@ -36,6 +37,7 @@ export const AuthProvider = ({children}) => {
 /**/   const userCollectionRef = collection(db, "Users")
 /**/   const userInfosRef = currentUserID && query(collection(db, "Users"), where("mail", "==", currentUserID.email)) 
 /**/   const userPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Preferences")
+/**/   const onSnapshotPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Preferences")
 /**/
 /**/   const addInfosUser = async (infos) => {
 /**/         await addDoc(userCollectionRef, infos)
@@ -54,7 +56,16 @@ export const AuthProvider = ({children}) => {
 /**/          const userSetPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", currentUser[0].id, "Preferences", idPref)
 /**/          await updateDoc(userSetPreferencesRef, data)
 /**/          getPref()
+/**/
+/**/          onSnapshot(userSetPreferencesRef, async (doc) => {
+/**/              if(doc.data()){
+/**/                  if(doc.data().favorite === false && doc.data().to_watch_later === false){
+/**/                      await deleteDoc(userSetPreferencesRef);
+/**/                  }
+/**/              }
+/**/          });
 /**/     }
+/**/
 /**/
 /**/    useEffect(() => {
 /**/        const getUser = async () => {
@@ -62,7 +73,6 @@ export const AuthProvider = ({children}) => {
 /**/                  setCurrentUser(data.docs.map(doc => ({...doc.data(), id: doc.id})))
 /**/        }
 /**/              getUser();
-                  getPref();
 /**/    }, [currentUserID])
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -90,7 +100,7 @@ export const AuthProvider = ({children}) => {
 /**/         return onAuthStateChanged(auth, user => {
 /**/                if(user){
 /**/                    setCurrentUserID(user)
-/**/                    
+/**/                    getPref()
 /**/                } else {
 /**/                     setCurrentUserID(null)
 /**/                }
@@ -110,7 +120,8 @@ export const AuthProvider = ({children}) => {
         signout,
         addInfosUser,
         addPreferences,
-        setPreferences
+        setPreferences,
+        getPref
     }
 
     return (

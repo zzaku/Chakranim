@@ -12,7 +12,7 @@ function Inscription({setRegister}){
     const [user, setUser] = useState({})
     const [inscription, setInscription] = useState({})
     const [error, setError] = useState("")
-    const {signup, currentUserID, addInfosUser} = useAuth()
+    const {signup, addInfosUser} = useAuth()
     const navigate = useNavigate()
     const patternMail = '[a-zA-Z0-9._\-]+@[a-zA-Z0-9._\-]+\.[a-zA-Z]{2,10}'
     const patternPhone = '[0-9]{10}'
@@ -34,7 +34,7 @@ function Inscription({setRegister}){
                 addInfosUser({prenom: user.prenom, 
                     nom: user.nom, 
                     pseudo: user.pseudo, 
-                    mail: user.mail, 
+                    mail: user.mail.toLowerCase(), 
                     phone: user.tel, 
                     adresse: user.adresse})
                 setTimeout(() => {

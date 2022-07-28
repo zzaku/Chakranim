@@ -41,7 +41,7 @@ const List = ({genre, genres, setNotAtHome}) =>{
     const jirenRef = useRef()
     const [needToConnect, setNeedToConnect] = useState(false)
     const mobile = useMediaQuery('(max-width:968px)')
-    const {addPreferences, setPreferences, currentUserID, currentUser} = useAuth()
+    const {addPreferences, setPreferences, currentUserID, currentUser, getPref} = useAuth()
 
     let categorie = genres.includes("é") ? genres.replace("é", "e")
         : genres.includes("è") ? genres.replaceAll("è", "e")
@@ -182,17 +182,21 @@ const List = ({genre, genres, setNotAtHome}) =>{
           cardListRef.current.scrollLeft = currentScrollPosition
         }
 
+        useEffect(() => {
+          getPref()
+        }, [])
+
         const setFav = (animeId) => {
 
-          const animePref = currentUser.Preferences.filter(elem => elem.animeId === animeId)
+          const animePref = currentUser && currentUser.Preferences && currentUser.Preferences.filter(elem => elem.animeId === animeId)
           if(currentUserID){
-            if(animePref.length === 0){
+            if(!currentUser.Preferences || animePref.length === 0){
               addPreferences({
                 animeId: animeId,
                 favorite: true,
                 to_watch_later: false
               })
-            } else if(animePref.length > 0){
+            } else if(animePref && animePref.length > 0){
               setPreferences({
                 favorite: animePref[0].favorite ? false : true,
               }, animePref[0].id)
@@ -204,15 +208,15 @@ const List = ({genre, genres, setNotAtHome}) =>{
 
         const setToWatchLater = (animeId) => {
 
-          const animePref = currentUser.Preferences.filter(elem => elem.animeId === animeId)
+          const animePref = currentUser && currentUser.Preferences && currentUser.Preferences.filter(elem => elem.animeId === animeId)
           if(currentUserID){
-            if(animePref.length === 0){
+            if(animePref && animePref.length === 0){
               addPreferences({
                 animeId: animeId,
                 favorite: false,
                 to_watch_later: true
               })
-            } else if(animePref.length > 0){
+            } else if(animePref && animePref.length > 0){
               setPreferences({
                 to_watch_later: animePref[0].to_watch_later ? false : true,
               }, animePref[0].id)

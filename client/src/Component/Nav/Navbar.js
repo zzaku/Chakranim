@@ -63,6 +63,9 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
     const seeAllAnimes =  <NavLink to={"/list/animes"}>
                             <h2>Touts les animes</h2>
                           </NavLink>
+    const seePreferences =  <NavLink to={"/list/preferences"}>
+                            <h2>Mes préférences</h2>
+                          </NavLink>
 
     const login = currentUserID ?
                       <>
@@ -117,6 +120,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                       style={{ justifyContent: "space-around", width: "50%" }}
                     >
                       {seeAllAnimes}
+                      {seePreferences}
                     </NavMenu>
                     <NavMenu
                       style={{ justifyContent: "space-around", width: "50%" }}

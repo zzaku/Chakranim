@@ -4,6 +4,7 @@ import Home from './Component/Home/Home'
 import Footer from './Component/Footer/Footer';
 import VodPlayer from './Route/VodPlayer/VodPlayer';
 import AllAnimes from './Route/AllAnimes/AllAnimes';
+import Preferences from './Route/Preferences/Preferences';
 import './App.css';
 import { createContext, useEffect, useState } from 'react';
 import Search from './Component/Search/Search';
@@ -86,6 +87,7 @@ function App() {
                 <Route path='/' element={<Home allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />  
                 <Route path='/watch/:watchName/:watchEpisode' element={<VodPlayer ep={ep} setEp={setEp} />} />
                 <Route path='/list/animes' element={<AllAnimes token={token} setToken={setToken} refreshToken={refreshToken} setRefreshToken={setRefreshToken} allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />
+                <Route path='/list/preferences' element={<Preferences token={token} setToken={setToken} refreshToken={refreshToken} setRefreshToken={setRefreshToken} allAnimes={allAnimes} setNotAtHome={setNotAtHome} />} />
                 <Route path='/connexion' element={<Login />} />
             </Routes>
           {!startSearching && <Footer />}
