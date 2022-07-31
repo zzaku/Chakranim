@@ -229,18 +229,20 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
                             {withoutDoublon.map((anime, i) => {
                                 return(
                                             <div className="card-content" onClick={() => handleToggle(anime)}>
-                                                {anime.newAnime && <div className='new-anime-mobile' style={{display: mobile ? "" : "none"}}><h2>Nouveauté</h2></div>}
+                                                {anime.newAnime && <div className='new-anime-mobile' style={{display: mobile ? "" : "none"}}><h2 style={{color: "red"}}>Nouveauté</h2></div>}
                                                 {anime.nouveau_Episode && <div className='new-ep-mobile' style={{display: mobile ? "" : "none"}}><h2>Nouveaux episodes</h2></div>}
-                                                <ParallaxHover width={"400"} height={"400"} yRotate={0}>
+                                                <ParallaxHover width={"700"} height={"700"} yRotate={360}>
                                                     <div style={{display: "flex", height: "100%", width: "100%"}}>
-                                                        {anime.newAnime && <div className='new-anime' style={{display: mobile ? "none" : ""}}><h2>Nouveauté</h2></div>}
-                                                        {anime.nouveau_Episode && <div className='new-ep' style={{display: mobile ? "none" : ""}}><h2>Nouveaux episodes</h2></div>}
-                                                        <Card sx={{ maxWidth: "auto"}}>
-                                                            <CardActionArea >
+                                                        {anime.newAnime && <div className='new-anime2' style={{display: mobile ? "none" : ""}}><h2 style={{color: "red"}}>Nouveauté</h2></div>}
+                                                        {anime.nouveau_Episode && <div className='new-ep2' style={{display: mobile ? "none" : ""}}><h2>Nouveaux episodes</h2></div>}
+                                                        <Card sx={{ maxWidth: "auto"}} style={{width: "100%", borderRadius: "25px", boxShadow: "2px 3px 3px 0px rgb(255 255 255 / 88%), 6px 1px 22px 3px rgb(143 3 93 / 96%), 4px 0px 150px 10px rgb(24 67 98 / 98%)"}}>
+                                                            <CardActionArea style={{height: "100%", width: "100%", borderRadius: "25px"}}>
                                                                 <CardMedia
                                                                     component="img"
-                                                                    height="auto"
+                                                                    height="100%"
+                                                                    width="100%"
                                                                     image={anime.image}
+                                                                    style={{borderRadius: "25px"}}
                                                                     alt="green iguana"
                                                                 />
                                                             </CardActionArea>

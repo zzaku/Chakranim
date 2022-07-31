@@ -54,3 +54,9 @@
   font-size: 3rem;
   text-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
 }
+
+.ph-layers-content{
+  display: flex;
+  height: 100%;
+  width: 100%;
+}

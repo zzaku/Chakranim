@@ -2,7 +2,7 @@ import React, { createRef } from "react";
 import './style/Card.css'
 
 const config = {
-    scale: 1.05, // How large to scale the item: 1.00 -> 1.10~
+    scale: 1.08, // How large to scale the item: 1.00 -> 1.10~
     rotation: 0.1, // Rotation modifier: 0.1 (more) -> 0.5 (less)
     alpha: 1.4, // Alpha channel modifer: 1.01 -> 1.1~
     shadow: 8 // How much the shadow moves
@@ -85,7 +85,7 @@ const config = {
       const shadowSize = 120;
       //const alpha = this.__calculateAlphaFromCenter(distanceFromCenter);
   
-      this.__buildState(rotateX, rotateY, shadowMovement, shadowSize, config.scale, angleDeg, 0.4);
+      this.__buildState(rotateX, rotateY, shadowMovement, shadowSize, config.scale, angleDeg, 0);
     }
   
     __handleMouseLeave() {

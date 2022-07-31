@@ -59,6 +59,7 @@ export const AuthProvider = ({children}) => {
 /**/              if(doc.data()){
 /**/                  if(doc.data().favorite === false && doc.data().to_watch_later === false){
 /**/                      await deleteDoc(userSetPreferencesRef);
+                          getPref()
 /**/                  }
 /**/              }
 /**/          });

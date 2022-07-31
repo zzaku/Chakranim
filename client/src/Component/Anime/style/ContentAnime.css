@@ -154,14 +154,22 @@
     display: flex;
     height: auto;
     width: 100%;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 }
 
 .container-saison-anime{
     display: flex;
     height: auto;
-    width: 50%;
+    width: 20%;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-other-saison-anime{
+    display: flex;
+    height: auto;
+    width: 33%;
     justify-content: space-around;
     align-items: center;
 }
@@ -175,12 +183,91 @@
     align-items: center;
 }
 
+.container-episode-nbr-anime{
+    display: flex;
+    height: auto;
+    width: 33%;
+    justify-content: space-around;
+    align-items: center;
+    font-family: "jojo5";
+}
+
+.langue-preferences-container{
+    display: flex;
+    height: 30%;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .container-langue{
     display: flex;
     height: 100%;
-    width: 100%;
+    width: 50%;
     justify-content: space-around;
     align-items: center;
+}
+
+.preferences-ref-container{
+    display: flex;
+    height: auto;
+    width: 25%;
+}
+
+.fav > button{
+    position: absolute;
+    display: flex;
+    z-index: 8;
+    justify-content: center;
+    background: rgb(199, 199, 199);
+    
+    box-shadow: rgb(199, 199, 199) 0px 20px 30px -10px;
+    border-radius: 6px;
+}
+
+.fav > button:hover{
+    position: absolute;
+    display: flex;
+    z-index: 8;
+    justify-content: center;
+    background: white;
+    border: 2px solid black;
+    box-shadow: rgb(255, 255, 255) 0px 20px 30px -10px;
+    border-radius: 6px;
+}
+
+
+.to-watch-later > button{
+    position: absolute;
+    display: flex;
+    z-index: 8;
+    justify-content: center;
+    right: 8%;
+    background: rgb(199, 199, 199);
+    
+    box-shadow: rgb(199, 199, 199) 0px 20px 30px -10px;
+    border-radius: 6px;
+}
+
+.to-watch-later > button:hover{
+    position: absolute;
+    display: flex;
+    z-index: 8;
+    justify-content: center;
+    right: 8%;
+    background: white;
+    border: 2px solid black;
+    box-shadow: rgb(255, 255, 255) 0px 20px 30px -10px;
+    border-radius: 6px;
+}
+
+.login-container{
+    display: flex;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .container-vod-anime{

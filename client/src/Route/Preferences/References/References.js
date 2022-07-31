@@ -1,14 +1,64 @@
 import { useMediaQuery } from "@mui/material";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { useAuth } from "../../../Component/Context/AuthContext";
 import ParallaxHover from "../../../Component/Home/List/Card/Card";
+import Backdrop from "@mui/material/Backdrop";
+import { epContext } from "../../../App";
+import ContentAnime from "../../../Component/Anime/ContentAnime";
+import CircularProgress from "@mui/material/CircularProgress";
+import {Button} from "@mui/material";
+import styled from "styled-components";
 import "../style/Preferences.css";
 
-const References = ({ selected }) => {
+  const References = ({ selected, setNotAtHome }) => {
   const { currentUser } = useAuth();
   const [animesPref, setAnimesPref] = useState([]);
-  const refCard = useRef();
   const mobile = useMediaQuery("(max-width:968px)");
+  const [open, setOpen] = useState(false)
+  const [anime, setAnime] = useState(null);
+  const wrapperRef = useRef(null);
+  const [descriptionSuite, setDescriptionSuite] = useState(false);
+  const [animeBySeason, setAnimeBySeason] = useState([]);
+  const cardContainerRef = useRef();
+  const cardListRef = useRef(null);
+  const loader = useContext(epContext);
+  
+    const BootstrapButton = styled(Button)({
+      boxShadow: 'none',
+      textTransform: 'none',
+      fontSize: 16,
+      padding: '6px 12px',
+      border: '1px solid',
+      borderRadius: "360px",
+      lineHeight: 1.5,
+      backgroundColor: 'red',
+      borderColor: '#0063cc',
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+      '&:hover': {
+        backgroundColor: '#0069d9',
+        borderColor: '#0062cc',
+        boxShadow: 'none',
+      },
+      '&:active': {
+        boxShadow: 'none',
+        backgroundColor: '#0062cc',
+        borderColor: '#005cbf',
+      },
+      '&:focus': {
+        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+      },
+    });
 
   const getPreferencesReferences = async (tab) => {
     let tempPref = [];
@@ -43,11 +93,103 @@ const References = ({ selected }) => {
     }
   }, [currentUser, selected]);
 
-  const handleToggle = () => {};
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        handleClose();
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
+
+  const handleClose = () => {
+    setOpen(false);
+    setDescriptionSuite(false);
+    setAnimeBySeason([]);
+    setAnime(null);
+  };
+
+  const handleToggle = (myAnime) => {
+    let firstPartToCheck = myAnime.name.split(" ")[0];
+    let secondPartToCheck =
+      myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1] : "";
+    let thirdPartToCheck =
+      myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2] : "";
+    loader.setLoading(true);
+    setAnime(myAnime);
+    fetch(
+      `${
+        process.env.REACT_APP_API_ANIME
+      }/VOD/animes/allSeason?name=${encodeURIComponent(
+        (firstPartToCheck + " " + secondPartToCheck).trim()
+      )}`
+    )
+      .then((res) => res.json())
+      .then((data) => setAnimeBySeason(data) + loader.setLoading(false));
+    setOpen(true);
+  };
+
+  const [finalPositionScroll, setFinalPositionScroll] = useState({
+    start: true,
+    end: false,
+  });
+  const [currentPose, setCurrentPose] = useState(0);
+
+  const scrollX = (val) => {
+    let currentScrollPosition = 0;
+    let scrollAmount =
+      cardContainerRef.current && cardContainerRef.current.scrollWidth * 7;
+    let maxScroll = cardListRef.current
+      ? cardListRef.current.scrollWidth
+      : null;
+    currentScrollPosition =
+      finalPositionScroll.start && !finalPositionScroll.end ? 0 : currentPose;
+    currentScrollPosition += val * scrollAmount;
+    setCurrentPose(currentScrollPosition);
+    if (currentScrollPosition >= maxScroll - scrollAmount) {
+      currentScrollPosition = maxScroll;
+      setFinalPositionScroll({ start: false, end: true });
+    } else if (currentScrollPosition <= 0) {
+      currentScrollPosition = 0;
+      setFinalPositionScroll({ start: true, end: false });
+    } else {
+      setFinalPositionScroll({ start: false, end: false });
+    }
+    cardListRef.current.scrollLeft = currentScrollPosition;
+  };
 
   return (
     <div className="list-anime-container">
       <div className="list-anime">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
+        open={open}
+      >
+        {anime ? (
+          <ContentAnime
+            wrapperRef={wrapperRef}
+            anime={anime}
+            setAnime={setAnime}
+            animeBySeason={animeBySeason}
+            descriptionSuite={descriptionSuite}
+            setDescriptionSuite={setDescriptionSuite}
+            setOpen={setOpen}
+            setNotAtHome={setNotAtHome}
+          />
+        ) : (
+          <CircularProgress color="inherit" />
+        )}
+      </Backdrop>
+      <div className="list-card-item">
+        <div className="card-list-item-container" ref={cardListRef}>
         {animesPref[0]
           ? animesPref[0].map((anime, i) => (
               <div
@@ -55,7 +197,7 @@ const References = ({ selected }) => {
                 className="card-item-container"
                 style={{ cursor: "pointer" }}
                 onClick={() => handleToggle(anime)}
-                ref={refCard}
+                ref={cardContainerRef}
               >
                 {anime.newAnime && (
                   <div
@@ -107,7 +249,27 @@ const References = ({ selected }) => {
                 </ParallaxHover>
               </div>
             ))
+                
           : null}
+        </div>
+        {
+        mobile ?
+        null
+        :
+          <div className="list-btn">
+        <div className="previous-btn">
+          <BootstrapButton style={{borderRadius: "360px"}} variant="contained" disableRipple onClick={() => scrollX(-1)}>
+            précédant
+          </BootstrapButton>
+        </div>
+        <div className="next-btn">
+          <BootstrapButton style={{borderRadius: "360px"}} variant="contained" disableRipple onClick={() => scrollX(1)}>
+            suivant
+          </BootstrapButton>
+        </div>
+      </div>
+        }
+      </div>
       </div>
     </div>
   );

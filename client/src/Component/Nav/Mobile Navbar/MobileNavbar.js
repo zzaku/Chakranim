@@ -4,6 +4,7 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { FcSearch } from 'react-icons/fc';
 import List from '@mui/material/List';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import BookIcon from '@mui/icons-material/Book';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
@@ -48,7 +49,7 @@ export default function SwipeableTemporaryDrawer({state, setState, setSearch, se
       onKeyDown={toggleDrawer(anchor, true)}
     >
       <List>
-        {["Voir la liste complète", "rechercher", "login", "logout"].map(
+        {["Voir la liste complète", "Mes préférences", "rechercher", "login", "logout"].map(
           (text, index) => (
             <ListItem key={text} disablePadding>
               {text === "Voir la liste complète" ? (
@@ -64,7 +65,20 @@ export default function SwipeableTemporaryDrawer({state, setState, setSearch, se
                     <ListItemText primary={text} style={{ width: "50%" }} />
                   </ListItemButton>
                 </NavLink>
-              ) : text === "rechercher" ? (
+              ) : text === "Mes préférences" ? (
+                <NavLink to={"/list/preferences"} style={{ textDecoration: "none" }}>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <BookIcon
+                        color="primary"
+                        size={"40px"}
+                        cursor="pointer"
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={text} style={{ width: "50%" }} />
+                  </ListItemButton>
+                </NavLink>
+              ) :text === "rechercher" ? (
                 <ListItemButton onClick={() => setSearch(true)}>
                   <ListItemIcon>
                     <FcSearch size={"40px"} cursor="pointer" />

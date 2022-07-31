@@ -7,7 +7,7 @@ import { Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import '../style/Login.css'
 
-function Connexion({setRegister}){
+function Connexion({setRegister, pathLocation, setNeedToConnect}){
 
     const load = useContext(epContext)
     const {signin} = useAuth()
@@ -30,9 +30,15 @@ function Connexion({setRegister}){
             signin(auth, userConnect.pseudo, userConnect.mdp)
             .then(res => {
                 setConnexion({successConnexion: 'Connexion reussis !'});
-                setTimeout(() => {
-                    navigate('/')
-                }, 1000) 
+                if(pathLocation === "/connexion"){
+                    setTimeout(() => {
+                        navigate('/')
+                    }, 1000) 
+                } else {
+                    setTimeout(() => {
+                        setNeedToConnect(false)
+                    }, 1000) 
+                }
             })
             .catch((error) => {
                 setConnexion({successConnexion: ''});
@@ -47,7 +53,7 @@ function Connexion({setRegister}){
     }
 
     return(
-            <div className="login">
+            <div className="login" style={{width: pathLocation === "/connexion" ? "60%" : "100%", backgroundColor: pathLocation === "/connexion" ? "60%" : "#101116", borderRadius: pathLocation === "/connexion" ? "none" : "25px",}}>
                             <div className="heading">
                             {/*submitted && childConnected.connected ? <div><ToastApprouved/></div>  : submitted && !childConnected.connected ? <div><Toast/></div> : null*/}
                             {error && <div className='error-container' style={{display: "flex", height: "auto", width: "auto"}}><Alert variant='danger'>{error}</Alert></div>}
@@ -70,7 +76,7 @@ function Connexion({setRegister}){
                                     </form>
                                 </div>
 
-                                <div className="container-asking">
+                                <div className="container-asking" style={{width: pathLocation === "/connexion" ? "75%" : "100%",}}>
                                     <a href={null} onClick={() => setRegister(true)} className='ask-registering' style={{color:"white"}}>Toujours pas inscrit ?</a>
                                     <a href={null} className='ask-forget-password' style={{color:"white"}}>Mot de passe oublié ?</a>
                                 </div>

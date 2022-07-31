@@ -4,19 +4,22 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import AddToQueueIcon from "@mui/icons-material/AddToQueue";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Preferences = () => {
   const [selected, setSelected] = useState("");
+  const mobile = useMediaQuery("(max-width:968px)");
 
   return (
     <div className="preferences-container">
       <div className="select-container">
         <div className="info">
           <div className="title">
-            <h1>Ma liste</h1>
+            <h2>Ma liste</h2>
           </div>
           <div className="description">
-            <h2>Vous retrouverez ici les animés que vous avez aimé !</h2>
+            {mobile ? <h4 style={{color: "white"}}>Vous retrouverez ici les animés que vous avez aimé ou que vous aimeriez regarder !</h4> : <h2>Vous retrouverez ici les animés que vous avez aimé ou que vous aimeriez regarder !</h2>}
+            
           </div>
         </div>
         <div className="select-wrapper">
@@ -27,7 +30,8 @@ const Preferences = () => {
               onClick={() => setSelected("fav")}
             >
               <BookmarkIcon />
-              <h3>Fav</h3>
+              {mobile ? <h4>Fav</h4> : <h3>Fav</h3>}
+              
             </Button>
             <Button
               variant="contained"
@@ -35,7 +39,8 @@ const Preferences = () => {
               onClick={() => setSelected("to_watch_later")}
             >
               <AddToQueueIcon />
-              <h3>regarder plus tard</h3>
+              {mobile ? <h4>regarder plus tard</h4> : <h3>regarder plus tard</h3>}
+              
             </Button>
           </div>
           {selected === "fav" ? (

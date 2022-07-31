@@ -40,41 +40,37 @@
     cursor: pointer;
     justify-content: space-between;
     align-items: center;
-    margin-left: 0%;
-    margin-top: 3%;
+    margin-top: 2%;
     margin-right: 2%;
-    margin-bottom: 7%;
-    width: 14%;
-    height: 100%;
+    width: 13%;
+    height: 270px;
 }
 
-.new-anime{
+.new-anime2{
     position: absolute;
     display: flex;
     z-index: 50;
     height: 25%;
-    width: 85%;
+    width: 100%;
     justify-content: center;
     align-items: center;
     background-color: white;
-    border-radius: 6px;
+    border-radius: 20px;
     opacity: 0.7;
-    right: 10%;
     top: 50%;
 }
 
-.new-ep{
+.new-ep2{
     position: absolute;
     display: flex;
     z-index: 50;
     height: 25%;
-    width: 85%;
+    width: 100%;
     justify-content: center;
     align-items: center;
     background-color: black;
-    border-radius: 6px;
+    border-radius: 20px;
     opacity: 0.7;
-    right: 5%;
     top: 50%;
 }
 
@@ -87,7 +83,7 @@
     justify-content: center;
     align-items: center;
     background-color: white;
-    border-radius: 6px;
+    border-radius: 25px;
     opacity: 0.7;
     right: 10%;
     top: 50%;
@@ -103,7 +99,7 @@
     justify-content: center;
     align-items: center;
     background-color: black;
-    border-radius: 6px;
+    border-radius: 25px;
     opacity: 0.7;
     right: 5%;
     top: 50%;
@@ -210,6 +206,11 @@
 }
 
 @media screen and (max-width: 968px) {
+
+    .animes-list{
+        height: 100vh;
+    }
+
     .grid-container:nth-child(2){
         width: calc(100% + 20%);
         margin-left: -5px;
@@ -228,6 +229,7 @@
     }
     
     .card-content{
+        height: 147px;
         width: 21%;
     }
 }

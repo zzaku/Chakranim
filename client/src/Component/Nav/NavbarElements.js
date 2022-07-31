@@ -8,7 +8,7 @@ height: 80px;
 display: flex;
 justify-content: space-around;
 padding: 0.5rem calc((100vw - 2500px) / 2);
-z-index: 10;
+z-index: 100;
 top: 0px;
 opacity: 1;
 `

@@ -120,34 +120,17 @@ h1{
     box-sizing: border-box;
 }
 
-.fav{
-    position: absolute;
+.card-info-content{
     display: flex;
-    z-index: 8;
-    background: white;
-    border: 2px solid black;
-    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
-    border-radius: 6px;
-}
-
-.to-watch-later{
-    position: absolute;
-    display: flex;
-    z-index: 8;
-    width: 15%;
-    justify-content: center;
-    right: 8%;
-    background: white;
-    border: 2px solid black;
-    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
-    border-radius: 6px;
+    height: 100%;
+    width: 100%;
 }
 
 
 .new-anime{
     position: absolute;
     display: flex;
-    z-index: 50;
+    z-index: 8;
     height: 25%;
     width: 85%;
     justify-content: center;
@@ -162,7 +145,7 @@ h1{
 .new-ep{
     position: absolute;
     display: flex;
-    z-index: 50;
+    z-index: 8;
     height: 25%;
     width: 85%;
     justify-content: center;
@@ -236,7 +219,9 @@ h1{
 
 @media screen and (max-width: 968px) {
     .card{
+        display: flex;
         height: 100%;
+        width: 100%;
         margin-left: 15px;
     }
 

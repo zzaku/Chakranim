@@ -1,24 +1,44 @@
 
-.login-container {
-    height: 100%;
-    width: 100%;
-    background-color: black;
+.login {
+  display: flex;
+  padding: 15px;
+  width: 60%;
+  height: 100%;
+  margin: 5% auto 0 auto;
+  background-color: black;
+  border: 2px solid #9b9bff;
+  justify-content: center;
+  align-items: center;
 }
 
-.login {
-  padding: 15px;
-  width: 25%;
-  height: 10%;
-  margin: 10% auto 0 auto;
-  background-color: black;
+.close-login-container-btn{
+  position: absolute;
+  display: flex;
+  right: 10%;
+  top: 10%;
+  height: auto;
+  width: auto;
+  background-color: white;
+  box-shadow: rgba(184, 184, 187, 0.25) 0px 50px 100px -20px, rgba(255, 255, 255, 0.3) 0px 30px 60px -30px, rgba(223, 223, 223, 0.35) 0px -2px 6px 3px ;
+  border-radius: 25px;
 }
 
 .login .heading {
-  height: auto;
+  height: 100%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin-top: 20%;
+  justify-content: center;
+  align-items: center;
+}
+
+.form{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .error-container > div {
@@ -160,6 +180,8 @@
 }
 
 .container-asking{
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  width: auto;
+  justify-content: space-around;
+  margin-top: 3%;
 }

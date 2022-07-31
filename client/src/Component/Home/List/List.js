@@ -12,14 +12,9 @@ import tpGoku from "./Neon/assets/tpGoku.gif";
 import songoku from "./Neon/assets/songoku.gif";
 import { parseGIF, decompressFrames } from "gifuct-js";
 import { useMediaQuery } from "@mui/material";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import AddToQueueIcon from "@mui/icons-material/AddToQueue";
-import AddToQueueTwoToneIcon from "@mui/icons-material/AddToQueueTwoTone";
 import "./style/List.css";
 import { epContext } from "../../../App";
 import { useAuth } from "../../Context/AuthContext";
-import Login from "../../../Route/Login/Login";
 
 const List = ({ genre, genres, setNotAtHome }) => {
   let withoutDoublon = [{}];
@@ -37,7 +32,6 @@ const List = ({ genre, genres, setNotAtHome }) => {
   const neonContainerRef = useRef();
   const gokuRef = useRef();
   const jirenRef = useRef();
-  const [needToConnect, setNeedToConnect] = useState(false);
   const mobile = useMediaQuery("(max-width:968px)");
   const {
     addPreferences,
@@ -208,58 +202,6 @@ const List = ({ genre, genres, setNotAtHome }) => {
     getPref();
   }, []);
 
-  const setFav = (animeId, nameAnime) => {
-    const animePref =
-      currentUser &&
-      currentUser.Preferences &&
-      currentUser.Preferences.filter((elem) => elem.animeId === animeId);
-    if (currentUserID) {
-      if (!currentUser.Preferences || animePref.length === 0) {
-        addPreferences({
-          animeId: animeId,
-          name: nameAnime,
-          favorite: true,
-          to_watch_later: false,
-        });
-      } else if (animePref && animePref.length > 0) {
-        setPreferences(
-          {
-            favorite: animePref[0].favorite ? false : true,
-          },
-          animePref[0].id
-        );
-      }
-    } else {
-      setNeedToConnect(true);
-    }
-  };
-
-  const setToWatchLater = (animeId, nameAnime) => {
-    const animePref =
-      currentUser &&
-      currentUser.Preferences &&
-      currentUser.Preferences.filter((elem) => elem.animeId === animeId);
-    if (currentUserID) {
-      if (animePref && animePref.length === 0) {
-        addPreferences({
-          animeId: animeId,
-          name: nameAnime,
-          favorite: false,
-          to_watch_later: true,
-        });
-      } else if (animePref && animePref.length > 0) {
-        setPreferences(
-          {
-            to_watch_later: animePref[0].to_watch_later ? false : true,
-          },
-          animePref[0].id
-        );
-      }
-    } else {
-      setNeedToConnect(true);
-    }
-  };
-
   return (
     <div className="card">
       <Backdrop
@@ -280,14 +222,6 @@ const List = ({ genre, genres, setNotAtHome }) => {
         ) : (
           <CircularProgress color="inherit" />
         )}
-      </Backdrop>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
-        open={needToConnect}
-      >
-        <div className="login-popup">
-          <Login wrapperRef={wrapperRef} />
-        </div>
       </Backdrop>
       <div className="grid-container">
         <h1>{DisplayAllCategory}</h1>
@@ -339,48 +273,6 @@ const List = ({ genre, genres, setNotAtHome }) => {
                     style={{ cursor: "pointer" }}
                     onClick={() => handleToggle(genre)}
                   >
-                    <div
-                      className={"fav"}
-                      onClick={() => setFav(genre._id, genre.name)}
-                    >
-                      <Button>
-                        {currentUserID &&
-                        currentUser &&
-                        currentUser.Preferences &&
-                        currentUser.Preferences.filter(
-                          (elem) => elem.animeId === genre._id
-                        )[0] &&
-                        currentUser.Preferences &&
-                        currentUser.Preferences.filter(
-                          (elem) => elem.animeId === genre._id
-                        )[0].favorite ? (
-                          <BookmarkIcon />
-                        ) : (
-                          <BookmarkBorderIcon className="faved" />
-                        )}
-                      </Button>
-                    </div>
-                    <div
-                      className={"to-watch-later"}
-                      onClick={() => setToWatchLater(genre._id, genre.name)}
-                    >
-                      <Button>
-                        {currentUserID &&
-                        currentUser &&
-                        currentUser.Preferences &&
-                        currentUser.Preferences.filter(
-                          (elem) => elem.animeId === genre._id
-                        )[0] &&
-                        currentUser.Preferences &&
-                        currentUser.Preferences.filter(
-                          (elem) => elem.animeId === genre._id
-                        )[0].to_watch_later ? (
-                          <AddToQueueTwoToneIcon />
-                        ) : (
-                          <AddToQueueIcon className="faved" />
-                        )}
-                      </Button>
-                    </div>
                     {genre.newAnime && (
                       <div
                         className="new-anime-mobile"
