@@ -337,4 +337,8 @@
     .container-name-anime{
         font-size: 7px;
     }
+
+    .preferences-ref-container{
+        width: 45%;
+    }
 }

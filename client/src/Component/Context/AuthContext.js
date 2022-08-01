@@ -24,7 +24,7 @@ export const AuthProvider = ({children}) => {
   
   ////////local storage currentUserID
   const userAccountInfos = localStorage.userInfos;
-  const [currentUser, setCurrentUser] = useState(userAccountInfos ? JSON.parse(userAccountInfos) : {})
+  const [currentUser, setCurrentUser] = useState(userAccountInfos ? JSON.parse(userAccountInfos) : null)
   
   useEffect(() => {
     localStorage.setItem("userInfos", JSON.stringify(currentUser));
@@ -44,14 +44,19 @@ export const AuthProvider = ({children}) => {
 /**/     }
 /**/
 /**/   const getPref = async () => {
-/**/          const datas = await getDocs(userPreferencesRef);
-/**/          setCurrentUser({...currentUser, Preferences: datas.docs.map(doc => ({...doc.data(), id: doc.id}))})
+/**/          if(userPreferencesRef){
+/**/              const datas = await getDocs(userPreferencesRef);
+/**/              setCurrentUser({...currentUser, Preferences: datas.docs.map(doc => ({...doc.data(), id: doc.id}))})
+/**/          } else {
+/**/              setCurrentUser(null)
+/**/          }
 /**/      }
 /**/
 /**/   const addPreferences = async (data) => {
 /**/          await addDoc(userPreferencesRef, data)
 /**/          getPref()
 /**/     }
+/**/
 /**/   const setPreferences = async (data, idPref) => {
 /**/          const userSetPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", currentUser[0].id, "Preferences", idPref)
 /**/          await updateDoc(userSetPreferencesRef, data)
@@ -59,7 +64,7 @@ export const AuthProvider = ({children}) => {
 /**/              if(doc.data()){
 /**/                  if(doc.data().favorite === false && doc.data().to_watch_later === false){
 /**/                      await deleteDoc(userSetPreferencesRef);
-                          getPref()
+/**/                           getPref()
 /**/                  }
 /**/              }
 /**/          });
@@ -70,11 +75,14 @@ export const AuthProvider = ({children}) => {
 /**/
 /**/    useEffect(() => {
 /**/        const getUser = async () => {
+/**/               if(userInfosRef){
 /**/                  const data = await getDocs(userInfosRef);
 /**/                  setCurrentUser(data.docs.map(doc => ({...doc.data(), id: doc.id})))
+/**/               }
 /**/        }
 /**/              getUser();
-                  getPref()
+/**/              getPref()
+/**/
 /**/    }, [currentUserID])
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,6 +113,7 @@ export const AuthProvider = ({children}) => {
 /**/                    getPref()
 /**/                } else {
 /**/                     setCurrentUserID(null)
+/**/                     setCurrentUser(null)
 /**/                }
 /**/        })
 /**/

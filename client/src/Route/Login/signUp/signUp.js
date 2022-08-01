@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "../style/Login.css";
 import { auth } from "../../../Component/Firebase/Firebase";
 
-function Inscription({ setRegister, pathLocation, setNeedToConnect }) {
+function Inscription({ setRegister, pathLocation, setNeedToConnect, propsChild }) {
   const load = useContext(epContext);
   const [user, setUser] = useState({});
   const [inscription, setInscription] = useState({});
@@ -38,7 +38,7 @@ function Inscription({ setRegister, pathLocation, setNeedToConnect }) {
             phone: user.tel,
             adresse: user.adresse,
           });
-          if(pathLocation === "/connexion"){
+          if(pathLocation === "/connexion" || pathLocation === "/list/preferences"){
             setTimeout(() => {
                 navigate('/')
             }, 1000) 
@@ -70,6 +70,7 @@ function Inscription({ setRegister, pathLocation, setNeedToConnect }) {
         width: pathLocation === "/connexion" ? "60%" : "100%",
         backgroundColor: pathLocation === "/connexion" ? "60%" : "#101116",
         borderRadius: pathLocation === "/connexion" ? "none" : "25px",
+        border: pathLocation === "/connexion" ? "none" : "2px solid #9b9bff",
       }}
     >
       <div className="heading">

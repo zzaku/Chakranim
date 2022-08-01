@@ -8,10 +8,11 @@ import ContentAnime from "../../../Component/Anime/ContentAnime";
 import CircularProgress from "@mui/material/CircularProgress";
 import {Button} from "@mui/material";
 import styled from "styled-components";
+import Login from "../../Login/Login"
 import "../style/Preferences.css";
 
   const References = ({ selected, setNotAtHome }) => {
-  const { currentUser } = useAuth();
+  const { currentUser, currentUserID, getPref } = useAuth();
   const [animesPref, setAnimesPref] = useState([]);
   const mobile = useMediaQuery("(max-width:968px)");
   const [open, setOpen] = useState(false)
@@ -21,6 +22,7 @@ import "../style/Preferences.css";
   const [animeBySeason, setAnimeBySeason] = useState([]);
   const cardContainerRef = useRef();
   const cardListRef = useRef(null);
+  const [needToConnect, setNeedToConnect] = useState(false);
   const loader = useContext(epContext);
   
     const BootstrapButton = styled(Button)({
@@ -90,8 +92,15 @@ import "../style/Preferences.css";
           );
         }
       }
+    } else {
+      setAnimesPref(null)
     }
-  }, [currentUser, selected]);
+  }, [currentUser, currentUserID, selected]);
+  
+
+  useEffect(() => {
+    getPref();
+  }, [currentUserID])
 
   useEffect(() => {
     /**
@@ -145,25 +154,31 @@ import "../style/Preferences.css";
 
   const scrollX = (val) => {
     let currentScrollPosition = 0;
+
     let scrollAmount =
       cardContainerRef.current && cardContainerRef.current.scrollWidth * 7;
     let maxScroll = cardListRef.current
       ? cardListRef.current.scrollWidth
       : null;
-    currentScrollPosition =
-      finalPositionScroll.start && !finalPositionScroll.end ? 0 : currentPose;
+
     currentScrollPosition += val * scrollAmount;
+
     setCurrentPose(currentScrollPosition);
+
     if (currentScrollPosition >= maxScroll - scrollAmount) {
       currentScrollPosition = maxScroll;
+     
       setFinalPositionScroll({ start: false, end: true });
-    } else if (currentScrollPosition <= 0) {
+    } 
+    else if (currentScrollPosition <= 0) {
       currentScrollPosition = 0;
       setFinalPositionScroll({ start: true, end: false });
-    } else {
+    } 
+    else {
       setFinalPositionScroll({ start: false, end: false });
     }
     cardListRef.current.scrollLeft = currentScrollPosition;
+
   };
 
   return (
@@ -188,72 +203,80 @@ import "../style/Preferences.css";
           <CircularProgress color="inherit" />
         )}
       </Backdrop>
+        {
+        currentUserID ?
+        
       <div className="list-card-item">
-        <div className="card-list-item-container" ref={cardListRef}>
-        {animesPref[0]
-          ? animesPref[0].map((anime, i) => (
-              <div
-                key={anime._id + i}
-                className="card-item-container"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleToggle(anime)}
-                ref={cardContainerRef}
-              >
-                {anime.newAnime && (
-                  <div
-                    className="new-anime-mobile"
-                    style={{ display: mobile ? "" : "none" }}
-                  >
-                    <h2>Nouveauté</h2>
-                  </div>
-                )}
-                {anime.nouveau_Episode && (
-                  <div
-                    className="new-ep-mobile"
-                    style={{ display: mobile ? "" : "none" }}
-                  >
-                    <h2>Nouveaux episodes</h2>
-                  </div>
-                )}
-                <ParallaxHover width={"700"} height={"700"} yRotate={500}>
-                  <div
-                    style={{
-                      position: "absolute",
-                      height: "100%",
-                      width: "100%",
-                    }}
+          {
+            animesPref && animesPref[0]?
+            <div className="card-list-item-container" ref={cardListRef}>
+               {animesPref[0].map((anime, i) => (
+                <div
+                    key={anime._id + i}
+                    className="card-item-container"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleToggle(anime)}
+                    ref={cardContainerRef}
                   >
                     {anime.newAnime && (
                       <div
-                        className="new-anime"
-                        style={{ display: mobile ? "none" : "" }}
+                        className="new-anime-mobile"
+                        style={{ display: mobile ? "" : "none" }}
                       >
                         <h2>Nouveauté</h2>
                       </div>
                     )}
                     {anime.nouveau_Episode && (
                       <div
-                        className="new-ep"
-                        style={{ display: mobile ? "none" : "" }}
+                        className="new-ep-mobile"
+                        style={{ display: mobile ? "" : "none" }}
                       >
                         <h2>Nouveaux episodes</h2>
                       </div>
                     )}
-                    <img
-                      alt={"carde-anime: " + anime.name}
-                      className="posters"
-                      style={{ height: "100%", width: "100%" }}
-                      src={anime.image && anime.image}
-                    />
+                    <ParallaxHover width={"700"} height={"700"} yRotate={500}>
+                      <div
+                        style={{
+                          position: "absolute",
+                          height: "100%",
+                          width: "100%",
+                        }}
+                      >
+                        {anime.newAnime && (
+                          <div
+                            className="new-anime"
+                            style={{ display: mobile ? "none" : "" }}
+                          >
+                            <h2>Nouveauté</h2>
+                          </div>
+                        )}
+                        {anime.nouveau_Episode && (
+                          <div
+                            className="new-ep"
+                            style={{ display: mobile ? "none" : "" }}
+                          >
+                            <h2>Nouveaux episodes</h2>
+                          </div>
+                        )}
+                        <img
+                          alt={"carde-anime: " + anime.name}
+                          className="posters"
+                          style={{ height: "100%", width: "100%" }}
+                          src={anime.image && anime.image}
+                        />
+                      </div>
+                    </ParallaxHover>
                   </div>
-                </ParallaxHover>
+                ))}
+                    
+                </div>
+              : 
+              <div className="no-resulte">
+                <h2>Aucun animé ajouté à votre liste.</h2>
               </div>
-            ))
-                
-          : null}
-        </div>
+              }
         {
-        mobile ?
+        mobile || !animesPref || !animesPref[0]?
         null
         :
           <div className="list-btn">
@@ -270,6 +293,11 @@ import "../style/Preferences.css";
       </div>
         }
       </div>
+      :
+      <div className="asking-login-container">
+        <Login setNeedToConnect={setNeedToConnect} propsChild={<h2>Connectez-vous pour visualiser la liste de vos préférences.</h2>}></Login>
+      </div>
+        }
       </div>
     </div>
   );

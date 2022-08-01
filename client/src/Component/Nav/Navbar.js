@@ -16,7 +16,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
   const [onMobile, setOnMobile] = useState(false)
   const mobile = useMediaQuery('(max-width:968px)');
   const nav = useRef()
-  const {currentUserID, setCurrentUserID, setCurrentUser, signout} = useAuth()
+  const {currentUserID, setCurrentUserID, setCurrentUser, signout, getPref} = useAuth()
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -42,11 +42,8 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
       
     });
 
-    const logOut = () => {
-      signout().then(res => {
-        setCurrentUser(null)
-        setCurrentUserID(null)
-      })
+    const logOut = async () => {
+      await signout()
     }
 
     const launchSearching = (e, animeToFind) => {

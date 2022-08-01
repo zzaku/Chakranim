@@ -215,7 +215,7 @@ const ContentAnime = ({
       currentUser.Preferences &&
       currentUser.Preferences.filter((elem) => elem.animeId === animeId);
     if (currentUserID) {
-      if (animePref && animePref.length === 0) {
+      if (!currentUser.Preferences || animePref.length === 0) {
         addPreferences({
           animeId: animeId,
           name: nameAnime,

@@ -1,12 +1,12 @@
 
 .login {
   display: flex;
+  flex-direction: column;
   padding: 15px;
   width: 60%;
   height: 100%;
   margin: 5% auto 0 auto;
   background-color: black;
-  border: 2px solid #9b9bff;
   justify-content: center;
   align-items: center;
 }
@@ -21,6 +21,13 @@
   background-color: white;
   box-shadow: rgba(184, 184, 187, 0.25) 0px 50px 100px -20px, rgba(255, 255, 255, 0.3) 0px 30px 60px -30px, rgba(223, 223, 223, 0.35) 0px -2px 6px 3px ;
   border-radius: 25px;
+}
+
+.needtolog{
+  display: flex;
+  height: 10%;
+  width: 100%;
+  justify-content: center;
 }
 
 .login .heading {

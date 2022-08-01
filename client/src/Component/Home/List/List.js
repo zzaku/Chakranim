@@ -86,7 +86,9 @@ const List = ({ genre, genres, setNotAtHome }) => {
                   gokuRef.current.style.height = "auto";
                   gokuRef.current.style.width = "auto";
                   setTimeout(() => {
-                    gokuRef.current.src = songoku;
+                    if(gokuRef.current){
+                      gokuRef.current.src = songoku;
+                    }
                   }, sumDelay2 - 100);
                 }
               });
@@ -177,22 +179,28 @@ const List = ({ genre, genres, setNotAtHome }) => {
 
   const scrollX = (val) => {
     let currentScrollPosition = 0;
+
     let scrollAmount =
       cardContainerRef.current && cardContainerRef.current.scrollWidth * 7;
     let maxScroll = cardListRef.current
       ? cardListRef.current.scrollWidth
       : null;
+      
     currentScrollPosition =
       finalPositionScroll.start && !finalPositionScroll.end ? 0 : currentPose;
     currentScrollPosition += val * scrollAmount;
+
     setCurrentPose(currentScrollPosition);
+
     if (currentScrollPosition >= maxScroll - scrollAmount) {
       currentScrollPosition = maxScroll;
       setFinalPositionScroll({ start: false, end: true });
-    } else if (currentScrollPosition <= 0) {
+    } 
+    else if (currentScrollPosition <= 0) {
       currentScrollPosition = 0;
       setFinalPositionScroll({ start: true, end: false });
-    } else {
+    } 
+    else {
       setFinalPositionScroll({ start: false, end: false });
     }
     cardListRef.current.scrollLeft = currentScrollPosition;
@@ -200,7 +208,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
 
   useEffect(() => {
     getPref();
-  }, []);
+  }, [currentUserID]);
 
   return (
     <div className="card">
@@ -224,7 +232,9 @@ const List = ({ genre, genres, setNotAtHome }) => {
         )}
       </Backdrop>
       <div className="grid-container">
-        <h1>{DisplayAllCategory}</h1>
+        <div className="genre-title">
+          <h1>{DisplayAllCategory}</h1>
+        </div>
         <div ref={neonContainerRef} className="grid-list-container">
           <div className="animation">
             <div className="animation-gif">
@@ -321,7 +331,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                         <img
                           alt={"carde-anime: " + genre.name}
                           className="posters"
-                          style={{ height: "100%", width: "100%" }}
+                          style={{ height: "100%", width: mobile ? "100%" : "210px" }}
                           src={genre.image && genre.image}
                         />
                       </div>
