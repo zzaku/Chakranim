@@ -63,6 +63,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    margin-top: 2%;
 }
 
 .list-anime{
@@ -153,6 +154,10 @@
 }
 
 @media screen and (max-width: 968px){
+
+    .list-anime{
+        width: 100%;
+    }
 
     .select-container{
         align-items: center;

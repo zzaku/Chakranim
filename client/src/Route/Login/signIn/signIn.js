@@ -12,6 +12,7 @@ function Connexion({
   pathLocation,
   setNeedToConnect,
   propsChild,
+  mobile
 }) {
   const load = useContext(epContext);
   const { signin, getPref } = useAuth();
@@ -34,7 +35,7 @@ function Connexion({
       await signin(auth, userConnect.pseudo, userConnect.mdp)
         .then((res) => {
           setConnexion({ successConnexion: "Connexion reussis !" });
-          getPref().then(res => console.log(res));
+          getPref()
           if (pathLocation === "/connexion") {
             setTimeout(() => {
               navigate("/");
@@ -69,10 +70,12 @@ function Connexion({
     <div
       className="login"
       style={{
-        width: pathLocation === "/connexion" ? "60%" : "100%",
+        marginTop: pathLocation === "/connexion" ? "15%" : "0",
+        width: pathLocation === "/connexion" ? "100%" : "100%",
         backgroundColor: pathLocation === "/connexion" ? "60%" : "#101116",
         borderRadius: pathLocation === "/connexion" ? "none" : "25px",
         border: pathLocation === "/connexion" ? "none" : "2px solid #9b9bff",
+        fontSize: mobile && "10px" 
       }}
     >
       <div className="needtolog">{propsChild && propsChild}</div>

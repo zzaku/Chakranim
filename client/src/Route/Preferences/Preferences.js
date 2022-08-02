@@ -7,8 +7,10 @@ import AddToQueueIcon from "@mui/icons-material/AddToQueue";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Preferences = () => {
-  const [selected, setSelected] = useState("");
-  const mobile = useMediaQuery("(max-width:968px)");
+
+  const [selected, setSelected] = useState(false);
+  const mobile = useMediaQuery("(max-width:968px)");  
+
 
   return (
     <div className="preferences-container">
@@ -43,11 +45,7 @@ const Preferences = () => {
               
             </Button>
           </div>
-          {selected === "fav" ? (
-            <References selected={selected} />
-          ) : (
-            selected === "to_watch_later" && <References selected={selected} />
-          )}
+            {selected ? <References  selected={selected}/> : null}
         </div>
       </div>
     </div>

@@ -163,7 +163,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
       `${
         process.env.REACT_APP_API_ANIME
       }/VOD/animes/allSeason?name=${encodeURIComponent(
-        (firstPartToCheck + " " + secondPartToCheck).trim()
+        (firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck).trim()
       )}`
     )
       .then((res) => res.json())
@@ -267,7 +267,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                   left: "3.2rem",
                   boxShadow:
                     "rgba(255,255,255, 0.4) -5px 5px, rgba(255,255,255, 0.3) -10px 10px, rgba(255,255,255, 0.2) -15px 15px, rgba(255,255,255, 0.1) -20px 20px, rgba(255,255,255, 0.05) -25px 25px",
-                  marginLeft: "3%",
+                  marginLeft: "2%",
                 }}
                 variant="text"
               >
@@ -309,7 +309,9 @@ const List = ({ genre, genres, setNotAtHome }) => {
                         style={{
                           position: "absolute",
                           height: "100%",
-                          width: "100%",
+                          width: mobile ? "100%" : "210px",
+                          boxShadow: "rgb(0 0 0) 0px 20px 30px -10px",
+                          borderRadius: "25px"
                         }}
                       >
                         {genre.newAnime && (

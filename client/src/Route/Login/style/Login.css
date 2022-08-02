@@ -138,9 +138,14 @@
 }
 /* Medium Devices, Desktops */
 @media only screen and (max-width: 992px) {
+
+  .login-container{
+    margin-top: 10%;
+  }
+
   .login {
     margin-top: 1%;
-    width: 550px;
+    width: 80%;
     font-size: 1.7em;
     min-height: 0;
   }
@@ -149,7 +154,7 @@
 @media only screen and (max-width: 768px) {
   .login {
     margin-top: 0;
-    width: 500px;
+    width: 90%;
     font-size: 1.3em;
     min-height: 0;
   }
@@ -158,7 +163,7 @@
 @media only screen and (max-width: 480px) {
   .login {
     margin-top: 0;
-    width: 400px;
+    width: 90;
     font-size: 1em;
     min-height: 0;
   }
@@ -170,7 +175,7 @@
 @media only screen and (max-width: 320px) {
   .login {
     margin-top: 0;
-    width: 200px;
+    width: 90;
     font-size: 0.7em;
     min-height: 0;
   }

@@ -23,6 +23,7 @@ import "../style/Preferences.css";
   const cardContainerRef = useRef();
   const cardListRef = useRef(null);
   const [needToConnect, setNeedToConnect] = useState(false);
+  const [loading, setLoading] = useState(false);
   const loader = useContext(epContext);
   
     const BootstrapButton = styled(Button)({
@@ -84,24 +85,28 @@ import "../style/Preferences.css";
   };
 
   useEffect(() => {
+    setLoading(true)
     if (currentUser) {
       if (currentUser.Preferences) {
         if (currentUser.Preferences.length > 0) {
           getPreferencesReferences(currentUser.Preferences).then((res) =>
+          {
             setAnimesPref(res)
-          );
+            setLoading(false)
+          });
+        } else {
+          setLoading(false)
         }
       }
     } else {
       setAnimesPref(null)
     }
   }, [currentUser, currentUserID, selected]);
-  
 
   useEffect(() => {
     getPref();
-  }, [currentUserID])
-
+  }, [currentUserID, selected])
+  
   useEffect(() => {
     /**
      * Alert if clicked on outside of element
@@ -132,13 +137,13 @@ import "../style/Preferences.css";
       myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1] : "";
     let thirdPartToCheck =
       myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2] : "";
-    loader.setLoading(true);
+   
     setAnime(myAnime);
     fetch(
       `${
         process.env.REACT_APP_API_ANIME
       }/VOD/animes/allSeason?name=${encodeURIComponent(
-        (firstPartToCheck + " " + secondPartToCheck).trim()
+        (firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck).trim()
       )}`
     )
       .then((res) => res.json())
@@ -208,7 +213,7 @@ import "../style/Preferences.css";
         
       <div className="list-card-item">
           {
-            animesPref && animesPref[0]?
+            !loading ? currentUser?.Preferences && animesPref[0] ?
             <div className="card-list-item-container" ref={cardListRef}>
                {animesPref[0].map((anime, i) => (
                 <div
@@ -270,9 +275,13 @@ import "../style/Preferences.css";
                 ))}
                     
                 </div>
-              : 
+                :
               <div className="no-resulte">
                 <h2>Aucun animé ajouté à votre liste.</h2>
+              </div>
+              :
+              <div className="no-resulte">
+                <CircularProgress />
               </div>
               }
         {

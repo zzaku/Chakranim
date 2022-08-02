@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "../style/Login.css";
 import { auth } from "../../../Component/Firebase/Firebase";
 
-function Inscription({ setRegister, pathLocation, setNeedToConnect, propsChild }) {
+function Inscription({ setRegister, pathLocation, setNeedToConnect, mobile }) {
   const load = useContext(epContext);
   const [user, setUser] = useState({});
   const [inscription, setInscription] = useState({});
@@ -67,10 +67,11 @@ function Inscription({ setRegister, pathLocation, setNeedToConnect, propsChild }
     <div
       className="login"
       style={{
-        width: pathLocation === "/connexion" ? "60%" : "100%",
+        width: pathLocation === "/connexion" ? "100%" : "100%",
         backgroundColor: pathLocation === "/connexion" ? "60%" : "#101116",
         borderRadius: pathLocation === "/connexion" ? "none" : "25px",
         border: pathLocation === "/connexion" ? "none" : "2px solid #9b9bff",
+        fontSize: mobile && "10px" 
       }}
     >
       <div className="heading">
