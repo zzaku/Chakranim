@@ -24,6 +24,8 @@ import "../style/Preferences.css";
   const cardListRef = useRef(null);
   const [needToConnect, setNeedToConnect] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [disableNext, setDisableNext] = useState(false);
+  const [disablePrevious, setDisablePrevious] = useState(null);
   const loader = useContext(epContext);
   
     const BootstrapButton = styled(Button)({
@@ -85,7 +87,9 @@ import "../style/Preferences.css";
   };
 
   useEffect(() => {
+
     setLoading(true)
+    
     if (currentUser) {
       if (currentUser.Preferences) {
         if (currentUser.Preferences.length > 0) {
@@ -158,32 +162,35 @@ import "../style/Preferences.css";
   const [currentPose, setCurrentPose] = useState(0);
 
   const scrollX = (val) => {
-    let currentScrollPosition = 0;
+    let currentScrollPosition = cardListRef.current.scrollLeft;
 
     let scrollAmount =
-      cardContainerRef.current && cardContainerRef.current.scrollWidth * 7;
+      cardContainerRef.current && cardContainerRef.current.scrollWidth * 9;
     let maxScroll = cardListRef.current
       ? cardListRef.current.scrollWidth
       : null;
 
     currentScrollPosition += val * scrollAmount;
-
-    setCurrentPose(currentScrollPosition);
+    console.log(val)
 
     if (currentScrollPosition >= maxScroll - scrollAmount) {
       currentScrollPosition = maxScroll;
-     
+      setDisableNext(true)
+      setDisablePrevious(false)
       setFinalPositionScroll({ start: false, end: true });
     } 
     else if (currentScrollPosition <= 0) {
       currentScrollPosition = 0;
+      setDisableNext(false)
+      setDisablePrevious(true)
       setFinalPositionScroll({ start: true, end: false });
     } 
     else {
+      setDisableNext(false)
+      setDisablePrevious(false)
       setFinalPositionScroll({ start: false, end: false });
     }
     cardListRef.current.scrollLeft = currentScrollPosition;
-
   };
 
   return (
@@ -285,17 +292,17 @@ import "../style/Preferences.css";
               </div>
               }
         {
-        mobile || !animesPref || !animesPref[0]?
+        mobile || !animesPref || !animesPref[0] || animesPref[0].length <= 9 ?
         null
         :
           <div className="list-btn">
         <div className="previous-btn">
-          <BootstrapButton style={{borderRadius: "360px"}} variant="contained" disableRipple onClick={() => scrollX(-1)}>
+          <BootstrapButton disabled={disablePrevious === null ? true : disablePrevious} style={{borderRadius: "360px"}} variant="contained" disableRipple onClick={() => scrollX(-1)}>
             précédant
           </BootstrapButton>
         </div>
         <div className="next-btn">
-          <BootstrapButton style={{borderRadius: "360px"}} variant="contained" disableRipple onClick={() => scrollX(1)}>
+          <BootstrapButton disabled={disableNext} style={{borderRadius: "360px"}} variant="contained" disableRipple onClick={() => scrollX(1)}>
             suivant
           </BootstrapButton>
         </div>

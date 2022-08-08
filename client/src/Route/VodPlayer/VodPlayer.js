@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -11,9 +11,13 @@ import Backdrop from '@mui/material/Backdrop';
 import { Link } from 'react-router-dom';
 import './style/VodPlayer.css'
 import { useMediaQuery } from '@mui/material';
+import { epContext } from '../../App';
 
-const VodPlayer = ({ep, setEp}) => {
+const VodPlayer = ({}) => {
 
+    const context = useContext(epContext)
+    const ep = context.ep
+    const setEp = context.setEp
     const [lecteur, setLecteur] = useState(ep.current_episode)
     const [next, setNext] = useState(false)
     const [checked, setChecked] = useState(false)
@@ -97,6 +101,23 @@ const VodPlayer = ({ep, setEp}) => {
         height: "50%",
       }));
 
+      const addToMostWatchedScore = async () => {
+        let score = 0
+        let multiplicator = 1.3
+
+        await fetch(`${process.env.REACT_APP_API_ANIME}/VOD/anime/${ep.id}`)
+        .then(res => res.json())
+        .then(data => multiplicator *= data.score_most_watched)
+
+        await fetch(`${process.env.REACT_APP_API_ANIME}/VOD/anime/score`, {
+          method: "PATCH",
+          headers: {"Content-type": "application/json;charset=UTF-8"},
+          body: JSON.stringify({
+            id: ep.id,
+            score: multiplicator.toFixed(0)
+          })
+        })
+      }
 
     return (
         <div className='container-vod-player'>
@@ -152,7 +173,7 @@ const VodPlayer = ({ep, setEp}) => {
                                     {currentEp === epMin ? null : <ColorButton size={!mobile ? "large" : "small"} onClick={() => goToPreviousEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true)} variant="contained"><span>Episode précédent</span></ColorButton>}
                                     </Link>
                                     <Link to={`/watch/${!ep.current_episode ? null : ep.current_episode[0] && ep.name.split("Saison")[0].replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${urlEp && urlEpPrevious && (urlEp + urlEpNext).replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
-                                    {currentEp === epMax ? null : <ColorButton size={!mobile ? "large" : "small"} onClick={() => goToNextEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true)} variant="contained"><span>Episode suivant</span></ColorButton>}
+                                    {currentEp === epMax ? null : <ColorButton size={!mobile ? "large" : "small"} onClick={() => goToNextEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true) + addToMostWatchedScore()} variant="contained"><span>Episode suivant</span></ColorButton>}
                                     </Link>
                                 </Stack>
                             </div>

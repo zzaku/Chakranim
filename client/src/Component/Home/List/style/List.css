@@ -77,7 +77,7 @@
     display: flex;
     height: auto;
     width: 100%;
-    justify-content: flex-start;
+    justify-content: center;
 }
 
 .list-card{
@@ -224,6 +224,22 @@ h1{
     padding-right: 20px;
 }
 
+.mostWatched{
+    position: absolute;
+    display: flex;
+    z-index: 8000;
+    height: 25%;
+    width: 40%;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    border-radius: 6px;
+    opacity: 1;
+    border-radius: 100%;
+    left: 1%;
+    top: 1%;
+}
+
 .list-card > button{
     position: absolute;
     height: 310px;
@@ -242,11 +258,16 @@ h1{
 
     .list-card{
         width: 80%;
-        padding: 1rem var(--spacer) 2rem var(--spacer);
+        height: 62%;
+        padding: 1rem var(--spacer) 1rem var(--spacer);
         grid-auto-columns: 40%;
         overflow-x: scroll;
         overflow-y: hidden;
         padding-left: 0;
+    }
+
+    .genre-title{
+        justify-content: flex-start;
     }
 
     .animation-gif{

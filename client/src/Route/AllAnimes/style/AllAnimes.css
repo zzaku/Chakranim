@@ -1,5 +1,5 @@
 .animes-list{
-    height: 150vh;
+    height: 100vh;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -25,6 +25,10 @@
     display: flex;
     width: 100%;
     height: 95%;
+}
+
+.grid-container > div.MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-2.grid-list.css-y1eez5-MuiGrid-root{
+    justify-content: center;
 }
 
 .container-layout{
@@ -180,6 +184,10 @@
 
     .animes-list{
         height: 100vh;
+    }
+
+    .grid-container > div.MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-2.grid-list.css-y1eez5-MuiGrid-root{
+        justify-content: flex-start;
     }
 
     .grid-container:nth-child(2){

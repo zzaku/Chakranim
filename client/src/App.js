@@ -26,7 +26,7 @@ function App() {
 
 ////local storage ep
   const saveAnime = localStorage.watching;
-  const [ep, setEp] = useState(saveAnime ? JSON.parse(saveAnime) : {current_episode: [], all_episodes: [], name: "", image: ""})
+  const [ep, setEp] = useState(saveAnime ? JSON.parse(saveAnime) : {current_episode: [], all_episodes: [], id: "", name: "", image: ""})
   
   useEffect(() => {
     localStorage.setItem("watching", JSON.stringify(ep));
@@ -78,7 +78,7 @@ function App() {
  
   return (
     <AuthProvider >
-      <epContext.Provider value={{setEp: setEp, token: token, setToken: setToken, refreshToken: refreshToken, setRefreshToken: setRefreshToken, setSearch: setSearch, search: search, setStartSearching: setStartSearching, animeToFind: animeToFind, setAnimeToFind: setAnimeToFind, setAnimeFound: setAnimeFound, loading: loading, setLoading: setLoading}}>
+      <epContext.Provider value={{ep: ep, setEp: setEp, token: token, setToken: setToken, refreshToken: refreshToken, setRefreshToken: setRefreshToken, setSearch: setSearch, search: search, setStartSearching: setStartSearching, animeToFind: animeToFind, setAnimeToFind: setAnimeToFind, setAnimeFound: setAnimeFound, loading: loading, setLoading: setLoading}}>
         <div className="App">
           <Router>
             {!search && <Navbar notAtHome={notAtHome} setNotAtHome={setNotAtHome} />}

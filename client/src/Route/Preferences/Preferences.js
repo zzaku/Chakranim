@@ -3,14 +3,15 @@ import References from "./References/References";
 import { useState } from "react";
 import { Button } from "@mui/material";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkBorder from "@mui/icons-material/BookmarkBorder";
 import AddToQueueIcon from "@mui/icons-material/AddToQueue";
+import AddToQueueTwoTone from "@mui/icons-material/AddToQueueTwoTone";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-const Preferences = () => {
+const Preferences = ({setNotAtHome}) => {
 
   const [selected, setSelected] = useState(false);
-  const mobile = useMediaQuery("(max-width:968px)");  
-
+  const mobile = useMediaQuery("(max-width:968px)"); 
 
   return (
     <div className="preferences-container">
@@ -31,7 +32,7 @@ const Preferences = () => {
               color="inherit"
               onClick={() => setSelected("fav")}
             >
-              <BookmarkIcon />
+              {selected === "fav" ? <BookmarkIcon /> : <BookmarkBorder/>}
               {mobile ? <h4>Fav</h4> : <h3>Fav</h3>}
               
             </Button>
@@ -40,12 +41,12 @@ const Preferences = () => {
               color="inherit"
               onClick={() => setSelected("to_watch_later")}
             >
-              <AddToQueueIcon />
+              {selected === "to_watch_later" ? <AddToQueueTwoTone /> : <AddToQueueIcon/>}
               {mobile ? <h4>regarder plus tard</h4> : <h3>regarder plus tard</h3>}
               
             </Button>
           </div>
-            {selected ? <References  selected={selected}/> : null}
+            {selected ? <References  selected={selected} setNotAtHome={setNotAtHome} /> : null}
         </div>
       </div>
     </div>

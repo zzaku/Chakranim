@@ -155,6 +155,39 @@ const getAllNameOfNewEp = async (episodes) => {
     console.log("correction appliqué.")
 }
 
+//UPDATE MOST WATCHED SCORE ANIME
+router.patch('/anime/score', async (req, res) => {
+    try{
+        const id = req.body.id
+        const score = req.body.score
+
+        const addScore = await Post.updateOne(
+            {
+                _id: id
+            },
+            {
+                $set: {
+                    score_most_watched: score  
+                }
+            }
+        )
+        res.status(200).json(addScore)
+    }catch(err){
+        res.status(401).json({message: err})
+    }
+})
+
+//GET BACK MOST WATCHED ANIMES
+router.get("/anime/mostWatched", async(req, res) => {
+    try{
+        const { page = 1, limit = 15 } = req.query;
+        const getMostWatched = await Post.find({}).sort({score_most_watched: -1}).limit(limit * 1)
+        res.status(200).json(getMostWatched)
+    }catch(err){
+        res.status(401).json({message: err})
+    }
+})
+
 //GET BACK LAST 10 ANIME
 router.get('/anime/recentlyadded',  async (req, res) => {
     try{
@@ -188,8 +221,6 @@ router.get('/list/animes', async (req, res) => {
 
         let posts = await Post.find().where('_id').in(reqId(animeId)).exec();
 
-        console.log(animeId)
-        console.log(posts)
         res.status(200).json(posts)
     }catch(err){
         res.status(401).json({message: err})
@@ -396,7 +427,7 @@ router.post('/allanimes', async (req, res) => {
         newAnime: req.body.newAnime,
         nouveau_Episode: req.body.nouveau_Episode,
         newEp: req.body.newEp,
-        score: req.body.score,
+        score_most_watched: req.body.score_most_watched,
         need_suite: req.body.need_suite,
         lastPart: req.body.lastPart
     }

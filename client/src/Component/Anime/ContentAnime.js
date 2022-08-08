@@ -251,6 +251,19 @@ const ContentAnime = ({
     setAnchorEl2(null);
   };
 
+  
+  const addToMostWatchedScore = async () => {
+    let currentScore = 5
+    currentScore += anime?.score_most_watched ? anime.score_most_watched : 0
+    await fetch(`${process.env.REACT_APP_API_ANIME}/VOD/anime/score`, {
+      method: "PATCH",
+      headers: {"Content-type": "application/json;charset=UTF-8"},
+      body: JSON.stringify({
+        id: anime._id,
+        score: currentScore
+      })
+    })
+  }
 
   return (
     <div className="display-ep-anime" ref={wrapperRef}>
@@ -565,14 +578,16 @@ const ContentAnime = ({
                       >
                         <div
                           onClick={() =>
-                            setOpen(false) +
+                            addToMostWatchedScore() +
                             setNotAtHome(true) +
+                            setOpen(false) +
                             setEp.setEp({
                               current_episode: setLecteurEpisode(
                                 allLinks[0],
                                 elem[0].episode
                               ),
                               all_episode: allLinks[0],
+                              id: anime._id,
                               name: anime.name,
                               image: anime.image,
                             }) +

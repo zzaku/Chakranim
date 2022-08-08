@@ -54,7 +54,7 @@ const PostSchema = mongoose.Schema({
         type: Boolean,
         required: false,
     },  
-    score: {
+    score_most_watched: {
         type: Number,
         required: false,
     },  

@@ -51,11 +51,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
     ? genres.replaceAll("-", "_")
     : genres;
 
-  let DisplayAllCategory = categorie.includes("_")
-    ? categorie.replaceAll("_", " ")
-    : categorie.includes("-")
-    ? categorie.replaceAll("-", " ")
-    : categorie;
+  let DisplayAllCategory = genres
 
   useEffect(() => {
     if (anime) {
@@ -124,7 +120,6 @@ const List = ({ genre, genres, setNotAtHome }) => {
   const filterDoublonAnime = () => {
     let newArray = [];
     let uniqueObject = {};
-
     if (genre[0][genres]) {
       for (let anime in genre[0][genres]) {
         // Extract the name
@@ -232,10 +227,10 @@ const List = ({ genre, genres, setNotAtHome }) => {
         )}
       </Backdrop>
       <div className="grid-container">
-        <div className="genre-title">
-          <h1>{DisplayAllCategory}</h1>
-        </div>
         <div ref={neonContainerRef} className="grid-list-container">
+          {mobile && <div className="genre-title">
+                <h1>{DisplayAllCategory}</h1>
+              </div>}
           <div className="animation">
             <div className="animation-gif">
               <img
@@ -244,6 +239,9 @@ const List = ({ genre, genres, setNotAtHome }) => {
                 style={{ display: "flex", height: "auto", width: "auto" }}
                 src={goku}
               />
+              <div className="genre-title">
+                <h1>{DisplayAllCategory}</h1>
+              </div>
               <img
                 alt="jiren"
                 ref={jirenRef}
@@ -257,7 +255,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
               />
             </div>
           </div>
-          <div className="list-card" ref={cardListRef}>
+          <div className="list-card" ref={cardListRef} style={{padding: mobile ? null : genres === "Les plus regardes" ? "8rem 3rem 0 1rem" : "8rem 3rem 0 3rem"}}>
             {!finalPositionScroll.start ? (
               <Button
                 className="scroll-btn"
@@ -302,7 +300,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                     <ParallaxHover
                       width={"700"}
                       height={"700"}
-                      yRotate={500}
+                      yRotate={genres === "Les plus regardés" ? 360 : 500}
                       refCard={refCard}
                     >
                       <div
@@ -330,6 +328,13 @@ const List = ({ genre, genres, setNotAtHome }) => {
                             <h2>Nouveaux episodes</h2>
                           </div>
                         )}
+                        {genres === "Les plus regardés" && (
+                          <div
+                            className="mostWatched"
+                          >
+                            <h1>{i+1}</h1>
+                          </div>
+                        )}
                         <img
                           alt={"carde-anime: " + genre.name}
                           className="posters"
@@ -350,7 +355,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                   right: "0",
                   boxShadow:
                     "rgba(255,255,255, 0.4) 5px -5px, rgba(255,255,255, 0.3) 10px -10px, rgba(255,255,255, 0.2) 15px -15px, rgba(255,255,255, 0.1) 20px -20px, rgba(255,255,255, 0.05) 25px -25px",
-                  marginRight: "14px",
+                  marginRight: genres === "Les plus regardes" ? "28px" : "14px",
                 }}
                 variant="none"
               >

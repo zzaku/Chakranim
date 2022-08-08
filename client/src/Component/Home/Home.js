@@ -6,7 +6,7 @@ import "./style/Home.css"
 
 const Home = ({allAnimes, setNotAtHome}) => {
 
-    const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance", "Films", "Nouveaux Episodes"], [])
+    const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance", "Films", "Les plus regardés", "Nouveaux Episodes"], [])
 
     //const [genre1, setGenre1] = useState([{}])
     //const [genre2, setGenre2] = useState([{}])
@@ -21,6 +21,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
     //const [genre11, setGenre11] = useState([{}])
     const [genre12, setGenre12] = useState([{}])
     const [genre13, setGenre13] = useState([{}])
+    const [mostWatched, setMostWatched] = useState([{}])
     const [lastAnime, setLastAnime] = useState([{}])
     const [ready, setReady] = useState(false)
 
@@ -38,6 +39,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
             setReady(true)
             if(ready){
                 getByLastAnime()
+                getMostWatched()
                 getByGenre13()
                 getByGenre4()
                 getByGenre8()
@@ -86,7 +88,13 @@ const Home = ({allAnimes, setNotAtHome}) => {
                 let getByLastAnime = async () => {
                     fetch(`${process.env.REACT_APP_API_ANIME}/VOD/anime/recentlyadded?page=1`)
                     .then(res => res.json())
-                    .then(data => setLastAnime([{[genres[13]]: data}]))
+                    .then(data => setLastAnime([{[genres[14]]: data}]))
+                }
+
+                let getMostWatched = async () => {
+                    await fetch(`${process.env.REACT_APP_API_ANIME}/VOD/anime/mostWatched`)
+                    .then(res => res.json())
+                    .then(data => setMostWatched([{[genres[13]]: data}]))
                 }
 
         
@@ -98,8 +106,8 @@ const Home = ({allAnimes, setNotAtHome}) => {
                     </div>
                     <div className="list">
                         <div className="list-container">
-                            {lastAnime && genres[13] ? <List allAnimes={allAnimes} genres={genres[13]} genre={lastAnime} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
-
+                            {lastAnime && genres[14] ? <List allAnimes={allAnimes} genres={genres[14]} genre={lastAnime} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
+                            {lastAnime ? <List allAnimes={allAnimes} genres={genres[13]} genre={mostWatched} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
                             
                             {genre3 && genres[2] ?<List allAnimes={allAnimes} genres={genres[2]} genre={ genre3} setGenre={setGenre3} setNotAtHome={setNotAtHome}/> : null}
                             {genre4 && genres[3] ?<List allAnimes={allAnimes} genres={genres[3]} genre={ genre4} setGenre={setGenre4} setNotAtHome={setNotAtHome}/> : null}
