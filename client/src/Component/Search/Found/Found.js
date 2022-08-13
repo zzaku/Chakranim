@@ -90,7 +90,7 @@ const Found = ({animeFound, setNotAtHome}) => {
         let firstPartToCheck = myAnime.name.split(" ")[0]
         let secondPartToCheck = myAnime.name.split(" ").length > 1 ? myAnime.name.split(" ")[1] : ""
         let thirdPartToCheck = myAnime.name.split(" ").length > 2 ? myAnime.name.split(" ")[2] : ""
-        console.log(firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck)
+
         setAnime(myAnime)
         fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/allSeason?name=${encodeURIComponent((firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck).trim())}`)
         .then(res => res.json())

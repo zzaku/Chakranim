@@ -212,21 +212,33 @@
     display: flex;
     height: auto;
     width: 25%;
+    justify-content: space-around;
+}
+
+.fav{
+    position: relative;
+    display: flex;
+    height: auto;
+    width: auto;
+}
+
+.to-watch-later{
+    position: relative;
+    display: flex;
+    height: auto;
+    width: auto;
 }
 
 .fav > button{
-    position: absolute;
     display: flex;
     z-index: 8;
     justify-content: center;
     background: rgb(199, 199, 199);
-    
     box-shadow: rgb(199, 199, 199) 0px 20px 30px -10px;
     border-radius: 6px;
 }
 
 .fav > button:hover{
-    position: absolute;
     display: flex;
     z-index: 8;
     justify-content: center;
@@ -238,7 +250,6 @@
 
 
 .to-watch-later > button{
-    position: absolute;
     display: flex;
     z-index: 8;
     justify-content: center;
@@ -250,7 +261,6 @@
 }
 
 .to-watch-later > button:hover{
-    position: absolute;
     display: flex;
     z-index: 8;
     justify-content: center;

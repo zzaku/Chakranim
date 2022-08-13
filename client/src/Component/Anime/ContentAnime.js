@@ -65,6 +65,8 @@ const ContentAnime = ({
     currentUserID,
     currentUser,
     getPref,
+    addResume,
+    setResume
   } = useAuth();
 
   const wrapperRefLogin = useRef(null);
@@ -263,6 +265,25 @@ const ContentAnime = ({
         score: currentScore
       })
     })
+  }
+
+  const addToResume = async (animeId, nameAnime, epAnime, saison, langue) => {
+    if(currentUserID){
+      const resume = currentUser && currentUser.Resume && currentUser.Resume.filter(elem => elem.animeId === animeId)
+      if(!currentUser.Resume || resume.length === 0) {
+        await addResume({
+          animeId: animeId,
+          name: nameAnime,
+          currentEp: epAnime,
+          saison: saison,
+          langue: langue
+        })
+      } else if (resume && resume.length > 0) {
+        await setResume({
+          currentEp: epAnime
+        }, resume[0].id)
+      }
+    } 
   }
 
   return (
@@ -464,9 +485,13 @@ const ContentAnime = ({
                 >
                   <Button
                     aria-owns={openPopper ? "mouse-over-popover-fav" : undefined}
-                    aria-haspopup="true"
+                    aria-haspopup="false"
                     onMouseEnter={handlePopoverOpenFav}
                     onMouseLeave={handlePopoverCloseFav}
+                    onMouseOver={() => {
+                    document.body.style.padding = 0;
+                    document.body.style.overflowY = "scroll";
+                  }}
                   >
                     {currentUserID &&
                     currentUser &&
@@ -499,7 +524,8 @@ const ContentAnime = ({
                       horizontal: "center",
                     }}
                     onClose={handlePopoverCloseFav}
-                    disableRestoreFocus
+                    disableAutoFocus={true}
+                    disableScrollLock={true}
                   >
                     <div style={{display: "flex", height: "100%", width: "100%", backgroundColor: "transparent", color: "white"}}>
                       <h5>Favori</h5>
@@ -546,7 +572,8 @@ const ContentAnime = ({
                       horizontal: "center",
                     }}
                     onClose={handlePopoverCloseToWatchLater}
-                    disableRestoreFocus
+                    disableAutoFocus={true}
+                    disableScrollLock={true}
                   >
                     <div style={{display: "flex", height: "100%", width: "100%", backgroundColor: "transparent", color: "white"}}>
                       <h5>Regarder plus regarder</h5>
@@ -579,6 +606,7 @@ const ContentAnime = ({
                         <div
                           onClick={() =>
                             addToMostWatchedScore() +
+                            addToResume(anime._id, anime.name, elem[0].episode, anime.saison, anime.langue) +
                             setNotAtHome(true) +
                             setOpen(false) +
                             setEp.setEp({
@@ -589,6 +617,8 @@ const ContentAnime = ({
                               all_episode: allLinks[0],
                               id: anime._id,
                               name: anime.name,
+                              langue: anime.langue,
+                              saison: anime.saison,
                               image: anime.image,
                             }) +
                             openSearch.setSearch(false)

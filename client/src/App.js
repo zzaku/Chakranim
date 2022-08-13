@@ -26,7 +26,7 @@ function App() {
 
 ////local storage ep
   const saveAnime = localStorage.watching;
-  const [ep, setEp] = useState(saveAnime ? JSON.parse(saveAnime) : {current_episode: [], all_episodes: [], id: "", name: "", image: ""})
+  const [ep, setEp] = useState(saveAnime ? JSON.parse(saveAnime) : {current_episode: [], all_episodes: [], id: "", name: "", langue: "", saison: "", image: ""})
   
   useEffect(() => {
     localStorage.setItem("watching", JSON.stringify(ep));

@@ -3,10 +3,13 @@ import List from "./List/List"
 import { useEffect, useMemo, useState } from "react"
 import customFetcher from "../Fetch/FetchInstance"
 import "./style/Home.css"
+import { useAuth } from "../Context/AuthContext"
 
 const Home = ({allAnimes, setNotAtHome}) => {
 
-    const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance", "Films", "Les plus regardés", "Nouveaux Episodes"], [])
+    const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance", "Films", "Les plus regardés", "Reprendre", "Nouveaux Episodes"], [])
+
+    const {currentUser, currentUserID} = useAuth()
 
     //const [genre1, setGenre1] = useState([{}])
     //const [genre2, setGenre2] = useState([{}])
@@ -21,6 +24,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
     //const [genre11, setGenre11] = useState([{}])
     const [genre12, setGenre12] = useState([{}])
     const [genre13, setGenre13] = useState([{}])
+    const [resume, setResume] = useState([{}])
     const [mostWatched, setMostWatched] = useState([{}])
     const [lastAnime, setLastAnime] = useState([{}])
     const [ready, setReady] = useState(false)
@@ -33,13 +37,13 @@ const Home = ({allAnimes, setNotAtHome}) => {
             }
             return params
         }
-
         
         useEffect(() => {
             setReady(true)
             if(ready){
                 getByLastAnime()
                 getMostWatched()
+                getResume()
                 getByGenre13()
                 getByGenre4()
                 getByGenre8()
@@ -88,7 +92,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
                 let getByLastAnime = async () => {
                     fetch(`${process.env.REACT_APP_API_ANIME}/VOD/anime/recentlyadded?page=1`)
                     .then(res => res.json())
-                    .then(data => setLastAnime([{[genres[14]]: data}]))
+                    .then(data => setLastAnime([{[genres[15]]: data}]))
                 }
 
                 let getMostWatched = async () => {
@@ -97,7 +101,13 @@ const Home = ({allAnimes, setNotAtHome}) => {
                     .then(data => setMostWatched([{[genres[13]]: data}]))
                 }
 
-        
+                let getResume = async () => {
+                    let ids = currentUser?.Resume?.map(anime => anime.animeId);
+                    await fetch(`https://chakranimes.herokuapp.com/VOD/list/animes?animeId=${ids}`)
+                    .then(res => res.json())
+                    .then(data => setResume([{[genres[14]]: data}]))
+                }
+
         return (
             <div className="anime-list">
                 <div className="anime-container">
@@ -106,8 +116,11 @@ const Home = ({allAnimes, setNotAtHome}) => {
                     </div>
                     <div className="list">
                         <div className="list-container">
-                            {lastAnime && genres[14] ? <List allAnimes={allAnimes} genres={genres[14]} genre={lastAnime} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
-                            {lastAnime ? <List allAnimes={allAnimes} genres={genres[13]} genre={mostWatched} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
+                            {lastAnime && genres[14] ? <List allAnimes={allAnimes} genres={genres[15]} genre={lastAnime} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
+
+                            {!currentUserID || resume[0]?.Reprendre?.message?.name === "CastError" || resume[0].length === 0 ? null : <List allAnimes={allAnimes} genres={genres[14]} genre={resume} setGenre={setLastAnime} setNotAtHome={setNotAtHome} />}
+
+                            {mostWatched ? <List allAnimes={allAnimes} genres={genres[13]} genre={mostWatched} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
                             
                             {genre3 && genres[2] ?<List allAnimes={allAnimes} genres={genres[2]} genre={ genre3} setGenre={setGenre3} setNotAtHome={setNotAtHome}/> : null}
                             {genre4 && genres[3] ?<List allAnimes={allAnimes} genres={genres[3]} genre={ genre4} setGenre={setGenre4} setNotAtHome={setNotAtHome}/> : null}

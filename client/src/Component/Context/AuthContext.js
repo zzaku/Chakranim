@@ -36,6 +36,7 @@ export const AuthProvider = ({children}) => {
 /**/   const userCollectionRef = collection(db, "Users")
 /**/   const userInfosRef = currentUserID && query(collection(db, "Users"), where("mail", "==", currentUserID.email)) 
 /**/   const userPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Preferences")
+/**/   const userResumeRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Resume")
 /**/   const onSnapshotPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Preferences")
 /**/
 /**/   const addInfosUser = async (infos) => {
@@ -70,6 +71,26 @@ export const AuthProvider = ({children}) => {
 /**/          getPref()
 /**/
 /**/     }
+/**/ 
+/**/   const getResume = async () => {
+/**/          if(userResumeRef){
+/**/              const datas = await getDocs(userResumeRef);
+/**/              setCurrentUser({...currentUser, Resume: datas.docs.map(doc => ({...doc.data(), id: doc.id}))})
+/**/          } else {
+/**/              setCurrentUser(null)
+/**/          }
+/**/      }
+/**/
+/**/   const addResume = async (data) => {
+/**/          await addDoc(userResumeRef, data)
+/**/          await getResume()
+/**/     }
+/**/
+/**/   const setResume = async (data, idResume) => {
+/**/          const userSetResume = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", currentUser[0].id, "Resume", idResume)
+/**/          await updateDoc(userSetResume, data)
+/**/          getResume()
+/**/     }
 /**/
 /**/
 /**/    useEffect(() => {
@@ -80,7 +101,8 @@ export const AuthProvider = ({children}) => {
 /**/               }
 /**/        }
 /**/              getUser();
-/**/              getPref()
+/**/              getPref();
+/**/              getResume();
 /**/
 /**/    }, [currentUserID])
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,6 +132,7 @@ export const AuthProvider = ({children}) => {
 /**/                if(user){
 /**/                    setCurrentUserID(user)
 /**/                    getPref()
+/**/                    getResume()
 /**/                } else {
 /**/                     setCurrentUserID(null)
 /**/                     setCurrentUser(null)
@@ -131,7 +154,10 @@ export const AuthProvider = ({children}) => {
         addInfosUser,
         addPreferences,
         setPreferences,
-        getPref
+        getPref,
+        getResume,
+        addResume,
+        setResume
     }
 
     return (

@@ -3,7 +3,7 @@ import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTo
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import ContentAnime from "../../Anime/ContentAnime";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, useMemo } from "react";
 import { Button } from "@mui/material";
 import ParallaxHover from "./Card/Card";
 import goku from "./Neon/assets/kamea.gif";
@@ -15,6 +15,7 @@ import { useMediaQuery } from "@mui/material";
 import "./style/List.css";
 import { epContext } from "../../../App";
 import { useAuth } from "../../Context/AuthContext";
+import { Link } from "react-router-dom";
 
 const List = ({ genre, genres, setNotAtHome }) => {
   let withoutDoublon = [{}];
@@ -27,6 +28,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
   const [descriptionSuite, setDescriptionSuite] = useState(false);
   const [animeBySeason, setAnimeBySeason] = useState([]);
   const loader = useContext(epContext);
+  const ep = useContext(epContext);
   const refCard = useRef();
   const cardContainerRef = useRef();
   const neonContainerRef = useRef();
@@ -205,6 +207,28 @@ const List = ({ genre, genres, setNotAtHome }) => {
     getPref();
   }, [currentUserID]);
 
+  const setLecteurEpisode = (tab, episode) => {
+    return tab.filter((elem) => elem[0].episode === episode);
+  };
+
+  const getCurrentEp = (AnimeId, name, langue, saison, image, links, nextLink) => {
+    const currentEp = currentUser && currentUser.Resume && currentUser.Resume.filter(elem => elem.animeId === AnimeId)
+    const allLinks = [links, nextLink];
+    console.log(allLinks)
+    ep.setEp({
+      current_episode: setLecteurEpisode(
+        allLinks[0],
+        currentEp[0].currentEp
+      ),
+      all_episode: allLinks[0],
+      id: AnimeId,
+      name: name,
+      langue: langue,
+      saison: saison,
+      image: image,
+    })
+  }
+
   return (
     <div className="card">
       <Backdrop
@@ -274,12 +298,90 @@ const List = ({ genre, genres, setNotAtHome }) => {
             ) : null}
             {withoutDoublon[0][genres]
               ? withoutDoublon[0][genres].map((genre, i) => (
+                genres === "Reprendre" ? <Link
+                to={`/watch/${genre.name
+                  .replaceAll(" ", "-")
+                  .replaceAll(".", "")
+                  .replaceAll(",", "")
+                  .replaceAll("#", "")}/Resume`}
+                style={{ textDecoration: "none" }}> <div
+                ref={cardContainerRef}
+                key={genre._id + i}
+                className="card-container"
+                style={{ cursor: "pointer" }}
+                onClick={() => handleToggle(genre) + (genres === "Reprendre" && getCurrentEp(genre._id, genre.name, genre.langue, genre.saison, genre.image, genre.links, genre.nextLinks))}
+              >
+                {genre.newAnime && (
                   <div
+                    className="new-anime-mobile"
+                    style={{ display: mobile ? "" : "none" }}
+                  >
+                    <h2>Nouveauté</h2>
+                  </div>
+                )}
+                {genre.nouveau_Episode && (
+                  <div
+                    className="new-ep-mobile"
+                    style={{ display: mobile ? "" : "none" }}
+                  >
+                    <h2>Nouveaux episodes</h2>
+                  </div>
+                )}
+                <ParallaxHover
+                  width={"700"}
+                  height={"700"}
+                  yRotate={genres === "Les plus regardés" ? 360 : 500}
+                  refCard={refCard}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      height: "100%",
+                      width: mobile ? "100%" : "210px",
+                      boxShadow: "rgb(0 0 0) 0px 20px 30px -10px",
+                      borderRadius: "25px"
+                    }}
+                  >
+                    {genre.newAnime && (
+                      <div
+                        className="new-anime"
+                        style={{ display: mobile ? "none" : "" }}
+                      >
+                        <h2>Nouveauté</h2>
+                      </div>
+                    )}
+                    {genre.nouveau_Episode && (
+                      <div
+                        className="new-ep"
+                        style={{ display: mobile ? "none" : "" }}
+                      >
+                        <h2>Nouveaux episodes</h2>
+                      </div>
+                    )}
+                    {genres === "Les plus regardés" && (
+                      <div
+                        className="mostWatched"
+                      >
+                        <h1>{i+1}</h1>
+                      </div>
+                    )}
+                    <img
+                      alt={"carde-anime: " + genre.name}
+                      className="posters"
+                      style={{ height: "100%", width: mobile ? "100%" : "210px" }}
+                      src={genre.image && genre.image}
+                    />
+                  </div>
+                </ParallaxHover>
+              </div>
+              </Link> 
+              : 
+              <div
                     ref={cardContainerRef}
                     key={genre._id + i}
                     className="card-container"
                     style={{ cursor: "pointer" }}
-                    onClick={() => handleToggle(genre)}
+                    onClick={() => handleToggle(genre) + (genres === "Reprendre" && getCurrentEp(genre._id, genre.links, genre.nextLinks))}
                   >
                     {genre.newAnime && (
                       <div

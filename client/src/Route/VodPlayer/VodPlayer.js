@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import './style/VodPlayer.css'
 import { useMediaQuery } from '@mui/material';
 import { epContext } from '../../App';
+import { useAuth } from '../../Component/Context/AuthContext';
 
 const VodPlayer = ({}) => {
 
@@ -33,6 +34,15 @@ const VodPlayer = ({}) => {
     let urlEp = !ep.current_episode ? null : ep.current_episode[0] && ep.current_episode[0][0].episode.split(" ")[0] + " "
     let urlEpNext  = !ep.current_episode ? null : ep.current_episode[0] && "0" +(parseInt( ep.current_episode[0][0].episode.split(" ")[1])+1).toString()
     let urlEpPrevious  = !ep.current_episode ? null : ep.current_episode[0] && "0" +(parseInt( ep.current_episode[0][0].episode.split(" ")[1])-1).toString()
+    let EpNext = "Episode " + urlEpNext
+    let PreviousEp = "Episode " + urlEpPrevious
+
+    const {
+        currentUserID,
+        currentUser,
+        addResume,
+        setResume
+    } = useAuth()
 
     
     const epFilter = (tab, episode) => {
@@ -41,6 +51,7 @@ const VodPlayer = ({}) => {
 
     const goToNextEP = (current_episode) => {
         let nbrOfNextEp = ep.all_episode.find(elem => elem[0].episode === current_episode.split(" ")[0] + " 0" + (parseInt(current_episode.split(" ")[1])+1).toString())
+
             if(nbrOfNextEp === undefined){
 
             } else {
@@ -119,6 +130,26 @@ const VodPlayer = ({}) => {
         })
       }
 
+      const addToResume = async (animeId, nameAnime, epAnime, saison, langue) => {
+          if(currentUserID){
+              const resume = currentUser && currentUser.Resume && currentUser.Resume.filter(elem => elem.animeId === animeId)
+              if(!currentUser.Resume || resume.length === 0) {
+                  await addResume({
+                    animeId: animeId,
+                    name: nameAnime,
+                    currentEp: epAnime,
+                    saison: saison,
+                    langue: langue
+                })
+            } else if (resume && resume.length > 0) {
+                await setResume({
+                currentEp: epAnime
+                }, resume[0].id)
+            }
+        } 
+      }
+
+
     return (
         <div className='container-vod-player'>
             <div ref={backgroundRef} style={{position: 'absolute', height: "100%", width: "100%", backdropFilter: "blur(5px)", opacity: "0.5"}}>
@@ -170,10 +201,10 @@ const VodPlayer = ({}) => {
                             <div ref={otherEpisodeRef} className='otherEpisode-content'>
                                 <Stack spacing={2} direction="row"  className='buttontogotootherep'>
                                     <Link to={`/watch/${!ep.current_episode ? null : ep.current_episode[0] && ep.name.split("Saison")[0].replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${urlEp && urlEpPrevious && ( urlEp  + urlEpPrevious ).replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
-                                    {currentEp === epMin ? null : <ColorButton size={!mobile ? "large" : "small"} onClick={() => goToPreviousEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true)} variant="contained"><span>Episode précédent</span></ColorButton>}
+                                    {currentEp === epMin ? null : <ColorButton size={!mobile ? "large" : "small"} onClick={() => goToPreviousEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true) + addToResume(ep.id, ep.name, PreviousEp, ep.saison, ep.langue)} variant="contained"><span>Episode précédent</span></ColorButton>}
                                     </Link>
                                     <Link to={`/watch/${!ep.current_episode ? null : ep.current_episode[0] && ep.name.split("Saison")[0].replaceAll(" ", "-").replaceAll(".", "").replaceAll(",", "").replaceAll("#", "")}/${urlEp && urlEpPrevious && (urlEp + urlEpNext).replaceAll(" ", "-")}`} style={{textDecoration: 'none'}}>
-                                    {currentEp === epMax ? null : <ColorButton size={!mobile ? "large" : "small"} onClick={() => goToNextEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true) + addToMostWatchedScore()} variant="contained"><span>Episode suivant</span></ColorButton>}
+                                    {currentEp === epMax ? null : <ColorButton size={!mobile ? "large" : "small"} onClick={() => goToNextEP(!ep.current_episode ? null : ep.current_episode[0][0].episode) + setNext(true) + addToMostWatchedScore() + addToResume(ep.id, ep.name, EpNext, ep.saison, ep.langue)} variant="contained"><span>Episode suivant</span></ColorButton>}
                                     </Link>
                                 </Stack>
                             </div>
