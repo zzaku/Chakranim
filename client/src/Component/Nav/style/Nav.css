@@ -1,3 +1,10 @@
+h1{
+    align-items: center;
+    height: 40px;
+    justify-content: center;
+    display: flex;
+}
+
 .Navigation {
     display: flex;
     position: fixed;
@@ -12,6 +19,70 @@
     align-items: center;
     cursor: pointer;
     color: white;
+}
+
+.link-container{
+    height: 100%;
+    width: 100%;
+    border: 2px #d9dbe1 solid;
+    border-radius: 20px;
+    box-shadow: rgb(56 95 137) 0px 20px 31px -30px, inset 0 14px 15px -9px #000000, inset 0 0px 33px 32px #131414, rgb(12 203 223 / 30%) 0px 10px 7px, rgb(21 143 247 / 23%) 0px -10px 7px;
+}
+
+.css-1ptx2yq-MuiInputBase-root-MuiInput-root {
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.4375em;
+    letter-spacing: 0.00938em;
+    color: rgba(0, 0, 0, 0.87);
+    box-sizing: border-box;
+    position: relative;
+    cursor: text;
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+}
+feuille de style user-agent
+div {
+    display: block;
+}
+.search-button {
+    display: flex;
+    /* height: 100%; */
+    justify-content: center;
+    margin-right: 25%;
+    align-items: center;
+    cursor: pointer;
+}
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+:root {
+    --cardWidth: 230px;
+    --cardHeight: 310px;
+    --cardMargin: 16px;
+}
+
+.search-input > div > div:before{
+    border-bottom: none;
+}
+
+.search-input > div > div:after {
+    border-bottom: none;
+}
+
+.search-input > div > div:hover:not(.Mui-disabled):before {
+    border-bottom: none;
 }
 
 .search-button{

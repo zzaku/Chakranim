@@ -39,12 +39,12 @@
     height: 98%;
     width: 95%;
     display: grid;
-    grid-template-rows: repeat(8, 600px);
+    grid-template-rows: repeat(9, 600px);
 }
 
 @media screen and (max-width: 968px) {
     .list-container{
         margin-left: 0;
-        grid-template-rows: repeat(8, 300px);
+        grid-template-rows: repeat(9, 313px);
     }
 }

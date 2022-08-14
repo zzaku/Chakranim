@@ -163,7 +163,7 @@ const VodPlayer = ({}) => {
                             <h1>{!ep.current_episode ? null : ep.current_episode[0] && ep.name.split("Saison")[0] + " " + ep.current_episode[0][0].episode}</h1>
                         </div>
                         <div className='iframe-container' ref={iframeContainer}>
-                            {!checked ? next ? <iframe title='VOD' allowFullScreen className='iframe' src={!ep.current_episode ? null : ep.current_episode[0] && ep.current_episode[0][0].lien}></iframe> : <iframe allowFullScreen className='iframe' title='VOD' src={lecteur[0] && lecteur[0][0].lien}></iframe> : null}
+                            {!checked ? next ? <iframe title='VOD' sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allowFullScreen className='iframe' src={!ep.current_episode ? null : ep.current_episode[0] && ep.current_episode[0][0].lien}></iframe> : <iframe allowFullScreen className='iframe' title='VOD' src={lecteur[0] && lecteur[0][0].lien}></iframe> : null}
                         </div>
                             <Backdrop
                             style={{width: "100%", height: "100%"}}
@@ -171,7 +171,7 @@ const VodPlayer = ({}) => {
                                 open={checked}
                             >
                                 <div className='iframe-container' ref={iframeContainer}>
-                                    {next ? <iframe className='iframe' title='VOD' allowFullScreen src={!ep.current_episode ? null : ep.current_episode[0][0].lien}></iframe> : <iframe title='VOD' allowFullScreen className='iframe' src={lecteur[0][0].lien}></iframe>}
+                                    {next ? <iframe className='iframe' title='VOD' sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allowFullScreen src={!ep.current_episode ? null : ep.current_episode[0][0].lien}></iframe> : <iframe title='VOD' allowFullScreen className='iframe' src={lecteur[0][0].lien}></iframe>}
                                 </div>
                             </Backdrop>
                         <div ref={movieBtnRef} className='watch-content'>

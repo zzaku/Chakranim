@@ -36,11 +36,10 @@ const List = ({ genre, genres, setNotAtHome }) => {
   const jirenRef = useRef();
   const mobile = useMediaQuery("(max-width:968px)");
   const {
-    addPreferences,
-    setPreferences,
     currentUserID,
     currentUser,
     getPref,
+    getResume
   } = useAuth();
 
   let categorie = genres.includes("é")
@@ -205,6 +204,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
 
   useEffect(() => {
     getPref();
+    getResume()
   }, [currentUserID]);
 
   const setLecteurEpisode = (tab, episode) => {
@@ -264,7 +264,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                 src={goku}
               />
               <div className="genre-title">
-                <h1>{DisplayAllCategory}</h1>
+                <h1>{genres === "Reprendre" ? (withoutDoublon[0][genres].length > 1 ? "Reprendre les animés en cours" : "Reprendre l'animé en cours") : DisplayAllCategory}</h1>
               </div>
               <img
                 alt="jiren"
@@ -279,7 +279,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
               />
             </div>
           </div>
-          <div className="list-card" ref={cardListRef} style={{padding: mobile ? null : genres === "Les plus regardes" ? "8rem 3rem 0 1rem" : "8rem 3rem 0 3rem"}}>
+          <div className="list-card" ref={cardListRef} style={{padding: mobile ? null : genres === "Les plus regardes" ? "8rem 3rem 0 1rem" : "8rem 3rem 0 3rem", justifyContent: genres === "Reprendre" && withoutDoublon[0][genres].length < 8 ? "center" : null}}>
             {!finalPositionScroll.start ? (
               <Button
                 className="scroll-btn"
@@ -448,7 +448,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                   </div>
                 ))
               : null}
-            {!finalPositionScroll.end ? (
+            {!finalPositionScroll.end && withoutDoublon[0][genres].length > 8 ? (
               <Button
                 className="scroll-btn"
                 ref={scrollRightRef}

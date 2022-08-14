@@ -120,6 +120,14 @@ router.get('/animes/allSeason', async (req, res) => {
     }
 });
 
+/*router.get('/test', async (req, res) => {
+    try{
+        const scrap = await pageScraper.pageScraper(browserInstance);
+    }catch(err){
+        res.status(401).json({message: err})
+    }
+});*/
+
 //CHECK AND SCRAP NEW ANIMES
 const scrapper = async () => {
         const scrap = await pageScraper.pageScraper(browserInstance);

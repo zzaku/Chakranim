@@ -74,7 +74,6 @@ function App() {
     getToken()
 
   }, [])
-
  
   return (
     <AuthProvider >

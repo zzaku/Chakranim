@@ -1,7 +1,7 @@
 import Extrait from "./Extrait/Extrait"
 import List from "./List/List"
 import { useEffect, useMemo, useState } from "react"
-import customFetcher from "../Fetch/FetchInstance"
+import { useMediaQuery } from "@mui/material"
 import "./style/Home.css"
 import { useAuth } from "../Context/AuthContext"
 
@@ -10,6 +10,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
     const genres = useMemo(() => ["S-F", "Action", "Aventure", "Comédie", "Tranche de vie", "Drame", "Fantasy", "Surnaturel", "Mystère", "Shonen", "Psychologique", "Romance", "Films", "Les plus regardés", "Reprendre", "Nouveaux Episodes"], [])
 
     const {currentUser, currentUserID} = useAuth()
+    const mobile = useMediaQuery("(max-width:968px)");
 
     //const [genre1, setGenre1] = useState([{}])
     //const [genre2, setGenre2] = useState([{}])
@@ -43,7 +44,6 @@ const Home = ({allAnimes, setNotAtHome}) => {
             if(ready){
                 getByLastAnime()
                 getMostWatched()
-                getResume()
                 getByGenre13()
                 getByGenre4()
                 getByGenre8()
@@ -51,7 +51,11 @@ const Home = ({allAnimes, setNotAtHome}) => {
                 getByGenre12()
                 getByGenre3()
             }
-        }, [ready, genres])
+        }, [ready])
+
+        useEffect(() => {
+            getResume()
+        }, [currentUserID, currentUser])
 
                 let getByGenre3 = async () => {
                     fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[2]}${getParam(genres[2])}`)
@@ -102,10 +106,12 @@ const Home = ({allAnimes, setNotAtHome}) => {
                 }
 
                 let getResume = async () => {
-                    let ids = currentUser?.Resume?.map(anime => anime.animeId);
-                    await fetch(`https://chakranimes.herokuapp.com/VOD/list/animes?animeId=${ids}`)
-                    .then(res => res.json())
-                    .then(data => setResume([{[genres[14]]: data}]))
+                    if(currentUser?.Resume){
+                        let ids = currentUser?.Resume?.map(anime => anime.animeId);
+                        await fetch(`https://chakranimes.herokuapp.com/VOD/list/animes?animeId=${ids}`)
+                        .then(res => res.json())
+                        .then(data => setResume([{[genres[14]]: data}]))
+                    }
                 }
 
         return (
@@ -115,10 +121,10 @@ const Home = ({allAnimes, setNotAtHome}) => {
                         <Extrait />
                     </div>
                     <div className="list">
-                        <div className="list-container">
+                        <div className="list-container" style={{gridTemplateRows: !mobile ? (currentUserID ? (resume[0]?.[genres[14]]?.length > 0 ? "repeat(9, 600px)" : "repeat(8, 600px)") : "repeat(8, 600px)") : (currentUserID ? (resume[0]?.[genres[14]]?.length > 0 ? "repeat(9, 313px)" : "repeat(8, 313px)") : "repeat(8, 313px)")}}>
                             {lastAnime && genres[14] ? <List allAnimes={allAnimes} genres={genres[15]} genre={lastAnime} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
 
-                            {!currentUserID || resume[0]?.Reprendre?.message?.name === "CastError" || resume[0].length === 0 ? null : <List allAnimes={allAnimes} genres={genres[14]} genre={resume} setGenre={setLastAnime} setNotAtHome={setNotAtHome} />}
+                            {!currentUserID || resume[0]?.Reprendre?.message?.name === "CastError" || resume[0]?.[genres[14]]?.length === 0 ? null : <List allAnimes={allAnimes} genres={genres[14]} genre={resume} setGenre={setLastAnime} setNotAtHome={setNotAtHome} />}
 
                             {mostWatched ? <List allAnimes={allAnimes} genres={genres[13]} genre={mostWatched} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
                             

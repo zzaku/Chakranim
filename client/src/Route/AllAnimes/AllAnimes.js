@@ -71,7 +71,6 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
             } else {
                 getAllByPagination()
             }
-            console.log(anime)
 
     }, [nextPage, getGenres, getAll15Animes])
 
@@ -209,6 +208,25 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
                     </div>
                     
                     <div className="grid-container">
+                    <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 100 }}
+        open={open}
+      >
+        {anime ? (
+          <ContentAnime
+            wrapperRef={wrapperRef}
+            anime={anime}
+            setAnime={setAnime}
+            animeBySeason={animeBySeason}
+            descriptionSuite={descriptionSuite}
+            setDescriptionSuite={setDescriptionSuite}
+            setOpen={setOpen}
+            setNotAtHome={setNotAtHome}
+          />
+        ) : (
+          <CircularProgress color="inherit" />
+        )}
+      </Backdrop>
                         {nextPage === 1 ? 
                         null 
                         : 
@@ -217,18 +235,12 @@ const AllAnimes = ({instance, allAnimes, setNotAtHome}) => {
                         </div>
                         }
                             
-                            <Backdrop
-                                sx={{ color: "#fff", width: "100%", zIndex: (theme) => theme.zIndex.drawer + 100 }}
-                                open={open} 
-                                >
-                                {anime ? <ContentAnime wrapperRef={wrapperRef} anime={anime} setAnime={setAnime} animeBySeason={animeBySeason} descriptionSuite={descriptionSuite} setDescriptionSuite={setDescriptionSuite} open={open} setOpen={setOpen} setNotAtHome={setNotAtHome} /> : <CircularProgress color="inherit" />}
-                            </Backdrop>
                             
                                
                             <Grid className="grid-list" container spacing={2} padding="2%"> 
                             {withoutDoublon.map((anime, i) => {
                                 return(
-                                            <div className="card-content" onClick={() => handleToggle(anime)}>
+                                            <div className="card-content" onClick={() => handleToggle(anime)} key={anime._id + i}>
                                                 <ParallaxHover width={"700"} height={"700"} yRotate={360}>
                                                     <div style={{display: "flex", height: "100%", width: "100%", justifyContent: "center"}}>
                                                         {anime.newAnime && <div className='new-anime2' style={{fontSize: mobile ? "7px" : "", opacity: mobile ? "0.8" : ""}}><h2 style={{color: "red"}}>Nouveauté</h2></div>}

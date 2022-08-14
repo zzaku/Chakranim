@@ -14,6 +14,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
   const open = useContext(epContext)
   const [appearNav] = useState(true)
   const [onMobile, setOnMobile] = useState(false)
+  const [newFont, setNewFont] = useState(false)
   const mobile = useMediaQuery('(max-width:968px)');
   const nav = useRef()
   const {currentUserID, setCurrentUserID, setCurrentUser, signout, getPref} = useAuth()
@@ -34,9 +35,12 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
       if(nav.current){
         if(scrollTop === 0){
           nav.current.style.background = "transparent"
+          setNewFont(false)
         }
         else{
-          nav.current.style.background = "#000"
+          nav.current.style.background = "#323d6c"
+          nav.current.style.borderRadius = "5px"
+          setNewFont(true)
         }
       }
       
@@ -57,27 +61,38 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
 
     const [state, setState] = useState({right: false});
 
-    const seeAllAnimes =  <NavLink to={"/list/animes"}>
-                            <h2>Touts les animes</h2>
+    const home = <NavLink to={"/"} style={{height: "auto", marginTop: mobile ? "0" : "5%"}}>
+                    <div className={newFont ? "link-container" : ""}><h1>Chakranime</h1></div>
+                  </NavLink>
+
+    const seeAllAnimes =  <NavLink to={"/list/animes"} style={{height: "auto", marginTop: "5%"}}>
+                            <div className={newFont ? "link-container" : ""}><h1>Touts les animes</h1></div>
                           </NavLink>
-    const seePreferences =  <NavLink to={"/list/preferences"}>
-                            <h2>Mes préférences</h2>
+    const seePreferences =  <NavLink to={"/list/preferences"} style={{height: "auto", marginTop: "5%"}}>
+                            <div className={newFont ? "link-container" : ""}><h1>Mes préférences</h1></div>
                           </NavLink>
 
     const login = currentUserID ?
                       <>
-                    <NavLink to={"/myAccount"}>
-                      <h2>Mon compte</h2>
+                    <NavLink to={"/myAccount"} style={{height: "auto", marginTop: "5%"}}>
+                    <div className={newFont ? "link-container" : ""}><h1>Mon compte</h1></div>
                     </NavLink>
-                    <Button onClick={() => logOut()} >Me déconnecter</Button>
+                    <div style={{height: "auto", marginTop: "5%"}}>
+                      <div className={newFont ? "link-container" : ""}>
+                        <Button onClick={() => logOut()} >Me déconnecter</Button>
+                      </div>
+                    </div>
+                    
                     </>
                     :
-                    <NavLink to={"/connexion"}>
-                      <h2>Se connecer</h2>
+                    <NavLink to={"/connexion"} style={{height: "auto", marginTop: "5%"}}>
+                      <div className={newFont ? "link-container" : ""}><h1>Se connecer</h1></div>
                     </NavLink>
 
-    const search =  <NavMenu style={{justifyContent: "space-around", width: "50%"}}>
-                      <FcSearch size={"40px"} cursor="pointer" onClick={() => open.setSearch(true)}/>
+    const search =  <NavMenu style={{justifyContent: "space-around", width: "auto"}}>
+                  <div style={{height: "auto", marginTop: "5%"}}>
+                      <div className={newFont ? "link-container" : ""}><FcSearch size={"40px"} cursor="pointer" onClick={() => open.setSearch(true)}/></div>
+                  </div>
                     </NavMenu>
 
     return (
@@ -109,18 +124,21 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                         </div>
                       </NavLink>
                     ) : (
-                      <NavLink to={"/"}>
-                        <h1>Chakranime</h1>
-                      </NavLink>
+                      <NavMenu style={{ display: "flex", justifyContent: "center", alignItems: mobile ? "center" : "flex-start", width: "auto", height: "100%" }}>
+                        {home}
+                      </NavMenu>
                     )}
                     <NavMenu
-                      style={{ justifyContent: "space-around", width: "50%" }}
+                      style={{ display: "flex", justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}
                     >
                       {seeAllAnimes}
+                    </NavMenu>
+                    <NavMenu style={{ display: "flex", justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}>
                       {seePreferences}
                     </NavMenu>
+                      
                     <NavMenu
-                      style={{ justifyContent: "space-around", width: "50%" }}
+                      style={{ justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}
                     >
                       {login}
                     </NavMenu>

@@ -128,7 +128,7 @@ function Inscription({ setRegister, pathLocation, setNeedToConnect, mobile }) {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Nom d'utilisateur"
+                placeholder="Pseudo"
                 name="pseudo"
                 onChange={onChangeUser}
                 autoComplete="off"
@@ -143,7 +143,7 @@ function Inscription({ setRegister, pathLocation, setNeedToConnect, mobile }) {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Adresse mail"
+                placeholder="Mail"
                 pattern="[a-zA-Z0-9._\-]+@[a-zA-Z0-9._\-]+\.[a-zA-Z]{2,10}"
                 name="mail"
                 onChange={onChangeUser}

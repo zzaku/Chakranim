@@ -97,8 +97,8 @@ const scraperObject = {
         let pagePromise = (link, nombre_ep) => new Promise(async(resolve, reject) => {
 
 			let newPage = await browser.newPage();
-              await newPage.goto(link);
-              await newPage.setDefaultNavigationTimeout(0);
+            await newPage.goto(link);
+            await newPage.setDefaultNavigationTimeout(0);
             await newPage.waitForSelector('#player-tabs > div.tab-blocks > div:nth-child(1) > div > div.new_player_top > div.new_player_next');
             await newPage.waitForTimeout(1000)
             let select = await newPage.$("div.jq-selectbox-wrapper > div")
@@ -125,11 +125,6 @@ const scraperObject = {
                 let nbrEp2 = isThereNbrEp ? parseInt(document.querySelector("#dle-content > div.watch-top > div > div > div > div.slide-poster > div").textContent.split(' ')[1]) : 0
                 let duree = document.querySelector("div.slide-info > p:nth-child(3) > b") ? document.querySelector("div.slide-info > p:nth-child(3) > b").textContent.trim() : document.querySelector("div.slide-info > p:nth-child(2) > b") ? document.querySelector("div.slide-info > p:nth-child(2) > b").textContent.trim() : document.querySelector("div.slide-info > p:nth-child(1) > b") ? document.querySelector("div.slide-info > p:nth-child(1) > b").textContent.trim() : ""
                 let date = document.querySelector("div.slide-middle > ul:nth-child(2) > li > b:nth-child(2) > a").textContent
-                function delay(time) {
-                    return new Promise(function(resolve) { 
-                        setTimeout(resolve, time)
-                    });
-                 }
                 for(cat of LesGenres){
                     genre.push(cat.textContent)
                 }
