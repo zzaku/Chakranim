@@ -221,7 +221,7 @@ import "../style/Preferences.css";
       <div className="list-card-item">
           {
             !loading ? currentUser?.Preferences && animesPref[0] ?
-            <div className="card-list-item-container" ref={cardListRef}>
+            <div className="card-list-item-container" ref={cardListRef} style={{justifyContent: mobile || !animesPref || !animesPref[0] || animesPref[0].length <= 9 ? "center" : "flex-start"}}>
                {animesPref[0].map((anime, i) => (
                 <div
                     key={anime._id + i}

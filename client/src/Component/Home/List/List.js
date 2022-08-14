@@ -35,12 +35,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
   const gokuRef = useRef();
   const jirenRef = useRef();
   const mobile = useMediaQuery("(max-width:968px)");
-  const {
-    currentUserID,
-    currentUser,
-    getPref,
-    getResume
-  } = useAuth();
+  const { currentUserID, currentUser, getPref, getResume } = useAuth();
 
   let categorie = genres.includes("é")
     ? genres.replace("é", "e")
@@ -52,7 +47,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
     ? genres.replaceAll("-", "_")
     : genres;
 
-  let DisplayAllCategory = genres
+  let DisplayAllCategory = genres;
 
   useEffect(() => {
     if (anime) {
@@ -83,7 +78,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                   gokuRef.current.style.height = "auto";
                   gokuRef.current.style.width = "auto";
                   setTimeout(() => {
-                    if(gokuRef.current){
+                    if (gokuRef.current) {
                       gokuRef.current.src = songoku;
                     }
                   }, sumDelay2 - 100);
@@ -159,7 +154,13 @@ const List = ({ genre, genres, setNotAtHome }) => {
       `${
         process.env.REACT_APP_API_ANIME
       }/VOD/animes/allSeason?name=${encodeURIComponent(
-        (firstPartToCheck + " " + secondPartToCheck + " " + thirdPartToCheck).trim()
+        (
+          firstPartToCheck +
+          " " +
+          secondPartToCheck +
+          " " +
+          thirdPartToCheck
+        ).trim()
       )}`
     )
       .then((res) => res.json())
@@ -181,7 +182,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
     let maxScroll = cardListRef.current
       ? cardListRef.current.scrollWidth
       : null;
-      
+
     currentScrollPosition =
       finalPositionScroll.start && !finalPositionScroll.end ? 0 : currentPose;
     currentScrollPosition += val * scrollAmount;
@@ -191,12 +192,10 @@ const List = ({ genre, genres, setNotAtHome }) => {
     if (currentScrollPosition >= maxScroll - scrollAmount) {
       currentScrollPosition = maxScroll;
       setFinalPositionScroll({ start: false, end: true });
-    } 
-    else if (currentScrollPosition <= 0) {
+    } else if (currentScrollPosition <= 0) {
       currentScrollPosition = 0;
       setFinalPositionScroll({ start: true, end: false });
-    } 
-    else {
+    } else {
       setFinalPositionScroll({ start: false, end: false });
     }
     cardListRef.current.scrollLeft = currentScrollPosition;
@@ -204,30 +203,38 @@ const List = ({ genre, genres, setNotAtHome }) => {
 
   useEffect(() => {
     getPref();
-    getResume()
+    getResume();
   }, [currentUserID]);
 
   const setLecteurEpisode = (tab, episode) => {
     return tab.filter((elem) => elem[0].episode === episode);
   };
 
-  const getCurrentEp = (AnimeId, name, langue, saison, image, links, nextLink) => {
-    const currentEp = currentUser && currentUser.Resume && currentUser.Resume.filter(elem => elem.animeId === AnimeId)
+  const getCurrentEp = (
+    AnimeId,
+    name,
+    langue,
+    saison,
+    image,
+    links,
+    nextLink
+  ) => {
+    const currentEp =
+      currentUser &&
+      currentUser.Resume &&
+      currentUser.Resume.filter((elem) => elem.animeId === AnimeId);
     const allLinks = [links, nextLink];
-    console.log(allLinks)
+    console.log(allLinks);
     ep.setEp({
-      current_episode: setLecteurEpisode(
-        allLinks[0],
-        currentEp[0].currentEp
-      ),
+      current_episode: setLecteurEpisode(allLinks[0], currentEp[0].currentEp),
       all_episode: allLinks[0],
       id: AnimeId,
       name: name,
       langue: langue,
       saison: saison,
       image: image,
-    })
-  }
+    });
+  };
 
   return (
     <div className="card">
@@ -252,9 +259,11 @@ const List = ({ genre, genres, setNotAtHome }) => {
       </Backdrop>
       <div className="grid-container">
         <div ref={neonContainerRef} className="grid-list-container">
-          {mobile && <div className="genre-title">
-                <h1>{DisplayAllCategory}</h1>
-              </div>}
+          {mobile && (
+            <div className="genre-title">
+              <h1>{DisplayAllCategory}</h1>
+            </div>
+          )}
           <div className="animation">
             <div className="animation-gif">
               <img
@@ -264,7 +273,13 @@ const List = ({ genre, genres, setNotAtHome }) => {
                 src={goku}
               />
               <div className="genre-title">
-                <h1>{genres === "Reprendre" ? (withoutDoublon[0][genres].length > 1 ? "Reprendre les animés en cours" : "Reprendre l'animé en cours") : DisplayAllCategory}</h1>
+                <h1>
+                  {genres === "Reprendre"
+                    ? withoutDoublon[0][genres].length > 1
+                      ? "Reprendre les animés en cours"
+                      : "Reprendre l'animé en cours"
+                    : DisplayAllCategory}
+                </h1>
               </div>
               <img
                 alt="jiren"
@@ -279,7 +294,21 @@ const List = ({ genre, genres, setNotAtHome }) => {
               />
             </div>
           </div>
-          <div className="list-card" ref={cardListRef} style={{padding: mobile ? null : genres === "Les plus regardes" ? "8rem 3rem 0 1rem" : "8rem 3rem 0 3rem", justifyContent: genres === "Reprendre" && withoutDoublon[0][genres].length < 8 ? "center" : null}}>
+          <div
+            className="list-card"
+            ref={cardListRef}
+            style={{
+              padding: mobile
+                ? null
+                : genres === "Les plus regardes"
+                ? "8rem 3rem 0 1rem"
+                : "8rem 3rem 0 3rem",
+              justifyContent:
+                genres === "Reprendre" && withoutDoublon[0][genres].length < 8
+                  ? "center"
+                  : null,
+            }}
+          >
             {!finalPositionScroll.start ? (
               <Button
                 className="scroll-btn"
@@ -297,158 +326,182 @@ const List = ({ genre, genres, setNotAtHome }) => {
               </Button>
             ) : null}
             {withoutDoublon[0][genres]
-              ? withoutDoublon[0][genres].map((genre, i) => (
-                genres === "Reprendre" ? <Link
-                to={`/watch/${genre.name
-                  .replaceAll(" ", "-")
-                  .replaceAll(".", "")
-                  .replaceAll(",", "")
-                  .replaceAll("#", "")}/Resume`}
-                style={{ textDecoration: "none" }}> <div
-                ref={cardContainerRef}
-                key={genre._id + i}
-                className="card-container"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleToggle(genre) + (genres === "Reprendre" && getCurrentEp(genre._id, genre.name, genre.langue, genre.saison, genre.image, genre.links, genre.nextLinks))}
-              >
-                {genre.newAnime && (
-                  <div
-                    className="new-anime-mobile"
-                    style={{ display: mobile ? "" : "none" }}
-                  >
-                    <h2>Nouveauté</h2>
-                  </div>
-                )}
-                {genre.nouveau_Episode && (
-                  <div
-                    className="new-ep-mobile"
-                    style={{ display: mobile ? "" : "none" }}
-                  >
-                    <h2>Nouveaux episodes</h2>
-                  </div>
-                )}
-                <ParallaxHover
-                  width={"700"}
-                  height={"700"}
-                  yRotate={genres === "Les plus regardés" ? 360 : 500}
-                  refCard={refCard}
-                >
-                  <div
-                    style={{
-                      position: "absolute",
-                      height: "100%",
-                      width: mobile ? "100%" : "210px",
-                      boxShadow: "rgb(0 0 0) 0px 20px 30px -10px",
-                      borderRadius: "25px"
-                    }}
-                  >
-                    {genre.newAnime && (
-                      <div
-                        className="new-anime"
-                        style={{ display: mobile ? "none" : "" }}
-                      >
-                        <h2>Nouveauté</h2>
-                      </div>
-                    )}
-                    {genre.nouveau_Episode && (
-                      <div
-                        className="new-ep"
-                        style={{ display: mobile ? "none" : "" }}
-                      >
-                        <h2>Nouveaux episodes</h2>
-                      </div>
-                    )}
-                    {genres === "Les plus regardés" && (
-                      <div
-                        className="mostWatched"
-                      >
-                        <h1>{i+1}</h1>
-                      </div>
-                    )}
-                    <img
-                      alt={"carde-anime: " + genre.name}
-                      className="posters"
-                      style={{ height: "100%", width: mobile ? "100%" : "210px" }}
-                      src={genre.image && genre.image}
-                    />
-                  </div>
-                </ParallaxHover>
-              </div>
-              </Link> 
-              : 
-              <div
-                    ref={cardContainerRef}
-                    key={genre._id + i}
-                    className="card-container"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleToggle(genre) + (genres === "Reprendre" && getCurrentEp(genre._id, genre.links, genre.nextLinks))}
-                  >
-                    {genre.newAnime && (
-                      <div
-                        className="new-anime-mobile"
-                        style={{ display: mobile ? "" : "none" }}
-                      >
-                        <h2>Nouveauté</h2>
-                      </div>
-                    )}
-                    {genre.nouveau_Episode && (
-                      <div
-                        className="new-ep-mobile"
-                        style={{ display: mobile ? "" : "none" }}
-                      >
-                        <h2>Nouveaux episodes</h2>
-                      </div>
-                    )}
-                    <ParallaxHover
-                      width={"700"}
-                      height={"700"}
-                      yRotate={genres === "Les plus regardés" ? 360 : 500}
-                      refCard={refCard}
+              ? withoutDoublon[0][genres].map((genre, i) =>
+                  genres === "Reprendre" ? (
+                    <Link
+                      to={`/watch/${genre.name
+                        .replaceAll(" ", "-")
+                        .replaceAll(".", "")
+                        .replaceAll(",", "")
+                        .replaceAll("#", "")}/Resume`}
+                      style={{ textDecoration: "none" }}
                     >
+                      {" "}
                       <div
-                        style={{
-                          position: "absolute",
-                          height: "100%",
-                          width: mobile ? "100%" : "210px",
-                          boxShadow: "rgb(0 0 0) 0px 20px 30px -10px",
-                          borderRadius: "25px"
-                        }}
+                        ref={cardContainerRef}
+                        key={genre._id + i}
+                        className="card-container"
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          handleToggle(genre) +
+                          (genres === "Reprendre" &&
+                            getCurrentEp(
+                              genre._id,
+                              genre.name,
+                              genre.langue,
+                              genre.saison,
+                              genre.image,
+                              genre.links,
+                              genre.nextLinks
+                            ))
+                        }
                       >
                         {genre.newAnime && (
                           <div
-                            className="new-anime"
-                            style={{ display: mobile ? "none" : "" }}
+                            className="new-anime-mobile"
+                            style={{ display: mobile ? "" : "none" }}
                           >
                             <h2>Nouveauté</h2>
                           </div>
                         )}
                         {genre.nouveau_Episode && (
                           <div
-                            className="new-ep"
-                            style={{ display: mobile ? "none" : "" }}
+                            className="new-ep-mobile"
+                            style={{ display: mobile ? "" : "none" }}
                           >
                             <h2>Nouveaux episodes</h2>
                           </div>
                         )}
-                        {genres === "Les plus regardés" && (
+                        <ParallaxHover
+                          width={"700"}
+                          height={"700"}
+                          yRotate={genres === "Les plus regardés" ? 360 : 500}
+                          refCard={refCard}
+                        >
                           <div
-                            className="mostWatched"
+                            style={{
+                              position: "absolute",
+                              height: "100%",
+                              width: mobile ? "100%" : "210px",
+                              boxShadow: "rgb(0 0 0) 0px 20px 30px -10px",
+                              borderRadius: "25px",
+                            }}
                           >
-                            <h1>{i+1}</h1>
+                            {genre.newAnime && (
+                              <div
+                                className="new-anime"
+                                style={{ display: mobile ? "none" : "" }}
+                              >
+                                <h2>Nouveauté</h2>
+                              </div>
+                            )}
+                            {genre.nouveau_Episode && (
+                              <div
+                                className="new-ep"
+                                style={{ display: mobile ? "none" : "" }}
+                              >
+                                <h2>Nouveaux episodes</h2>
+                              </div>
+                            )}
+                            {genres === "Les plus regardés" && (
+                              <div className="mostWatched">
+                                <h1>{i + 1}</h1>
+                              </div>
+                            )}
+                            <img
+                              alt={"carde-anime: " + genre.name}
+                              className="posters"
+                              style={{
+                                height: "100%",
+                                width: mobile ? "100%" : "210px",
+                              }}
+                              src={genre.image && genre.image}
+                            />
                           </div>
-                        )}
-                        <img
-                          alt={"carde-anime: " + genre.name}
-                          className="posters"
-                          style={{ height: "100%", width: mobile ? "100%" : "210px" }}
-                          src={genre.image && genre.image}
-                        />
+                        </ParallaxHover>
                       </div>
-                    </ParallaxHover>
-                  </div>
-                ))
+                    </Link>
+                  ) : (
+                    <div
+                      ref={cardContainerRef}
+                      key={genre._id + i}
+                      className="card-container"
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        handleToggle(genre) +
+                        (genres === "Reprendre" &&
+                          getCurrentEp(genre._id, genre.links, genre.nextLinks))
+                      }
+                    >
+                      {genre.newAnime && (
+                        <div
+                          className="new-anime-mobile"
+                          style={{ display: mobile ? "" : "none" }}
+                        >
+                          <h2>Nouveauté</h2>
+                        </div>
+                      )}
+                      {genre.nouveau_Episode && (
+                        <div
+                          className="new-ep-mobile"
+                          style={{ display: mobile ? "" : "none" }}
+                        >
+                          <h2>Nouveaux episodes</h2>
+                        </div>
+                      )}
+                      <ParallaxHover
+                        width={"700"}
+                        height={"700"}
+                        yRotate={genres === "Les plus regardés" ? 360 : 500}
+                        refCard={refCard}
+                      >
+                        <div
+                          style={{
+                            position: "absolute",
+                            height: "100%",
+                            width: mobile ? "100%" : "210px",
+                            boxShadow: "rgb(0 0 0) 0px 20px 30px -10px",
+                            borderRadius: "25px",
+                          }}
+                        >
+                          {genre.newAnime && (
+                            <div
+                              className="new-anime"
+                              style={{ display: mobile ? "none" : "" }}
+                            >
+                              <h2>Nouveauté</h2>
+                            </div>
+                          )}
+                          {genre.nouveau_Episode && (
+                            <div
+                              className="new-ep"
+                              style={{ display: mobile ? "none" : "" }}
+                            >
+                              <h2>Nouveaux episodes</h2>
+                            </div>
+                          )}
+                          {genres === "Les plus regardés" && (
+                            <div className="mostWatched">
+                              <h1>{i + 1}</h1>
+                            </div>
+                          )}
+                          <img
+                            alt={"carde-anime: " + genre.name}
+                            className="posters"
+                            style={{
+                              height: "100%",
+                              width: mobile ? "100%" : "210px",
+                            }}
+                            src={genre.image && genre.image}
+                          />
+                        </div>
+                      </ParallaxHover>
+                    </div>
+                  )
+                )
               : null}
-            {!finalPositionScroll.end && withoutDoublon[0][genres].length > 8 ? (
+            {!finalPositionScroll.end &&
+            withoutDoublon[0][genres].length > 8 ? (
               <Button
                 className="scroll-btn"
                 ref={scrollRightRef}

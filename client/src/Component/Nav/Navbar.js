@@ -8,6 +8,9 @@ import './style/Nav.css'
 import { Button, TextField, useMediaQuery } from "@mui/material";
 import MobileNavbar from "./Mobile Navbar/MobileNavbar"
 import { useAuth } from "../Context/AuthContext";
+import { grey } from '@mui/material/colors';
+import Avatar from '@mui/material/Avatar';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const Navbar = ({notAtHome, setNotAtHome}) => {
 
@@ -62,7 +65,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
     const [state, setState] = useState({right: false});
 
     const home = <NavLink to={"/"} style={{height: "auto", marginTop: mobile ? "0" : "5%"}}>
-                    <div className={newFont ? "link-container" : ""}><h1>Chakranime</h1></div>
+                    <div className={newFont ? "link-container" : ""}><h1 id="nav">Accueil</h1></div>
                   </NavLink>
 
     const seeAllAnimes =  <NavLink to={"/list/animes"} style={{height: "auto", marginTop: "5%"}}>
@@ -75,11 +78,15 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
     const login = currentUserID ?
                       <>
                     <NavLink to={"/myAccount"} style={{height: "auto", marginTop: "5%"}}>
-                    <div className={newFont ? "link-container" : ""}><h1>Mon compte</h1></div>
+                    <div className={newFont ? "link-container" : ""} style={{borderRadius: "25px", height: "50px", width: "auto"}}>{/*<Avatar
+                                                                            sx={{ bgcolor: grey[500] }}
+                                                                            alt="demy Sharp"
+                                                                            src="/broken-image.jpg"
+                                                                          />*/}<AccountCircleIcon sx={{ color: grey[500] }} style={{borderRadius: "20px", height: "50px", width: "auto"}} fontSize="large" /></div>
                     </NavLink>
                     <div style={{height: "auto", marginTop: "5%"}}>
                       <div className={newFont ? "link-container" : ""}>
-                        <Button onClick={() => logOut()} >Me déconnecter</Button>
+                        <Button style={{ borderRadius: "20px" }} onClick={() => logOut()} >Me déconnecter</Button>
                       </div>
                     </div>
                     
@@ -89,9 +96,9 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                       <div className={newFont ? "link-container" : ""}><h1>Se connecer</h1></div>
                     </NavLink>
 
-    const search =  <NavMenu style={{justifyContent: "space-around", width: "auto"}}>
+    const search =  <NavMenu style={{justifyContent: "space-around", width: "10%"}}>
                   <div style={{height: "auto", marginTop: "5%"}}>
-                      <div className={newFont ? "link-container" : ""}><FcSearch size={"40px"} cursor="pointer" onClick={() => open.setSearch(true)}/></div>
+                      <div ><FcSearch size={"40px"} cursor="pointer" onClick={() => open.setSearch(true)}/></div>
                   </div>
                     </NavMenu>
 
@@ -113,7 +120,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                     setOnMobile={setOnMobile}
                   />
                 ) : (
-                  <Nav ref={nav} className="Navigation">
+                  <Nav ref={nav} className="Navigation" style={{ justifyContent: "space-around" }}>
                     {notAtHome ? (
                       <NavLink to={"/"}>
                         <div
@@ -128,20 +135,24 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                         {home}
                       </NavMenu>
                     )}
-                    <NavMenu
-                      style={{ display: "flex", justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}
+                    <div style={{display: "flex", flexDirection: "row", justifyContent: "space-around", width: "25%"}}>
+                      <NavMenu
+                      style={{ justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}
                     >
                       {seeAllAnimes}
                     </NavMenu>
-                    <NavMenu style={{ display: "flex", justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}>
+                    <NavMenu style={{ justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}>
                       {seePreferences}
                     </NavMenu>
-                      
+                    </div>
+                    
+                    <div style={{display: "flex", flexDirection: "row", justifyContent: "space-around", width: "30%"}}>
                     <NavMenu
                       style={{ justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}
                     >
                       {login}
                     </NavMenu>
+                    </div>
                     {!onMobile ? (
                       <Bars
                         onClick={() =>

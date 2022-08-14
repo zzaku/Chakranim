@@ -5,6 +5,10 @@ h1{
     display: flex;
 }
 
+#nav{
+    width: 120px
+}
+
 .Navigation {
     display: flex;
     position: fixed;

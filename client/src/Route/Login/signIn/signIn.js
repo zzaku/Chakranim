@@ -70,7 +70,7 @@ function Connexion({
     <div
       className="login"
       style={{
-        marginTop: pathLocation === "/connexion" ? "15%" : "0",
+        marginTop: pathLocation === "/connexion" ? "0" : "0",
         width: pathLocation === "/connexion" ? "100%" : "100%",
         backgroundColor: pathLocation === "/connexion" ? "60%" : "#101116",
         borderRadius: pathLocation === "/connexion" ? "none" : "25px",

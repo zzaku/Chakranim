@@ -16,7 +16,6 @@ import { useAuth } from "../Context/AuthContext";
 import Popover from "@mui/material/Popover";
 import styled from "styled-components";
 import Login from "../../Route/Login/Login"
-import { isEmpty } from "@firebase/util";
 
 const ContentAnime = ({
   anime,

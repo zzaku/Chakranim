@@ -2,12 +2,13 @@ import styled from 'styled-components';
 
 export const Box = styled.div`
 display: flex;
-margin: 5% 0 20px;
-background: black;
+margin: 0;
+background: #161b30;
 flex-direction: column;
 justify-content: center;
 width: 100%;
 height: auto;
+z-index: 1;
 
 @media (max-width: 1000px) {
 	padding: 70px 0px;
@@ -18,6 +19,7 @@ export const Container = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	align-items: center;
 	justify-content: center;
 	/* background: red; */
 `
@@ -33,8 +35,9 @@ export const NetworkContainer = styled.div`
 display: flex;
 flex-direction: column;
 width: 100%;
-height: auto;
+height: 50px;
 justify-content: center;
+align-items: flex-end;
 
 @media (max-width: 1000px) {
 	grid-template-columns: repeat(auto-fill,

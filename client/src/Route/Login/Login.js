@@ -5,6 +5,7 @@ import { useAuth } from "../../Component/Context/AuthContext";
 import { Navigate, useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import zIndex from "@mui/material/styles/zIndex";
 
 function Identification({ connected, setConnected, setNeedToConnect, wrapperRefLogin, propsChild }) {
   const [register, setRegister] = useState(false);
@@ -12,7 +13,7 @@ function Identification({ connected, setConnected, setNeedToConnect, wrapperRefL
   const location = useLocation();
   const pathLocation = location.pathname;
   const mobile = useMediaQuery("(max-width:968px)");
-
+console.log(!mobile && !register && pathLocation)
   return currentUserId ? (
     <Navigate to="/" />
   ) : (
@@ -21,14 +22,14 @@ function Identification({ connected, setConnected, setNeedToConnect, wrapperRefL
       ref={wrapperRefLogin}
       style={{
         display: "flex",
-        height: pathLocation === "/connexion " ? "100%" : pathLocation === "/list/preferences" && !register && !mobile ? "75%" : pathLocation === "/list/preferences" && register && !mobile ? "100%" : pathLocation === "/list/preferences" && register && mobile ? "90%" : pathLocation === "/list/preferences" && !register && mobile ? "60%" : mobile && register ? "60%" : mobile && !register ? "30%" : !mobile && register ? "65%" : !mobile && !register && "40%",
+        height: pathLocation === "/connexion" && !mobile ? "100vh" : pathLocation === "/connexion" && mobile ? "50vh" : pathLocation === "/list/preferences" && !register && !mobile ? "75%" : pathLocation === "/list/preferences" && register && !mobile ? "100%" : pathLocation === "/list/preferences" && register && mobile ? "90%" : pathLocation === "/list/preferences" && !register && mobile ? "60%" : mobile && register ? "auto" : mobile && !register ? "auto" : !mobile && register && pathLocation !== "/connexion" ? "auto" : !mobile && !register && pathLocation !== "/connexion" && "auto",
         width: pathLocation === "/connexion" ? "100%" : pathLocation === "/list/preferences" && !register && !mobile ? "60%" : pathLocation === "/list/preferences" && register && !mobile ? "50%" : pathLocation === "/list/preferences" && register && mobile ? "95%" : pathLocation === "/list/preferences" && !register && mobile ? "100%" : mobile && register ? "75%" : mobile && !register ? "95%" : !mobile && register ? "40%" : !mobile && !register && "45%",
         borderRadius: pathLocation === "/connexion" ? "none" : "25px",
         backgroundColor: pathLocation === "/connexion" ? "black" : "#101116",
         boxShadow: pathLocation === "/connexion" ? "none" : "blue 0px 25px 48px, white 0px 15px 22px",
         justifyContent: "center",
         marginTop: pathLocation === "/connexion" && mobile ? "40%" : pathLocation === "/connexion" && !mobile && register && "5%",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
         {
