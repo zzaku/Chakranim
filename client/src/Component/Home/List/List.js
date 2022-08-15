@@ -57,7 +57,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
     }
   }, [anime]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     let sumDelay1;
     let sumDelay2;
 
@@ -87,7 +87,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
           }, sumDelay1);
         }
       });
-  }, [gokuRef]);
+  }, [gokuRef]);*/
 
   const displayGifOneTime = (array) => {
     if (array[0]) {
@@ -266,12 +266,12 @@ const List = ({ genre, genres, setNotAtHome }) => {
           )}
           <div className="animation">
             <div className="animation-gif">
-              <img
+              {/*<img
                 alt="goku"
                 ref={gokuRef}
                 style={{ display: "flex", height: "auto", width: "auto" }}
                 src={goku}
-              />
+          />*/}
               <div className="genre-title">
                 <h1>
                   {genres === "Reprendre"
@@ -281,7 +281,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                     : DisplayAllCategory}
                 </h1>
               </div>
-              <img
+              {/*<img
                 alt="jiren"
                 ref={jirenRef}
                 style={{
@@ -291,7 +291,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                   WebkitTransform: "scaleX(-1)",
                 }}
                 src={jiren}
-              />
+              />*/}
             </div>
           </div>
           <div
