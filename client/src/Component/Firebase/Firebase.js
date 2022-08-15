@@ -10,7 +10,6 @@ const app =  initializeApp({
   storageBucket: "chakranimes-67c42.appspot.com",
   messagingSenderId: "741902551118",
   appId: "1:741902551118:web:1a78ea4edd1d85a2b69b1f",
-  measurementId: "G-HJYEVGP73Q"
   });
 
 export const auth = getAuth(app);

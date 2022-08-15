@@ -3,7 +3,7 @@ import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTo
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import ContentAnime from "../../Anime/ContentAnime";
-import { useState, useEffect, useRef, useContext, useMemo } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { Button } from "@mui/material";
 import ParallaxHover from "./Card/Card";
 import goku from "./Neon/assets/kamea.gif";
