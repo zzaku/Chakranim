@@ -90,9 +90,9 @@ function App() {
     }
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     getToken();
-  }, []);
+  }, []);*/
 
   return (
     <AuthProvider>

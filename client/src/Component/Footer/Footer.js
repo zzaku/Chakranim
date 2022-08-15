@@ -37,21 +37,7 @@ const Footer = ({ footerRef }) => {
                 </a>
               </Heading>
             </Column>
-            <Column>
-              <Heading>
-                <a
-                  href="https://twitter.com/chakranime"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img
-                    alt="twitter"
-                    src="https://img.icons8.com/color/96/000000/twitter--v1.png"
-                    style={{ height: "80px", width: "80px" }}
-                  />
-                </a>
-              </Heading>
-            </Column>
+            
             <Column>
               <Heading>
                 <a
