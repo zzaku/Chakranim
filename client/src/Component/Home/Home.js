@@ -118,7 +118,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
             <div className="anime-list">
                 <div className="anime-container">
                     <div className="extrait">
-                       { /*<Extrait />*/}
+                       <Extrait />
                     </div>
                     <div className="list">
                         <div className="list-container" style={{gridTemplateRows: !mobile ? (currentUserID ? (resume[0]?.[genres[14]]?.length > 0 ? "repeat(9, 600px)" : "repeat(8, 600px)") : "repeat(8, 600px)") : (currentUserID ? (resume[0]?.[genres[14]]?.length > 0 ? "repeat(9, 313px)" : "repeat(8, 313px)") : "repeat(8, 313px)")}}>
