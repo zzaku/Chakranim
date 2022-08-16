@@ -87,7 +87,7 @@ export default function SwipeableTemporaryDrawer({state, setState, setSearch, se
                 </ListItemButton>
               ) : currentUserID ? (
                 text === "login" ? (
-                  <NavLink to={"/myAccount"} style={{ textDecoration: "none" }}>
+                  <NavLink to={"/account"} style={{ textDecoration: "none" }}>
                     <ListItemButton>
                       <ListItemIcon>
                         <PersonIcon

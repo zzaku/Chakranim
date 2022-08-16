@@ -10,6 +10,7 @@ import { createContext, useEffect, useState } from "react";
 import Search from "./Component/Search/Search";
 import Login from "./Route/Login/Login";
 import { AuthProvider } from "./Component/Context/AuthContext";
+import Account from "./Route/Account/Account";
 
 export const epContext = createContext();
 export const log = createContext();
@@ -165,6 +166,7 @@ function App() {
                 }
               />
               <Route path="/connexion" element={<Login />} />
+              <Route path="/account" element={<Account />} />
             </Routes>
             <Footer />
           </Router>

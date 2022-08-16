@@ -1,0 +1,65 @@
+.profile-container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+}
+
+.bannière-container{
+    display: flex;
+    height: 30%;
+    width: 100%;
+    background-color: cadetblue;
+}
+
+.content-container{
+    display: flex;
+    height: 70%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(105, 50, 50);
+}
+
+.content{
+    display: flex;
+    padding: 20px;
+    height: 85%;
+    width: 90%;
+    background-color: rgb(22, 22, 22);
+}
+
+.paper-container{
+    display: flex;
+    height: 95%;
+    width: 98%;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+
+.paper-container-content{
+    display: flex;
+    height: auto;
+    width: 100%;
+    color: black;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.info-user{
+    display: flex;
+    height: 30%;
+    width: 100%;
+}
+
+.info-bio{
+    display: flex;
+    height: 30%;
+    width: 100%;
+}
+
+.info-password{
+    display: flex;
+    height: 30%;
+    width: 100%;
+}

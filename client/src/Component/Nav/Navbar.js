@@ -77,7 +77,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
 
     const login = currentUserID ?
                       <>
-                    <NavLink to={"/myAccount"} style={{height: "auto", marginTop: "5%"}}>
+                    <NavLink to={"/account"} style={{height: "auto", marginTop: "5%"}}>
                     <div className={newFont ? "link-container" : ""} style={{borderRadius: "25px", height: "50px", width: "auto"}}>{/*<Avatar
                                                                             sx={{ bgcolor: grey[500] }}
                                                                             alt="demy Sharp"
