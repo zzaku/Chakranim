@@ -42,6 +42,10 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem("watching", JSON.stringify(ep));
+
+    return () => {
+      localStorage.setItem("watching", JSON.stringify(ep));
+    }
   }, [ep]);
   ///////////////////////////////////////////////////////////
 

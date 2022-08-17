@@ -50,11 +50,28 @@ const Home = ({allAnimes, setNotAtHome}) => {
                 getByGenre9()
                 getByGenre12()
                 getByGenre3()
+
+                return () => {
+                    getByLastAnime()
+                    getMostWatched()
+                    getByGenre13()
+                    getByGenre4()
+                    getByGenre8()
+                    getByGenre9()
+                    getByGenre12()
+                    getByGenre3()
+                  }
             }
+
+            
         }, [ready])
 
         useEffect(() => {
             getResume()
+
+            return () => {
+                getResume()
+              }
         }, [currentUserID, currentUser])
 
                 let getByGenre3 = async () => {

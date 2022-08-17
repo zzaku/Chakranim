@@ -26,6 +26,7 @@
     padding: 20px;
     height: 85%;
     width: 90%;
+    border-radius: 25px;
     background-color: rgb(22, 22, 22);
 }
 
@@ -42,24 +43,56 @@
     display: flex;
     height: auto;
     width: 100%;
+    justify-content: space-around;
     color: black;
     font-family: 'Courier New', Courier, monospace;
 }
 
-.info-user{
+.info-container{
     display: flex;
     height: 30%;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.bio-container{
+    display: flex;
+    height: 100%;
     width: 100%;
 }
 
-.info-bio{
+.title-container-bio{
     display: flex;
-    height: 30%;
-    width: 100%;
+    height: 100%;
+    width: 20%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.info-password{
+.content-bio{
     display: flex;
-    height: 30%;
+    height: 100%;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+}
+
+.save-changes{
+    display: flex;
+    height: auto;
     width: 100%;
+    justify-content: flex-end;
+}
+
+.title-modify-color-palette{
+    display: flex;
+    height: 100%;
+    width: auto;
+}
+
+.color-palette{
+    display: flex;
+    height: 100%;
+    width: auto;
 }

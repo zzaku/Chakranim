@@ -13,7 +13,7 @@ function Identification({ connected, setConnected, setNeedToConnect, wrapperRefL
   const location = useLocation();
   const pathLocation = location.pathname;
   const mobile = useMediaQuery("(max-width:968px)");
-console.log(!mobile && !register && pathLocation)
+
   return currentUserId ? (
     <Navigate to="/" />
   ) : (

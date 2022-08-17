@@ -1,5 +1,5 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth"
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateEmail } from "firebase/auth"
 import { db, auth } from "../Firebase/Firebase";
 import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc } from "firebase/firestore";
 
@@ -41,7 +41,15 @@ export const AuthProvider = ({children}) => {
 /**/
 /**/   const addInfosUser = async (infos) => {
 /**/         await addDoc(userCollectionRef, infos)
+/**/         getUser()
 /**/     }
+/**/
+/**/      const getUser = async () => {
+/**/               if(userInfosRef){
+/**/                  const data = await getDocs(userInfosRef);
+/**/                  setCurrentUser(data.docs.map(doc => ({...doc.data(), id: doc.id})))
+/**/               }
+/**/        }
 /**/
 /**/   const getPref = async () => {
 /**/          if(userPreferencesRef){
@@ -92,17 +100,24 @@ export const AuthProvider = ({children}) => {
 /**/          getResume()
 /**/     }
 /**/
+/**/   const setBio = async (data, idUser) => {
+/**/          const userSetBio = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", idUser)
+/**/          await updateDoc(userSetBio, data)
+/**/          getUser()
+/**/     }
+/**/
 /**/
 /**/    useEffect(() => {
-/**/        const getUser = async () => {
-/**/               if(userInfosRef){
-/**/                  const data = await getDocs(userInfosRef);
-/**/                  setCurrentUser(data.docs.map(doc => ({...doc.data(), id: doc.id})))
-/**/               }
-/**/        }
+/**/        
 /**/              getUser();
 /**/              getPref();
 /**/              getResume();
+/**/
+/**/              return () => {
+/**/                getUser();
+/**/                getPref();
+/**/                getResume();
+/**/             }
 /**/
 /**/    }, [currentUserID])
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,6 +141,17 @@ export const AuthProvider = ({children}) => {
 /**/          return fetchSignout
 /**/        }
 /**/
+/**/        const updateMail = async (email) => {
+/**/        const user = auth.currentUser;
+/**/        const displayName = user.displayName;
+            const mail = user.email;
+            const photoURL = user.photoURL;
+            const emailVerified = user.emailVerified;
+            const uid = user.uid;
+/**/         await updateEmail(auth.currentUser, email).then(res => res)
+getResume()
+/**/        }
+/**/
 /**/    useEffect(() => {
 /**/
 /**/         return onAuthStateChanged(auth, user => {
@@ -133,9 +159,21 @@ export const AuthProvider = ({children}) => {
 /**/                    setCurrentUserID(user)
 /**/                    getPref()
 /**/                    getResume()
+/**/
+/**/                    return () => {
+/**/                      setCurrentUserID(user)
+/**/                      getPref()
+/**/                      getResume()
+/**/                     }
 /**/                } else {
 /**/                     setCurrentUserID(null)
 /**/                     setCurrentUser(null)
+/**/
+/**/                     return () => {
+/**/                       setCurrentUserID(user)
+/**/                       getPref()
+/**/                       getResume()
+/**/                     }
 /**/                }
 /**/        })
 /**/
@@ -157,7 +195,9 @@ export const AuthProvider = ({children}) => {
         getPref,
         getResume,
         addResume,
-        setResume
+        setResume,
+        setBio,
+        updateMail,
     }
 
     return (
