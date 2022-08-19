@@ -27,7 +27,7 @@
     height: 95%;
 }
 
-.grid-container > div.MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-2.grid-list.css-y1eez5-MuiGrid-root{
+.grid-list{
     justify-content: center;
 }
 
@@ -184,7 +184,7 @@
         height: 100vh;
     }
 
-    .grid-container > div.MuiGrid-root.MuiGrid-container.MuiGrid-spacing-xs-2.grid-list.css-y1eez5-MuiGrid-root{
+    .grid-list{
         justify-content: flex-start;
     }
 
