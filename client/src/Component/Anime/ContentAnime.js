@@ -30,11 +30,8 @@ const ContentAnime = ({
   let withoutDoublon = [{}];
   const setEp = useContext(epContext);
   const openSearch = useContext(epContext);
+  const [addClass, setAddClass] = useState("")
   const hoverCardRef = useRef()
-  const hoverCard = () => {
-    console.log(hoverCardRef)
-    hoverCardRef.current.style.opacity = "1"
-  }
   let distributionTemp = anime.desc ? anime.desc.split("Acteur") : null;
   let description = anime.desc ? anime.desc.split("Acteur")[0] : null;
   let distribution = anime.desc
@@ -627,7 +624,6 @@ const ContentAnime = ({
                             }) +
                             openSearch.setSearch(false)
                           }
-                          onMouseOver={() => hoverCard()}
                           className="vod-cards card-shadow"
                           style={{
                             display: "flex",
@@ -637,11 +633,25 @@ const ContentAnime = ({
                             cursor: "pointer",
                           }}
                         >
+                          <div className="card-shadow-image">
                           <Overlay
                             image={anime.image}
                             episode={elem[0].episode}
                             saison={anime.saison}
-                          />
+                            />
+                          </div>
+                          <div className={`card-shadow-episode-${anime._id}`} style={{
+                            display: "flex",
+                            position: "absolute",
+                            top: "45%",
+                            left: "15%",
+                            height: "auto",
+                            width: "auto",
+                            fontSize: "14px",
+                            opacity: "0.7"
+                          }}>
+                            <h1>{anime.saison === "Film" ? null : elem[0].episode}</h1>
+                          </div>
                         </div>
                       </Link>
                     </div>

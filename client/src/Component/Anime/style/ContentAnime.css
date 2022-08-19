@@ -319,12 +319,24 @@
 
 .card-shadow:hover {
     box-shadow: 0 14px 28px rgba(255, 255, 255, 0.25), 0 10px 10px rgba(255, 255, 255, 0.22);
-    opacity: 1;
   }
   
 .card-shadow {
     box-shadow: 0 3px 6px rgba(255, 255, 255, 0.16), 0 3px 6px rgba(255, 255, 255, 0.23);
+    opacity: 1;
+}
+
+.card-shadow-image{
+    display: "flex";
+    height: "auto";
+    width: "auto";
+    border-radius: "15px";
+    cursor: "pointer";
     opacity: 0.5;
+}
+
+.card-shadow-image:hover{
+    opacity: 0.8;
 }
 
 @media screen and (max-width: 968px) {
