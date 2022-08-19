@@ -125,10 +125,12 @@ const Home = ({allAnimes, setNotAtHome}) => {
                 let getResume = async () => {
                     if(currentUser?.Resume){
                         let ids = currentUser?.Resume?.map(anime => anime.animeId);
-                        await fetch(`${process.env.REACT_APP_API_ANIME}/VOD/list/animes?animeId=${ids}`)
-                        .then(res => res.json())
-                        .then(data => setResume([{[genres[14]]: data}]))
-                    }
+                        if(ids){
+                            await fetch(`${process.env.REACT_APP_API_ANIME}/VOD/list/animes?animeId=${ids}`)
+                            .then(res => res.json())
+                            .then(data => setResume([{[genres[14]]: data}]))
+                        }
+                        }
                 }
 
         return (

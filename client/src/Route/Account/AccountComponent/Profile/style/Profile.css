@@ -1,98 +1,80 @@
-.profile-container{
+.avatar-container{
     display: flex;
-    height: 100%;
+    height: 10%;
     width: 100%;
-    flex-direction: column;
-}
-
-.bannière-container{
-    display: flex;
-    height: 30%;
-    width: 100%;
-    background-color: cadetblue;
-}
-
-.content-container{
-    display: flex;
-    height: 70%;
-    width: 100%;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    background-color: rgb(105, 50, 50);
 }
 
-.content{
+.content-avatar-container{
     display: flex;
-    padding: 20px;
-    height: 85%;
-    width: 90%;
-    border-radius: 25px;
-    background-color: rgb(22, 22, 22);
-}
-
-.paper-container{
-    display: flex;
-    height: 95%;
-    width: 98%;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-
-.paper-container-content{
-    display: flex;
-    height: auto;
-    width: 100%;
-    justify-content: space-around;
-    color: black;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-.info-container{
-    display: flex;
-    height: 30%;
-    width: 100%;
-    justify-content: space-around;
-}
-
-.bio-container{
-    display: flex;
-    height: 100%;
-    width: 100%;
-}
-
-.title-container-bio{
-    display: flex;
-    height: 100%;
-    width: 20%;
-    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    height: 156px;
+    width: 156px;
     justify-content: center;
     align-items: center;
+    margin-left: 5%;
+    border-radius: 100%;
+    border: 5px solid #1f2642;
+    cursor: pointer;
+}
+
+.add-avatar{
+    display: flex;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0.5;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    border-radius: 100%;
+}
+
+.input-file{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.avatar-image-profile-container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background-color: #949997;
+    border-radius: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.pseudo{
+    font-family: "jojo6";
+    font-size: 30px;
 }
 
 .content-bio{
     display: flex;
     height: 100%;
-    width: 80%;
+    width: 100%;
     justify-content: center;
     align-items: center;
 }
 
-.save-changes{
-    display: flex;
-    height: auto;
-    width: 100%;
-    justify-content: flex-end;
-}
-
-.title-modify-color-palette{
+.content-bio-container{
     display: flex;
     height: 100%;
-    width: auto;
+    width: 65%;
+    background: #1f2642;
+    justify-content: center;
+    align-items: center;
+    border: 0 solid black;
+    border-radius: 15px;
+    box-shadow: rgb(0 0 0 / 83%) 41px 50px 47px, rgb(0 0 0 / 83%) -11px -12px 30px, rgb(0 0 0 / 83%) 30px 22px 34px, rgb(0 0 0 / 83%) 20px 10px 57px, rgb(0 0 0 / 83%) 0px 0px 31px;
 }
 
-.color-palette{
-    display: flex;
-    height: 100%;
-    width: auto;
+textarea:focus-visible{
+    outline: none;
 }

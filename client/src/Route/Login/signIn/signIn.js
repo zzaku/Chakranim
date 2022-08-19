@@ -48,17 +48,20 @@ function Connexion({
             }, 1000);
           }
         })
-        await getPref()
         .catch((error) => {
+          console.log(error.message)
           setConnexion({ successConnexion: "" });
           const errorMessage = error.message;
           setError(
             errorMessage === "Firebase: Error (auth/user-not-found)."
               ? "Cette adresse mail n'est liée à aucun compte !"
-              : errorMessage === "Firebase: Error (auth/wrong-password)." &&
+              : errorMessage === "Firebase: Error (auth/wrong-password)." ?
                   "Adresse mail ou mot de passe incorrect !"
+                  : errorMessage === "Firebase: Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later. (auth/too-many-requests)." &&
+                  "Nombre de tentatives trop élevées, réessayer plus tard !"
           );
         });
+        await getPref()
     } catch {
       setError("Connexion échoué !");
     }

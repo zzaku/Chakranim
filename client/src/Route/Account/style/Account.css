@@ -4,6 +4,7 @@
     width: 100vw;
     align-items: flex-end;
     justify-content: center;
+    background: #161b30;
 }
 
 .dashboard{
@@ -11,12 +12,11 @@
     height: 90%;
     width: 100%;
     flex-direction: row;
-    background-color: rgb(39, 39, 39);
+    background-color: white;
 }
 
 .component-container{
     display: flex;
     height: 100%;
     width: 85%;
-    background-color: aquamarine;
 }

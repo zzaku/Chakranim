@@ -82,7 +82,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                                                                             sx={{ bgcolor: grey[500] }}
                                                                             alt="demy Sharp"
                                                                             src="/broken-image.jpg"
-                                                                          />*/}<AccountCircleIcon sx={{ color: grey[500] }} style={{borderRadius: "20px", height: "50px", width: "auto"}} fontSize="large" /></div>
+                                                                          />*/}<h1>Profile</h1></div>
                     </NavLink>
                     <div style={{height: "auto", marginTop: "5%"}}>
                       <div className={newFont ? "link-container" : ""}>

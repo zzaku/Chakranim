@@ -1,7 +1,9 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateEmail } from "firebase/auth"
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, deleteUser } from "firebase/auth"
 import { db, auth } from "../Firebase/Firebase";
 import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc } from "firebase/firestore";
+import { storage } from "../Firebase/Firebase";
+import { ref, uploadBytes, getStorage, getDownloadURL } from "firebase/storage";
 
 const AuthContext = createContext()
 
@@ -100,10 +102,35 @@ export const AuthProvider = ({children}) => {
 /**/          getResume()
 /**/     }
 /**/
-/**/   const setBio = async (data, idUser) => {
+/**/   const setInfo = async (data, idUser) => {
 /**/          const userSetBio = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", idUser)
 /**/          await updateDoc(userSetBio, data)
 /**/          getUser()
+/**/     }
+/**/
+/**/   const setDisplayInfosUser = async (data, idUser) => {
+/**/          const userSetDisplaying = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", idUser)
+/**/          await updateDoc(userSetDisplaying, data)
+/**/          getUser()
+/**/     }
+/**/
+/**/   const setAvatarPath = async (data, idUser) => {
+/**/          const userSetAvatarPath = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", idUser)
+/**/          await updateDoc(userSetAvatarPath, data)
+/**/          getUser()
+/**/     }
+/**/
+/**/   const uploadAvatar = async (avatar, path_avatar, uuid) => {   
+/**/          const avatarRef = ref(storage, `avatars/${path_avatar + uuid}`)
+/**/          await uploadBytes(avatarRef, avatar)
+/**/          getUser()
+/**/     }
+/**/
+/**/   const getBackImage = async (path_avatar1, path_avatar2, uuid) => {
+/**/          const storage = getStorage();
+/**/          const getUrl = getDownloadURL(ref(storage,`avatars/${path_avatar2 + uuid}`)).then(url => url)
+/**/          getUser()
+/**/          return getUrl
 /**/     }
 /**/
 /**/
@@ -142,14 +169,19 @@ export const AuthProvider = ({children}) => {
 /**/        }
 /**/
 /**/        const updateMail = async (email) => {
-/**/        const user = auth.currentUser;
-/**/        const displayName = user.displayName;
-            const mail = user.email;
-            const photoURL = user.photoURL;
-            const emailVerified = user.emailVerified;
-            const uid = user.uid;
-/**/         await updateEmail(auth.currentUser, email).then(res => res)
-getResume()
+/**/         await updateEmail(auth.currentUser, email)
+/**/        }
+/**/
+/**/        const updatePass = async (newPassword) => {
+/**/         await updatePassword(auth.currentUser, newPassword)
+/**/        }
+/**/
+/**/        const deleteAccount = async (idUser) => {
+/**/
+/**/          const deleteCurrentUser = doc(db, "Users", idUser)
+/**/
+/**/          await deleteUser(auth.currentUser)
+/**/          await deleteDoc(deleteCurrentUser);
 /**/        }
 /**/
 /**/    useEffect(() => {
@@ -196,8 +228,14 @@ getResume()
         getResume,
         addResume,
         setResume,
-        setBio,
+        setInfo,
         updateMail,
+        updatePass,
+        deleteAccount,
+        setDisplayInfosUser,
+        uploadAvatar,
+        getBackImage,
+        setAvatarPath,
     }
 
     return (

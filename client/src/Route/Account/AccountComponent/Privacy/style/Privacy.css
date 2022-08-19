@@ -1,0 +1,138 @@
+.profile-container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+}
+
+.bannière-container{
+    display: flex;
+    height: 30%;
+    width: 100%;
+}
+
+.content-container{
+    display: flex;
+    height: 70%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: grey;
+}
+
+.content{
+    display: flex;
+    padding: 20px;
+    height: 85%;
+    width: 90%;
+    border-radius: 25px;
+    background-color: rgb(22, 22, 22);
+}
+
+.paper-container{
+    display: flex;
+    height: 95%;
+    width: 98%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.paper-container-content{
+    display: flex;
+    height: auto;
+    width: 100%;
+    justify-content: space-around;
+    color: black;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.info-container{
+    display: flex;
+    height: 30%;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.bio-container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.title-container-bio{
+    display: flex;
+    height: 100%;
+    width: 20%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-bio{
+    display: flex;
+    height: 100%;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+}
+
+.save-changes{
+    display: flex;
+    height: auto;
+    width: 100%;
+    justify-content: flex-end;
+}
+
+.title-modify-color-palette{
+    display: flex;
+    height: 100%;
+    width: auto;
+    align-items: center;
+}
+
+.color-palette{
+    display: flex;
+    height: auto;
+    width: auto;
+}
+
+.custom-layout{
+    position: relative;
+}
+
+.custom-layout .react-colorful {
+    display: flex;
+    height: 100%;
+    width: 450px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #33333a;
+    box-shadow: 0 6px 12px #999;
+  }
+  
+  .custom-layout .react-colorful__saturation {
+    margin: 15px 0;
+    border-radius: 5px;
+    border-bottom: none;
+  }
+  
+  .custom-layout .react-colorful__hue {
+    order: -1;
+  }
+  
+  .custom-layout .react-colorful__hue,
+  .custom-layout .react-colorful__alpha {
+    height: 14px;
+    border-radius: 5px;
+  }
+  
+  .custom-layout .react-colorful__hue-pointer,
+  .custom-layout .react-colorful__alpha-pointer {
+    width: 20px;
+    height: 20px;
+  }
+
+  

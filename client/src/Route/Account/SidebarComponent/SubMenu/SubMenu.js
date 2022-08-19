@@ -38,14 +38,14 @@ const DropdownLink = styled.div`
   }
 `;
 
-const SubMenu = ({ item }) => {
+const SubMenu = ({ item, setNavSidebar }) => {
   const [subnav, setSubnav] = useState(false);
 
   const showSubnav = () => setSubnav(!subnav);
 
   return (
     <>
-      <SidebarLink onClick={() => (item.subNav ? showSubnav() : console.log(item.component))} >
+      <SidebarLink onClick={() => (item.subNav ? showSubnav() : setNavSidebar(item.component))} >
         <div>
           {item.icon}
           <SidebarLabel>{item.title}</SidebarLabel>
@@ -61,7 +61,7 @@ const SubMenu = ({ item }) => {
       {subnav &&
         item.subNav.map((item, index) => {
           return (
-            <DropdownLink key={index} onClick={() => console.log(item.component)}>
+            <DropdownLink key={index} onClick={() => setNavSidebar(item.component)}>
               {item.icon}
               <SidebarLabel>{item.title}</SidebarLabel>
             </DropdownLink>

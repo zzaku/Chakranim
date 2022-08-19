@@ -7,14 +7,21 @@ import * as RiIcons from 'react-icons/ri';
 export const SidebarData = [
   {
     title: 'Profile',
-    component: 'Profile',
+    component: 'profile',
+    icon: <AiIcons.AiFillHome />,
+    iconClosed: <RiIcons.RiArrowDownSFill />,
+    iconOpened: <RiIcons.RiArrowUpSFill />,
+  },
+  {
+    title: 'Confidentialité / Sécurité',
+    component: 'privacy-settings',
     icon: <AiIcons.AiFillHome />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
   },
   {
     title: 'Amis',
-    component: 'Amis',
+    component: 'friend',
     icon: <IoIcons.IoIosPaper />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
@@ -22,36 +29,36 @@ export const SidebarData = [
     subNav: [
       {
         title: "List d'amis",
-        component: "List d'amis",
+        component: "friend-list",
         icon: <IoIcons.IoIosPaper />,
         cName: 'sub-nav'
       },
       {
         title: "Demande d'amis",
-        component: "Demande d'amis",
+        component: "friend-request",
         icon: <IoIcons.IoIosPaper />,
         cName: 'sub-nav'
       },
       {
         title: 'Bloqué',
-        component: 'Bloqué',
+        component: 'bloqued',
         icon: <IoIcons.IoIosPaper />
       }
     ]
   },
   {
     title: 'Messages privés',
-    component: 'Messages privés',
+    component: 'private-message',
     icon: <FaIcons.FaCartPlus />
   },
   {
     title: 'Notification',
-    component: 'Notification',
+    component: 'notification',
     icon: <IoIcons.IoMdPeople />
   },
   {
     title: 'Réglage',
-    component: 'Réglage',
+    component: 'settings',
     icon: <FaIcons.FaEnvelopeOpenText />,
 
     iconClosed: <RiIcons.RiArrowDownSFill />,
@@ -60,19 +67,19 @@ export const SidebarData = [
     subNav: [
       {
         title: 'Voix',
-        component: 'Voix',
+        component: 'voice',
         icon: <IoIcons.IoIosPaper />
       },
       {
         title: 'Vidéo',
-        component: 'Vidéo',
+        component: 'video',
         icon: <IoIcons.IoIosPaper />
       }
     ]
   },
   {
     title: 'Support',
-    component: '/support',
+    component: 'support',
     icon: <IoIcons.IoMdHelpCircle />
   }
 ];

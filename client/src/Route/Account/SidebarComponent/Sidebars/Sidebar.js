@@ -40,18 +40,15 @@ const SidebarWrap = styled.div`
   width: 100%;
 `;
 
-const Sidebar = () => {
-  const [sidebar, setSidebar] = useState(true);
-
-  const showSidebar = () => setSidebar(!sidebar);
+const Sidebar = ({setNavSidebar}) => {
 
   return (
     <>
       <IconContext.Provider value={{ color: '#fff' }}>
-        <SidebarNav sidebar={sidebar}>
+        <SidebarNav sidebar={true}>
           <SidebarWrap>
             {SidebarData.map((item, index) => {
-              return <SubMenu item={item} key={index} />;
+              return <SubMenu item={item} key={index} setNavSidebar={setNavSidebar} />;
             })}
           </SidebarWrap>
         </SidebarNav>

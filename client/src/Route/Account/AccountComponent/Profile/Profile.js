@@ -1,430 +1,199 @@
-import "./style/Profile.css";
+import { useAuth } from "../../../../Component/Context/AuthContext";
 import banniere from "../assets/backgroundProfile.jpg";
 import { Box } from "@mui/system";
-import { Button, Paper, TextareaAutosize } from "@mui/material";
-import { useAuth } from "../../../../Component/Context/AuthContext";
-import TextField from "@mui/material/TextField";
-import { useEffect, useState } from "react";
-import { HexColorPicker } from "powerful-color-picker";
-import PaletteIcon from '@mui/icons-material/Palette';
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+import "./style/Profile.css";
+import { Button, IconButton, TextareaAutosize } from "@mui/material";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { useEffect, useRef, useState } from "react";
+import { uuidv4 } from "@firebase/util";
 
 const Profile = () => {
-  const { currentUser, setBio, updateMail, getResume } = useAuth();
-  const [user, setUser] = useState({
-    bio: "",
-    mail: "",
-    phone: "",
-    pseudo: "",
-  });
-  const [color, setColor] = useState("#aabbcc");
-  const [newColor, setNewColor] = useState(false);
-  const patternPhone = "^s*-?[0-9]{1,10}s*$";
+  const { currentUser, setDisplayInfosUser, uploadAvatar, getBackImage, setAvatarPath } = useAuth();
+  const [addAvatar, setAddAvatar] = useState(false)
+  const [imageUpload, setImageUpload] = useState(null)
+  const [avatar, setAvatar] = useState("")
+  const buttonIcon = useRef()
+
+  const setBackgroundIcon = () => {
+    buttonIcon.current.style.backgroundColor = "black"
+  } 
+console.log(imageUpload)
+  const uploadImage = async () => {
+    
+    const uuid = uuidv4()
+
+    if(imageUpload){
+      uploadAvatar(imageUpload, imageUpload.name, uuid)
+      .then(() => {
+        getBackImage(currentUser[0].avatar_path, imageUpload.name, uuid).then(res => {
+          setAvatar(res)
+          setAvatarPath({avatar: res}, currentUser[0].id)
+        })
+      })
+    }
+
+  }
 
   useEffect(() => {
-    setUser({...user, bio: currentUser?.[0]?.bio ? currentUser[0].bio : "" });
-  }, [currentUser]);
-
-  const setNewBio = () => {
-    if (user.mail) {
-      updateMail(user.mail).then(() =>
-        getResume().then(() => window.location.reload())
-      );
-    }
-    setBio(
-      user.mail && user.phone && user.pseudo
-        ? {
-            bio: user.bio,
-            mail: user.mail,
-            phone: user.phone,
-            pseudo: user.pseudo,
-          }
-        : !user.mail && user.phone && user.pseudo
-        ? { bio: user.bio, phone: user.phone, pseudo: user.pseudo }
-        : user.mail && !user.phone && user.pseudo
-        ? { bio: user.bio, mail: user.mail, pseudo: user.pseudo }
-        : user.mail && user.phone && !user.pseudo
-        ? { bio: user.bio, mail: user.mail, phone: user.phone }
-        : !user.mail && !user.phone && user.pseudo
-        ? { bio: user.bio, pseudo: user.pseudo }
-        : user.mail && !user.phone && !user.pseudo
-        ? { bio: user.bio, mail: user.mail }
-        : !user.mail && user.phone && !user.pseudo
-        ? { bio: user.bio, phone: user.phone }
-        : !user.mail && !user.phone && !user.pseudo && { bio: user.bio },
+    uploadImage()
+  }, [imageUpload])
+  
+  const setDisplayInfoUser = (mail, phone) => {
+    setDisplayInfosUser(
+      {
+        display: {
+          mail: currentUser?.[0]?.display?
+          (currentUser?.[0]?.display.mail? (mail
+              ? !currentUser[0].display.mail
+              : currentUser[0].display.mail)
+            : (mail
+            ? !currentUser[0].display.mail
+            : currentUser[0].display.mail))
+            :(mail ? mail : mail),
+          phone: currentUser?.[0]?.display?
+          (currentUser?.[0]?.display.phone? (phone
+              ? !currentUser[0].display.phone
+              : currentUser[0].display.phone)
+            : (phone
+            ? !currentUser[0].display.phone
+            : currentUser[0].display.phone))
+            :
+            (phone ? phone : phone)
+        },
+      },
       currentUser[0].id
     );
   };
-  console.log(user);
 
   return (
     <div className="profile-container">
       <div className="bannière-container">
         <img style={{ height: "100%", width: "100%" }} src={banniere} />
       </div>
-      <div className="content-container">
-        <div className="content">
+      <div
+        className="content-container"
+        style={{
+          backgroundColor: currentUser?.[0]?.theme
+            ? `rgba(${currentUser[0].theme.r}, ${currentUser[0].theme.g}, ${currentUser[0].theme.b}, ${currentUser[0].theme.a})`
+            : `rgba(80, 80, 80, 1)`,
+            flexDirection: "column"
+        }}
+      >
+        <div className="avatar-container">
+          <div className="content-avatar-container" onMouseOver={() => setAddAvatar(true)} onMouseOut={() => setAddAvatar(false)}>
+            {!avatar && !currentUser?.[0]?.avatar ? <div className="avatar-image-profile-container" style={{ fontSize: currentUser?.[0]?.avatar ? null : "40px", fontFamily: "jojo4" }}>
+              <h1>{currentUser?.[0]?.pseudo[0].toUpperCase()}</h1>
+            </div> 
+            :
+            <img style={{ height: "100%", width: "100%", borderRadius: "100%", background: "grey"}} src={avatar ? (avatar) : (currentUser?.[0]?.avatar ? currentUser[0].avatar : null)} />
+            }
+            {addAvatar && 
+              <div className="add-avatar">
+                <IconButton ref={buttonIcon} aria-label="upload picture" sx={{display: "flex", position: "relative", backgroundColor: "black", height: "100%", width: "100%", color:"white"}} onMouseOver={() => setBackgroundIcon()}>
+                  <input className="input-file" accept="image/*" multiple type="file" onChange={(e) =>  setImageUpload(e.target.files[0])} />
+                  <AddPhotoAlternateIcon sx={{ height: "25%", width: "25%" }} />
+                </IconButton>
+              </div>}
+          </div>
+        </div>
+        <div className="content" style={{ background: "transparent" }}>
           <Box
             sx={{
               width: "100%",
               height: "100%",
               display: "flex",
-              backgroundColor: "blue",
             }}
           >
-            <Paper
-              sx={{
-                display: "flex",
-                width: "100%",
-                height: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div className="paper-container">
-                <div
-                  className="info-container"
-                  style={{ alignItems: "center" }}
-                >
-                  <div className="paper-container-content">
-                    <h3>Nom d'utilisateur</h3>
-                    <TextField
-                      id="standard-basic"
-                      label={currentUser[0]?.pseudo}
-                      variant="filled"
-                      value={user.pseudo}
-                      onChange={(e) =>
-                        setUser({ ...user, pseudo: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="paper-container-content">
-                    <h3>Email</h3>
-                    <TextField
-                      id="standard-basic"
-                      label={currentUser[0]?.mail}
-                      variant="filled"
-                      value={user.mail}
-                      onChange={(e) =>
-                        setUser({
-                          ...user,
-                          mail: e.target.value.toLocaleLowerCase(),
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="paper-container-content">
-                    <h3>Numéro</h3>
-                    <TextField
-                      id="standard-basic"
-                      label={currentUser[0]?.phone}
-                      variant="filled"
-                      value={user.phone}
-                      onChange={(e) =>
-                        console.log(e.target.value.match(patternPhone)) +
-                        setUser({
-                          ...user,
-                          phone: e.target.value.match(patternPhone)
-                            ? e.target.value
-                            : user.phone,
-                        })
-                      }
-                    />
+            <div className="paper-container">
+              <div className="info-container" style={{ alignItems: "center" }}>
+                <div className="paper-container-content">
+                  <div className="pseudo">
+                    <h3>{currentUser?.[0]?.pseudo}</h3>
                   </div>
                 </div>
-                <div className="info-container">
-                  <div className="paper-container-content">
-                    <div className="bio-container">
-                      <div className="title-container-bio">
-                        <h3>Bio</h3>
-                      </div>
-                      <div className="content-bio">
+                <div className="paper-container-content">
+                  {currentUser?.[0]?.display?.mail ? (
+                    <div style={{ fontSize: "15px" }}>
+                      <h3>
+                        {currentUser[0].mail}{" "}
+                        <Button
+                          variant="outained"
+                          onClick={() => setDisplayInfoUser(true, false)}
+                        >
+                          <FaEyeSlash />
+                        </Button>
+                      </h3>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="outained"
+                      onClick={() => setDisplayInfoUser(true, false)}
+                    >
+                      <h4>
+                        Afficher votre mail <FaEye />
+                      </h4>
+                    </Button>
+                  )}
+                </div>
+                <div className="paper-container-content">
+                  {currentUser?.[0]?.display?.phone ? (
+                    <div style={{ fontSize: "17px" }}>
+                      <h4>
+                        {currentUser[0].phone}{" "}
+                        <Button
+                          variant="outained"
+                          onClick={() => setDisplayInfoUser(false, true)}
+                        >
+                          <FaEyeSlash />
+                        </Button>
+                      </h4>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="outained"
+                      onClick={() => setDisplayInfoUser(false, true)}
+                    >
+                      <h4>
+                        Afficher votre numéo de téléphone <FaEye />
+                      </h4>
+                    </Button>
+                  )}
+                </div>
+              </div>
+              <div className="info-container" style={{ height: "37%" }}>
+                <div className="paper-container-content">
+                  <div className="bio-container">
+                    <div className="content-bio">
+                      <div className="content-bio-container">
                         <TextareaAutosize
                           maxRows={6}
                           aria-label="maximum height"
+                          value={currentUser?.[0]?.bio ? currentUser[0].bio : "Ajouter une description via l'onglet Confidentialité et Sécurité"}
                           style={{
-                            width: "80%",
-                            height: "100%",
-                            border: "2px solid black",
-                            borderRadius: "15px",
+                            resize: "none",
+                            width: "50%",
+                            height: "50%",
+                            border: "0",
                             fontSize: "15px",
                             padding: "5px",
+                            background: "transparent",
+                            color: "white",
+                            justifyContent: "center",
+                            alignItems: "center",
                           }}
-                          value={user.bio}
-                          onChange={(e) =>
-                            setUser({ ...user, bio: e.target.value })
-                          }
-                          maxLength="244"
                         />
                       </div>
                     </div>
                   </div>
-                  <div className="paper-container-content" style={{flexDirection: newColor ? "row" : "column"}}>
-                    <div className="title-modify-color-palette">
-                      <h3>Modifier le thème</h3>
-                    </div>
-                    <div className="color-palette">
-                      {newColor ? <HexColorPicker color={color} onChange={setColor} /> : <Button onClick={() => setNewColor(!newColor)}><PaletteIcon /></Button>}
-                    </div>
-                  </div>
                 </div>
-                <div
-                  className="info-container"
-                  style={{ alignItems: "center" }}
-                >
-                  <div className="paper-container-content">
-                    <h3>Changer de mot de passe</h3>
-                  </div>
-                  <div className="paper-container-content">
-                    <h3>Supprimer le compte</h3>
-                  </div>
-                </div>
-                {user.mail.length === 0 &&
-                user.bio === currentUser?.[0]?.bio &&
-                user.pseudo.length === 0 &&
-                user.phone.length === 0 ? null : user.mail.length === 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" onClick={() => setNewBio()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length === 0 ? (
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        onClick={() => setNewBio()}
-                        type="submit"
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length === 0 ? (
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" onClick={() => setNewBio()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        onClick={() => setNewBio()}
-                        type="submit"
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" onClick={() => setNewBio()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length === 0 ? (
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        onClick={() => setNewBio()}
-                        type="submit"
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        onClick={() => setNewBio()}
-                        type="submit"
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" onClick={() => setNewBio()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length === 0 ? (
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        onClick={() => setNewBio()}
-                        type="submit"
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length === 0 ? (
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" onClick={() => setNewBio()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        onClick={() => setNewBio()}
-                        type="submit"
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" onClick={() => setNewBio()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length === 0 ? (
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        onClick={() => setNewBio()}
-                        type="submit"
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        onClick={() => setNewBio()}
-                        type="submit"
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : (
-                  user.mail.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length === 0 && (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        onClick={() => setNewBio()}
-                        type="submit"
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  )
-                )}
               </div>
-            </Paper>
+              <div className="info-container" style={{ alignItems: "center" }}>
+                <div className="paper-container-content"></div>
+                <div className="paper-container-content"></div>
+              </div>
+            </div>
           </Box>
         </div>
       </div>

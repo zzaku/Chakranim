@@ -16,6 +16,7 @@ import "./style/List.css";
 import { epContext } from "../../../App";
 import { useAuth } from "../../Context/AuthContext";
 import { Link } from "react-router-dom";
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 
 const List = ({ genre, genres, setNotAtHome }) => {
   let withoutDoublon = [{}];
@@ -335,11 +336,11 @@ const List = ({ genre, genres, setNotAtHome }) => {
                         .replaceAll(",", "")
                         .replaceAll("#", "")}/Resume`}
                       style={{ textDecoration: "none" }}
+                      key={genre._id + i}
                     >
                       {" "}
                       <div
                         ref={cardContainerRef}
-                        key={genre._id + i}
                         className="card-container"
                         style={{ cursor: "pointer" }}
                         onClick={() =>
@@ -359,7 +360,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                         {genre.newAnime && (
                           <div
                             className="new-anime-mobile"
-                            style={{ display: mobile ? "" : "none" }}
+                            style={{ display: "none" }}
                           >
                             <h2>Nouveauté</h2>
                           </div>
@@ -367,7 +368,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                         {genre.nouveau_Episode && (
                           <div
                             className="new-ep-mobile"
-                            style={{ display: mobile ? "" : "none" }}
+                            style={{ display: "none" }}
                           >
                             <h2>Nouveaux episodes</h2>
                           </div>
@@ -380,7 +381,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                         >
                           <div
                             style={{
-                              position: "absolute",
+                              position: "relative",
                               height: "100%",
                               width: mobile ? "100%" : "210px",
                               boxShadow: "rgb(0 0 0) 0px 20px 30px -10px",
@@ -390,7 +391,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                             {genre.newAnime && (
                               <div
                                 className="new-anime"
-                                style={{ display: mobile ? "none" : "" }}
+                                style={{ display: "none" }}
                               >
                                 <h2>Nouveauté</h2>
                               </div>
@@ -398,7 +399,7 @@ const List = ({ genre, genres, setNotAtHome }) => {
                             {genre.nouveau_Episode && (
                               <div
                                 className="new-ep"
-                                style={{ display: mobile ? "none" : "" }}
+                                style={{ display: "none" }}
                               >
                                 <h2>Nouveaux episodes</h2>
                               </div>
@@ -417,6 +418,9 @@ const List = ({ genre, genres, setNotAtHome }) => {
                               }}
                               src={genre.image && genre.image}
                             />
+                            <div style={{position: "absolute", display: "flex", borderRadius: "25px", zIndex: "100", top: "0", background: "black", opacity: "0.6", height: "100%", width: "100%", alignItems: "center", justifyContent: "center"}}>
+                              <PlayCircleIcon sx={{height: "70%", width: "70%", color: "white"}}/>
+                            </div>
                           </div>
                         </ParallaxHover>
                       </div>

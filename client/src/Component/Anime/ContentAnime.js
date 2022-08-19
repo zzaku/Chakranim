@@ -30,6 +30,11 @@ const ContentAnime = ({
   let withoutDoublon = [{}];
   const setEp = useContext(epContext);
   const openSearch = useContext(epContext);
+  const hoverCardRef = useRef()
+  const hoverCard = () => {
+    console.log(hoverCardRef)
+    hoverCardRef.current.style.opacity = "1"
+  }
   let distributionTemp = anime.desc ? anime.desc.split("Acteur") : null;
   let description = anime.desc ? anime.desc.split("Acteur")[0] : null;
   let distribution = anime.desc
@@ -622,6 +627,7 @@ const ContentAnime = ({
                             }) +
                             openSearch.setSearch(false)
                           }
+                          onMouseOver={() => hoverCard()}
                           className="vod-cards card-shadow"
                           style={{
                             display: "flex",
