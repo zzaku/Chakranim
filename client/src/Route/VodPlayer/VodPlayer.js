@@ -78,10 +78,10 @@ const VodPlayer = ({}) => {
 
     const setModCinema = () => {
         if(!checked){
-            iframeContainer.current.style.width = "65.3%";
-            iframeContainer.current.style.height = "70.6%";
+            iframeContainer.current.style.width = "100%";
+            iframeContainer.current.style.height = "100%";
             iframeContainer.current.style.boxShadow = "1px 5px 70px white";
-            backgroundRef.current.style.opacity = "0.2";
+            backgroundRef.current.style.opacity = "0.1";
             modeCineRef.current.style.position = "absolute";
             modeCineRef.current.style.right = "10%";
             modeCineRef.current.style.zIndex = "2000";
@@ -95,7 +95,7 @@ const VodPlayer = ({}) => {
             iframeContainer.current.style.boxShadow = "";
             modeCineRef.current.style.position = "";
             modeCineRef.current.style.right = "10%";
-            modeCineRef.current.style.zIndex = "0";
+            modeCineRef.current.style.zIndex = "2000";
             modeCineRef.current.style.top = "0";
             otherEpisodeRef.current.style.height = "auto";
             otherEpisodeRef.current.style.marginTop = "0";
@@ -159,24 +159,36 @@ const VodPlayer = ({}) => {
             <div className='vod'>
                 <div className='watch'>
                     <div className='watch-container'>
-                        <div className='title'>
+                        <div className='title' style={{display: checked && "none", opacity: checked ? "0.5" : "1"}}>
                             <h1>{!ep.current_episode ? null : ep.current_episode[0] && ep.name.split("Saison")[0] + " " + ep.current_episode[0][0].episode}</h1>
                         </div>
-                        <div className='iframe-container' ref={iframeContainer}>
-                            {!checked ? next ? <iframe title='VOD' sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allowFullScreen className='iframe' src={!ep.current_episode ? null : ep.current_episode[0] && ep.current_episode[0][0].lien}></iframe> : <iframe allowFullScreen className='iframe' title='VOD' src={lecteur[0] && lecteur[0][0].lien}></iframe> : null}
-                        </div>
+                        <div style={{display: "flex", height: "100%", width: checked ? "88.9%" : "100%", justifyContent: "center"}}>
                             <Backdrop
-                            style={{width: "100%", height: "100%"}}
-                                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 100 }}
-                                open={checked}
+                            style={{display: "flex", position: "relative", alignItems: "center", justifyContent: "center", width: "100%", height: "100%"}}
+                                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + -100 }}
+                                open={true}
                             >
                                 <div className='iframe-container' ref={iframeContainer}>
                                     {next ? <iframe className='iframe' title='VOD' sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allowFullScreen src={!ep.current_episode ? null : ep.current_episode[0][0].lien}></iframe> : <iframe title='VOD' allowFullScreen className='iframe' src={lecteur[0][0].lien}></iframe>}
                                 </div>
                             </Backdrop>
-                        <div ref={movieBtnRef} className='watch-content'>
+                        </div>
+                        {
+                            checked && 
+                            <div ref={modeCineRef} className='cinema-mode-active'>
+                            <FormControlLabel
+                                style={{color: "white", backgroundColor: "transparent", borderRadius: "12px", paddingLeft: "10px", border: `2px ${cyan[400]} solid`}}
+                                value="mode cinéma"
+                                control={<Checkbox checked={checked} />}
+                                label="mode cinéma"
+                                labelPlacement="start"
+                                onChange={() => setChecked(checked === true ? false : true) + setModCinema()}
+                                />
+                            </div>
+                        }
+                        <div ref={movieBtnRef} className='watch-content' style={{display: checked && "none", opacity: checked ? "0.5" : "1"}}>
                             <div className='lecteur-container'>
-                                <h2>Lecteurs</h2>
+                                <h2>Choissez le lecteur de votre choix</h2>
                                 <Box
                                 sx={{
                                     display: 'flex',
@@ -213,7 +225,7 @@ const VodPlayer = ({}) => {
                             <FormControlLabel
                                 style={{color: "white", backgroundColor: "transparent", borderRadius: "12px", paddingLeft: "10px", border: `2px ${cyan[400]} solid`}}
                                 value="mode cinéma"
-                                control={<Checkbox />}
+                                control={<Checkbox checked={!checked} />}
                                 label="mode cinéma"
                                 labelPlacement="start"
                                 onChange={() => setChecked(checked === true ? false : true) + setModCinema()}

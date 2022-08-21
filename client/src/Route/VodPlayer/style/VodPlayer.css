@@ -34,8 +34,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-   
-    
 }
 
 h1, h2 {
@@ -82,6 +80,16 @@ h1, h2 {
     justify-content: space-around;
     align-items: center;
     width: auto;
+}
+
+.cinema-mode-active{
+    display: flex;
+    position: absolute;
+    justify-content: space-around;
+    align-items: center;
+    width: auto;
+    z-index: 10000;
+    bottom: 0;
 }
 
 .buttontogotootherep{

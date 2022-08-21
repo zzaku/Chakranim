@@ -1,9 +1,10 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, deleteUser } from "firebase/auth"
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth"
 import { db, auth } from "../Firebase/Firebase";
-import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc, } from "firebase/firestore";
 import { storage } from "../Firebase/Firebase";
 import { ref, uploadBytes, getStorage, getDownloadURL } from "firebase/storage";
+import { async } from "@firebase/util";
 
 const AuthContext = createContext()
 
@@ -179,9 +180,33 @@ export const AuthProvider = ({children}) => {
 /**/        const deleteAccount = async (idUser) => {
 /**/
 /**/          const deleteCurrentUser = doc(db, "Users", idUser)
+/**/          const deleteCurrentUserPref = collection(db, "Users", idUser, "Preferences")
+/**/          const deleteCurrentUserResume = collection(db, "Users", idUser, "Resume")
 /**/
 /**/          await deleteUser(auth.currentUser)
-/**/          await deleteDoc(deleteCurrentUser);
+/**/
+/**/          await onSnapshot(deleteCurrentUserPref, async (elem) => {
+/**/               elem.docs.map( async (document) => {
+/**/                  const deleteUserPreferences = doc(db, "Users", idUser, "Preferences", document._key.path.segments.at(-1))
+/**/                  await deleteDoc(deleteUserPreferences);
+/**/               })
+/**/           })
+/**/
+/**/          await onSnapshot(deleteCurrentUserResume, async (elem) => {
+/**/               elem.docs.map( async (document) => {
+/**/                  const deleteCurrentResume = doc(db, "Users", idUser, "Resume", document._key.path.segments.at(-1))
+/**/                  await deleteDoc(deleteCurrentResume);
+/**/               })
+/**/           })
+/**/
+/**/          await deleteDoc(deleteCurrentUser)
+/**/        }
+/**/
+/**/        const reauthenticateAccount = async (userProvidedPassword) => {
+/**/
+/**/          const credential = EmailAuthProvider.credential(auth.currentUser.email, userProvidedPassword)
+/**/
+/**/          await reauthenticateWithCredential(auth.currentUser, credential)
 /**/        }
 /**/
 /**/    useEffect(() => {
@@ -236,6 +261,7 @@ export const AuthProvider = ({children}) => {
         uploadAvatar,
         getBackImage,
         setAvatarPath,
+        reauthenticateAccount,
     }
 
     return (

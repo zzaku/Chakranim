@@ -8,6 +8,7 @@ import { Button, IconButton, TextareaAutosize } from "@mui/material";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useEffect, useRef, useState } from "react";
 import { uuidv4 } from "@firebase/util";
+import ImageCropper from "../../../../Component/ImageCropper/ImageCropper";
 
 const Profile = () => {
   const { currentUser, setDisplayInfosUser, uploadAvatar, getBackImage, setAvatarPath } = useAuth();
@@ -19,7 +20,7 @@ const Profile = () => {
   const setBackgroundIcon = () => {
     buttonIcon.current.style.backgroundColor = "black"
   } 
-console.log(imageUpload)
+
   const uploadImage = async () => {
     
     const uuid = uuidv4()
@@ -82,12 +83,12 @@ console.log(imageUpload)
         }}
       >
         <div className="avatar-container">
-          <div className="content-avatar-container" onMouseOver={() => setAddAvatar(true)} onMouseOut={() => setAddAvatar(false)}>
+          <div className="content-avatar-container" onMouseOver={() => setAddAvatar(false)} onMouseOut={() => setAddAvatar(false)}>
             {!avatar && !currentUser?.[0]?.avatar ? <div className="avatar-image-profile-container" style={{ fontSize: currentUser?.[0]?.avatar ? null : "40px", fontFamily: "jojo4" }}>
               <h1>{currentUser?.[0]?.pseudo[0].toUpperCase()}</h1>
             </div> 
             :
-            <img style={{ height: "100%", width: "100%", borderRadius: "100%", background: "grey"}} src={avatar ? (avatar) : (currentUser?.[0]?.avatar ? currentUser[0].avatar : null)} />
+            <ImageCropper style={{ height: "100%", width: "100%", borderRadius: "100%", background: "grey"}} imageUpload={imageUpload} imageSRC={banniere} />
             }
             {addAvatar && 
               <div className="add-avatar">

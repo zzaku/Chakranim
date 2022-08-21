@@ -13,7 +13,7 @@ import PublishedWithChangesIcon from "@mui/icons-material/PublishedWithChanges";
 import ConfirmDialog from "../../../../Component/ConfirmDialog/ConfirmDialog";
 
 const Privacy = () => {
-  const { currentUser, setInfo, updateMail, updatePass, getResume } =
+  const { currentUser, setInfo, updateMail, updatePass, getResume, reauthenticateAccount } =
     useAuth();
   const [user, setUser] = useState({
     bio: "",
@@ -22,11 +22,16 @@ const Privacy = () => {
     phone: "",
     pseudo: "",
   });
+  const [currentPass, setCurrentPass] = useState({password: "", password_confirmed: ""})
+  console.log(currentPass)
   const [color, setColor] = useState(currentUser?.[0]?.theme? {r: currentUser[0].theme.r, g: currentUser[0].theme.g, b: currentUser[0].theme.b, a: currentUser[0].theme.a} : {r: 80, g: 80, b: 80, a: 1});
   const [newColor, setNewColor] = useState(false);
   const [themeChecked, setThemeChecked] = useState(false);
   const [passwordUpdated, setPasswordUpdated] = useState(false);
   const [open, setOpen] = useState(false);
+  const [needToReauthentificate, setNeedToReauthentificate] = useState(false);
+  const [needToReauthentificateEmail, setNeedToReauthentificateEmail] = useState(false);
+  const [errMessage, setErrMessage] = useState("");
   const popover = useRef();
   const close = useCallback(() => setNewColor(false), []);
   useClickOutside(popover, close);
@@ -39,30 +44,127 @@ const Privacy = () => {
 
   const setNewInfo = async () => {
     if (user.mail && !user.password) {
-      updateMail(user.mail).then(() =>
-        getResume().then(() => window.location.reload())
-      );
+      updateMail(user.mail).then(() => {
+        setInfo(
+          user.mail && user.phone && user.pseudo
+            ? {
+                bio: user.bio,
+                mail: user.mail,
+                phone: user.phone,
+                pseudo: user.pseudo,
+              }
+            : !user.mail && user.phone && user.pseudo
+            ? { bio: user.bio, phone: user.phone, pseudo: user.pseudo }
+            : user.mail && !user.phone && user.pseudo
+            ? { bio: user.bio, mail: user.mail, pseudo: user.pseudo }
+            : user.mail && user.phone && !user.pseudo
+            ? { bio: user.bio, mail: user.mail, phone: user.phone }
+            : !user.mail && !user.phone && user.pseudo
+            ? { bio: user.bio, pseudo: user.pseudo }
+            : user.mail && !user.phone && !user.pseudo
+            ? { bio: user.bio, mail: user.mail }
+            : !user.mail && user.phone && !user.pseudo
+            ? { bio: user.bio, phone: user.phone }
+            : !user.mail && !user.phone && !user.pseudo && { bio: user.bio },
+          currentUser[0].id
+        ).then(() => {
+          getResume().then(() => window.location.reload())
+          setUser({
+            bio: currentUser[0].bio,
+            mail: "",
+            password: "",
+            phone: "",
+            pseudo: "",
+          })
+        })
+      })
+      .catch((err) => {
+        const errCode = err.code
+        if(errCode === "auth/requires-recent-login"){
+          setNeedToReauthentificateEmail(true)
+        } else if (errCode === "auth/email-already-in-use"){
+          setErrMessage("Adresse mail déja utilisé!")
+        }
+      })
     } else if(!user.mail && user.password) {
       await updatePass(user.password).then(() => {
-        setUser({
-          ...user,
+        setInfo(
+          user.mail && user.phone && user.pseudo
+            ? {
+                bio: user.bio,
+                mail: user.mail,
+                phone: user.phone,
+                pseudo: user.pseudo,
+              }
+            : !user.mail && user.phone && user.pseudo
+            ? { bio: user.bio, phone: user.phone, pseudo: user.pseudo }
+            : user.mail && !user.phone && user.pseudo
+            ? { bio: user.bio, mail: user.mail, pseudo: user.pseudo }
+            : user.mail && user.phone && !user.pseudo
+            ? { bio: user.bio, mail: user.mail, phone: user.phone }
+            : !user.mail && !user.phone && user.pseudo
+            ? { bio: user.bio, pseudo: user.pseudo }
+            : user.mail && !user.phone && !user.pseudo
+            ? { bio: user.bio, mail: user.mail }
+            : !user.mail && user.phone && !user.pseudo
+            ? { bio: user.bio, phone: user.phone }
+            : !user.mail && !user.phone && !user.pseudo && { bio: user.bio },
+          currentUser[0].id
+        ).then(() => setUser({
+          bio: currentUser[0].bio,
           mail: "",
           password: "",
           phone: "",
           pseudo: "",
-        });
+        }));
         setPasswordUpdated(true)
         setTimeout(() => {
           setPasswordUpdated(false)
         }, 1000);
+      }).catch((err) => {
+        const oldSessionError = err.code
+        if(oldSessionError === "auth/requires-recent-login"){
+          setNeedToReauthentificate(true)
+        } 
       })
       
     } else if(user.mail && user.password) {
       updatePass(user.password)
       .then(() => {
-        updateMail(user.mail).then(() =>
-          getResume().then(() => window.location.reload())
-        );
+        updateMail(user.mail).then(() => {
+          setInfo(
+            user.mail && user.phone && user.pseudo
+              ? {
+                  bio: user.bio,
+                  mail: user.mail,
+                  phone: user.phone,
+                  pseudo: user.pseudo,
+                }
+              : !user.mail && user.phone && user.pseudo
+              ? { bio: user.bio, phone: user.phone, pseudo: user.pseudo }
+              : user.mail && !user.phone && user.pseudo
+              ? { bio: user.bio, mail: user.mail, pseudo: user.pseudo }
+              : user.mail && user.phone && !user.pseudo
+              ? { bio: user.bio, mail: user.mail, phone: user.phone }
+              : !user.mail && !user.phone && user.pseudo
+              ? { bio: user.bio, pseudo: user.pseudo }
+              : user.mail && !user.phone && !user.pseudo
+              ? { bio: user.bio, mail: user.mail }
+              : !user.mail && user.phone && !user.pseudo
+              ? { bio: user.bio, phone: user.phone }
+              : !user.mail && !user.phone && !user.pseudo && { bio: user.bio },
+            currentUser[0].id
+          ).then(() => {
+            getResume().then(() => window.location.reload())
+            setUser({
+              bio: currentUser[0].bio,
+              mail: "",
+              password: "",
+              phone: "",
+              pseudo: "",
+            })
+          });
+        });
         setPasswordUpdated(true)
         setTimeout(() => {
           setPasswordUpdated(false)
@@ -74,11 +176,18 @@ const Privacy = () => {
           phone: "",
           pseudo: "",
         });
-      });
+      })
+      .catch((err) => {
+        const errCode = err.code
+        if (errCode === "auth/email-already-in-use"){
+          setErrMessage("Adresse mail déja utilisé!")
+        } else if(errCode === "auth/requires-recent-login"){
+          setNeedToReauthentificate(true)
+        } 
+      })
     } 
 
-    if(user.mail || user.phone || user.pseudo || user.bio){
-
+    if(!user.mail && !user.password){
       setInfo(
         user.mail && user.phone && user.pseudo
           ? {
@@ -110,6 +219,133 @@ const Privacy = () => {
       }));
     }
   };
+
+  const reauthetificateUser = (password) => {
+    reauthenticateAccount(password)
+    .then(() => {
+      setNeedToReauthentificate(false)
+      setNeedToReauthentificateEmail(false)
+      if (user.mail && !user.password) {
+        updateMail(user.mail).then(() => {
+
+          setInfo(
+            user.mail && user.phone && user.pseudo
+              ? {
+                  bio: user.bio,
+                  mail: user.mail,
+                  phone: user.phone,
+                  pseudo: user.pseudo,
+                }
+              : !user.mail && user.phone && user.pseudo
+              ? { bio: user.bio, phone: user.phone, pseudo: user.pseudo }
+              : user.mail && !user.phone && user.pseudo
+              ? { bio: user.bio, mail: user.mail, pseudo: user.pseudo }
+              : user.mail && user.phone && !user.pseudo
+              ? { bio: user.bio, mail: user.mail, phone: user.phone }
+              : !user.mail && !user.phone && user.pseudo
+              ? { bio: user.bio, pseudo: user.pseudo }
+              : user.mail && !user.phone && !user.pseudo
+              ? { bio: user.bio, mail: user.mail }
+              : !user.mail && user.phone && !user.pseudo
+              ? { bio: user.bio, phone: user.phone }
+              : !user.mail && !user.phone && !user.pseudo && { bio: user.bio },
+            currentUser[0].id
+          ).then(() => {
+            getResume().then(() => window.location.reload())
+            setUser({
+              bio: currentUser[0].bio,
+              mail: "",
+              password: "",
+              phone: "",
+              pseudo: "",
+            })
+          })
+        })
+        .catch(err => {
+          const errCode = err.code
+          if(errCode === "auth/email-already-in-use"){
+            setErrMessage("Adresse mail déja utilisé!")
+          }
+        })
+      } else if(!user.mail && user.password) {
+      updatePass(user.password).then(() => {
+        setUser({
+          ...user,
+          mail: "",
+          password: "",
+          phone: "",
+          pseudo: "",
+        });
+        setPasswordUpdated(true)
+        setTimeout(() => {
+          setPasswordUpdated(false)
+        }, 1000);
+        })
+      } else if(user.mail && user.password) {
+        updatePass(user.password)
+      .then(() => {
+        updateMail(user.mail).then(() => {
+          setInfo(
+            user.mail && user.phone && user.pseudo
+              ? {
+                  bio: user.bio,
+                  mail: user.mail,
+                  phone: user.phone,
+                  pseudo: user.pseudo,
+                }
+              : !user.mail && user.phone && user.pseudo
+              ? { bio: user.bio, phone: user.phone, pseudo: user.pseudo }
+              : user.mail && !user.phone && user.pseudo
+              ? { bio: user.bio, mail: user.mail, pseudo: user.pseudo }
+              : user.mail && user.phone && !user.pseudo
+              ? { bio: user.bio, mail: user.mail, phone: user.phone }
+              : !user.mail && !user.phone && user.pseudo
+              ? { bio: user.bio, pseudo: user.pseudo }
+              : user.mail && !user.phone && !user.pseudo
+              ? { bio: user.bio, mail: user.mail }
+              : !user.mail && user.phone && !user.pseudo
+              ? { bio: user.bio, phone: user.phone }
+              : !user.mail && !user.phone && !user.pseudo && { bio: user.bio },
+            currentUser[0].id
+          ).then(() => {
+            getResume().then(() => window.location.reload())
+            setUser({
+              bio: currentUser[0].bio,
+              mail: "",
+              password: "",
+              phone: "",
+              pseudo: "",
+            })
+          });
+        })
+        .catch(err => {
+          const errCode = err.code
+            if(errCode === "auth/email-already-in-use"){
+              setErrMessage("Adresse mail déja utilisé!")
+            }
+        })
+        setPasswordUpdated(true)
+        setTimeout(() => {
+          setPasswordUpdated(false)
+        }, 1000);
+        setUser({
+          ...user,
+          mail: "",
+          password: "",
+          phone: "",
+          pseudo: "",
+        });
+      });
+      }
+    })
+    .catch(err => {
+      const errCode = err.code
+      if(errCode === "auth/wrong-password"){
+        setErrMessage("Mot de pass incorrect")
+        setCurrentPass({password: "", password_confirmed: ""})
+      }
+    })
+  }
 
   const setNewTheme = () => {
     setThemeChecked(true);
@@ -156,7 +392,7 @@ const Privacy = () => {
                 height: "100%",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: newColor ? "rgba(80, 80, 80, 1)" : "#ababab",
+                backgroundColor: open || newColor ? "rgba(80, 80, 80, 1)" : "#ababab",
               }}
             >
               <div className="paper-container">
@@ -186,7 +422,53 @@ const Privacy = () => {
                   </div>
                   <div className="paper-container-content">
                     <h3>Email</h3>
+                    {needToReauthentificateEmail ? 
+                    <>
+                    {errMessage && <Alert variant="outlined" severity="info">{errMessage}</Alert>}
                     <TextField
+                      id="password"
+                      label={"mot de passe actuel"}
+                      variant="filled"
+                      type={"password"}
+                      inputProps={{
+                        autoComplete: 'new-password',
+                        form: {
+                          autocomplete: 'off',
+                        },
+                      }}
+                      value={currentPass.password}
+                      onChange={(e) =>
+                        setCurrentPass({
+                          ...currentPass,
+                          password: e.target.value,
+                        })
+                      }
+                    />
+                    <TextField
+                      id="password2"
+                      label={"confirmation du mot de passe actuel"}
+                      variant="filled"
+                      type={"password"}
+                      inputProps={{
+                        autoComplete: 'new-password',
+                        form: {
+                          autocomplete: 'off',
+                        },
+                      }}
+                      value={currentPass.password_confirmed}
+                      onChange={(e) =>
+                        setCurrentPass({
+                          ...currentPass,
+                          password_confirmed: e.target.value,
+                        })
+                      }
+                    />
+                    <Button variant="contained" disabled={currentPass.password.length >= 8 && currentPass.password === currentPass.password_confirmed ? false : true} onClick={() => reauthetificateUser(currentPass.password)} >Modifier le mot de passe</Button>
+                    </>
+                    :
+                    <>
+                    {errMessage && <Alert variant="outlined" severity="info">{errMessage}</Alert>}
+                      <TextField
                       id="mail"
                       label={currentUser[0]?.mail}
                       variant="filled"
@@ -197,7 +479,7 @@ const Privacy = () => {
                           mail: e.target.value.toLocaleLowerCase(),
                         })
                       }
-                    />
+                    /></>}
                   </div>
                   <div className="paper-container-content">
                     <h3>Numéro</h3>
@@ -292,7 +574,7 @@ const Privacy = () => {
                           justifyContent: "space-around",
                           color: "black",
                           }}>
-                          <Button variant="contained" onClick={() => setNewColor(!newColor)}>
+                          <Button variant="contained" disabled={open} onClick={() => setNewColor(!newColor)}>
                             <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}><h3>Modifier le thème</h3><PaletteIcon /></div>
                           </Button>
                         </div>
@@ -304,10 +586,54 @@ const Privacy = () => {
                   className="info-container"
                   style={{ alignItems: "center" }}
                 >
-                  <div className="paper-container-content">
-                    <div><h3>Changer de mot de passe</h3></div>
+                  <div className="paper-container-content" style={{ height: "70%"}}>
+                    <div style={{ display: "flex", alignItems: "center" }}><h3>Changer de mot de passe</h3></div>
                     <div style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start"}}>
+                    {needToReauthentificate ?
+                    <>
+                    {errMessage && <Alert variant="outlined" severity="info">{errMessage}</Alert>}
                     <TextField
+                      id="password"
+                      label={"mot de passe actuel"}
+                      variant="filled"
+                      type={"password"}
+                      inputProps={{
+                        autoComplete: 'new-password',
+                        form: {
+                          autocomplete: 'off',
+                        },
+                      }}
+                      value={currentPass.password}
+                      onChange={(e) =>
+                        setCurrentPass({
+                          ...currentPass,
+                          password: e.target.value,
+                        })
+                      }
+                    />
+                    <TextField
+                      id="password2"
+                      label={"confirmation du mot de passe actuel"}
+                      variant="filled"
+                      type={"password"}
+                      inputProps={{
+                        autoComplete: 'new-password',
+                        form: {
+                          autocomplete: 'off',
+                        },
+                      }}
+                      value={currentPass.password_confirmed}
+                      onChange={(e) =>
+                        setCurrentPass({
+                          ...currentPass,
+                          password_confirmed: e.target.value,
+                        })
+                      }
+                    />
+                    <Button variant="contained" disabled={currentPass.password.length >= 8 && currentPass.password === currentPass.password_confirmed ? false : true} onClick={() => reauthetificateUser(currentPass.password)} >Modifier le mot de passe</Button>
+                    </>
+                    :
+                    <><TextField
                       id="password"
                       label={"password"}
                       variant="filled"
@@ -326,14 +652,14 @@ const Privacy = () => {
                         })
                       }
                     />
-                    {!passwordUpdated ? null :
+                     {!passwordUpdated ? null :
                     <Alert severity="success" color="info">
                       Mot de passe modifié!
-                    </Alert>}
+                    </Alert>}</>}
                     </div>
                   </div>
                   <div className="paper-container-content">
-                    <Button variant="contained" disabled={newColor? true: false} color="error" onClick={() => setOpen(true)}><h3>Supprimer le compte</h3></Button>
+                    <Button variant="contained" disabled={open || newColor? true: false} color="error" onClick={() => setOpen(true)}><h3>Supprimer le compte</h3></Button>
                   </div>
                 </div>
                 {user.mail.length === 0 &&
@@ -349,7 +675,7 @@ const Privacy = () => {
                     user.phone.length === 10) ||
                   user.bio !== currentUser?.[0]?.bio ? (
                     <div className="save-changes">
-                      <Button variant="contained" disabled={newColor? true: false} onClick={() => setNewInfo()}>
+                      <Button variant="contained" disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}>
                         Enregistrer
                       </Button>
                     </div>
@@ -365,7 +691,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -379,107 +705,7 @@ const Privacy = () => {
                   user.pseudo !== currentUser?.[0]?.pseudo ||
                   user.bio !== currentUser?.[0]?.bio ? (
                     <div className="save-changes">
-                      <Button variant="contained" disabled={newColor? true: false} onClick={() => setNewInfo()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.password.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length === 0 ? (
-                  user.password.length > 0 ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" disabled={newColor? true: false} onClick={() => setNewInfo()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.password.length === 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.password.length === 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" disabled={newColor? true: false} onClick={() => setNewInfo()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.password.length === 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length === 0 ? (
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.password.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length === 0 ? (
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.password.length > 0 ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.password.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length === 0 ? (
-                  user.password.length > 0 ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
+                      <Button variant="contained" disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}>
                         Enregistrer
                       </Button>
                     </div>
@@ -488,178 +714,18 @@ const Privacy = () => {
                   user.password.length > 0 &&
                   user.bio === currentUser?.[0]?.bio &&
                   user.pseudo.length === 0 &&
-                  user.phone.length > 0 ? (
-                  user.password.length > 0 ||
-                  user.phone !== currentUser?.[0]?.phone ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.password.length === 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.password.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.password.length > 0 ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.password.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.password.length > 0 ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.password.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length === 0 ? (
-                  user.password.length > 0 ||
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.password.length > 0 &&
-                  user.bio === currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.password.length > 0 ||
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.password.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length > 0 ? (
-                  (user.phone !== currentUser?.[0]?.phone &&
-                    user.phone.length === 10) ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" disabled={newColor? true: false} onClick={() => setNewInfo()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length > 0 &&
-                  user.password.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
-                  user.phone.length === 0 ? (
-                  user.mail.toLowerCase() !==
-                    currentUser?.[0]?.mail.toLowerCase() ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button
-                        variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
-                      >
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.password.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length > 0 &&
-                  user.phone.length === 0 ? (
-                  user.pseudo !== currentUser?.[0]?.pseudo ||
-                  user.bio !== currentUser?.[0]?.bio ? (
-                    <div className="save-changes">
-                      <Button variant="contained" disabled={newColor? true: false} onClick={() => setNewInfo()}>
-                        Enregistrer
-                      </Button>
-                    </div>
-                  ) : null
-                ) : user.mail.length === 0 &&
-                  user.password.length > 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
-                  user.pseudo.length === 0 &&
                   user.phone.length === 0 ? (
                   user.password.length > 0 ||
                   user.bio !== currentUser?.[0]?.bio ? (
                     <div className="save-changes">
-                      <Button variant="contained" disabled={newColor? true: false} onClick={() => setNewInfo()}>
+                      <Button variant="contained" disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}>
                         Enregistrer
                       </Button>
                     </div>
                   ) : null
                 ) : user.mail.length > 0 &&
                   user.password.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
+                  user.bio === currentUser?.[0]?.bio &&
                   user.pseudo.length === 0 &&
                   user.phone.length > 0 ? (
                   (user.phone !== currentUser?.[0]?.phone &&
@@ -670,7 +736,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -678,7 +744,7 @@ const Privacy = () => {
                   ) : null
                 ) : user.mail.length === 0 &&
                   user.password.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
+                  user.bio === currentUser?.[0]?.bio &&
                   user.pseudo.length > 0 &&
                   user.phone.length > 0 ? (
                   (user.phone !== currentUser?.[0]?.phone &&
@@ -686,14 +752,14 @@ const Privacy = () => {
                   user.pseudo !== currentUser?.[0]?.pseudo ||
                   user.bio !== currentUser?.[0]?.bio ? (
                     <div className="save-changes">
-                      <Button variant="contained" disabled={newColor? true: false} onClick={() => setNewInfo()}>
+                      <Button variant="contained" disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}>
                         Enregistrer
                       </Button>
                     </div>
                   ) : null
                 ) : user.mail.length > 0 &&
                   user.password.length === 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
+                  user.bio === currentUser?.[0]?.bio &&
                   user.pseudo.length > 0 &&
                   user.phone.length === 0 ? (
                   user.mail.toLowerCase() !==
@@ -703,7 +769,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -711,7 +777,7 @@ const Privacy = () => {
                   ) : null
                 ) : user.mail.length > 0 &&
                   user.password.length > 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
+                  user.bio === currentUser?.[0]?.bio &&
                   user.pseudo.length === 0 &&
                   user.phone.length === 0 ? (
                   user.mail.toLowerCase() !==
@@ -721,7 +787,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -729,7 +795,7 @@ const Privacy = () => {
                   ) : null
                 ) : user.mail.length === 0 &&
                   user.password.length > 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
+                  user.bio === currentUser?.[0]?.bio &&
                   user.pseudo.length > 0 &&
                   user.phone.length === 0 ? (
                   user.password.length > 0 ||
@@ -738,7 +804,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -746,7 +812,7 @@ const Privacy = () => {
                   ) : null
                 ) : user.mail.length === 0 &&
                   user.password.length > 0 &&
-                  user.bio !== currentUser?.[0]?.bio &&
+                  user.bio === currentUser?.[0]?.bio &&
                   user.pseudo.length === 0 &&
                   user.phone.length > 0 ? (
                   user.password.length > 0 ||
@@ -755,7 +821,267 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length > 0 &&
+                  user.password.length === 0 &&
+                  user.bio === currentUser?.[0]?.bio &&
+                  user.pseudo.length > 0 &&
+                  user.phone.length > 0 ? (
+                  (user.phone !== currentUser?.[0]?.phone &&
+                    user.phone.length === 10) ||
+                  user.mail.toLowerCase() !==
+                    currentUser?.[0]?.mail.toLowerCase() ||
+                  user.pseudo !== currentUser?.[0]?.pseudo ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length === 0 &&
+                  user.password.length > 0 &&
+                  user.bio === currentUser?.[0]?.bio &&
+                  user.pseudo.length > 0 &&
+                  user.phone.length > 0 ? (
+                  (user.phone !== currentUser?.[0]?.phone &&
+                    user.phone.length === 10) ||
+                  user.password.length > 0 ||
+                  user.pseudo !== currentUser?.[0]?.pseudo ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length > 0 &&
+                  user.password.length > 0 &&
+                  user.bio === currentUser?.[0]?.bio &&
+                  user.pseudo.length === 0 &&
+                  user.phone.length > 0 ? (
+                  (user.phone !== currentUser?.[0]?.phone &&
+                    user.phone.length === 10) ||
+                  user.mail.toLowerCase() !==
+                    currentUser?.[0]?.mail.toLowerCase() ||
+                  user.password.length > 0 ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length > 0 &&
+                  user.password.length > 0 &&
+                  user.bio === currentUser?.[0]?.bio &&
+                  user.pseudo.length > 0 &&
+                  user.phone.length === 0 ? (
+                  user.password.length > 0 ||
+                  user.mail.toLowerCase() !==
+                    currentUser?.[0]?.mail.toLowerCase() ||
+                  user.pseudo !== currentUser?.[0]?.pseudo ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length > 0 &&
+                  user.password.length > 0 &&
+                  user.bio === currentUser?.[0]?.bio &&
+                  user.pseudo.length > 0 &&
+                  user.phone.length > 0 ? (
+                  (user.phone !== currentUser?.[0]?.phone &&
+                    user.phone.length === 10) ||
+                  user.password.length > 0 ||
+                  user.mail.toLowerCase() !==
+                    currentUser?.[0]?.mail.toLowerCase() ||
+                  user.pseudo !== currentUser?.[0]?.pseudo ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length === 0 &&
+                  user.password.length === 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length === 0 &&
+                  user.phone.length > 0 ? (
+                  (user.phone !== currentUser?.[0]?.phone &&
+                    user.phone.length === 10) ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button variant="contained" disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}>
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length > 0 &&
+                  user.password.length === 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length === 0 &&
+                  user.phone.length === 0 ? (
+                  user.mail.toLowerCase() !==
+                    currentUser?.[0]?.mail.toLowerCase() ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length === 0 &&
+                  user.password.length === 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length > 0 &&
+                  user.phone.length === 0 ? (
+                  user.pseudo !== currentUser?.[0]?.pseudo ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button variant="contained" disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}>
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length === 0 &&
+                  user.password.length > 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length === 0 &&
+                  user.phone.length === 0 ? (
+                  user.password.length > 0 ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button variant="contained" disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}>
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length > 0 &&
+                  user.password.length === 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length === 0 &&
+                  user.phone.length > 0 ? (
+                  (user.phone !== currentUser?.[0]?.phone &&
+                    user.phone.length === 10) ||
+                  user.mail.toLowerCase() !==
+                    currentUser?.[0]?.mail.toLowerCase() ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length === 0 &&
+                  user.password.length === 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length > 0 &&
+                  user.phone.length > 0 ? (
+                  (user.phone !== currentUser?.[0]?.phone &&
+                    user.phone.length === 10) ||
+                  user.pseudo !== currentUser?.[0]?.pseudo ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button variant="contained" disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}>
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length > 0 &&
+                  user.password.length === 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length > 0 &&
+                  user.phone.length === 0 ? (
+                  user.mail.toLowerCase() !==
+                    currentUser?.[0]?.mail.toLowerCase() ||
+                  user.pseudo !== currentUser?.[0]?.pseudo ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length > 0 &&
+                  user.password.length > 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length === 0 &&
+                  user.phone.length === 0 ? (
+                  user.mail.toLowerCase() !==
+                    currentUser?.[0]?.mail.toLowerCase() ||
+                  user.password.length > 0 ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length === 0 &&
+                  user.password.length > 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length > 0 &&
+                  user.phone.length === 0 ? (
+                  user.password.length > 0 ||
+                  user.pseudo !== currentUser?.[0]?.pseudo ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
+                      >
+                        Enregistrer
+                      </Button>
+                    </div>
+                  ) : null
+                ) : user.mail.length === 0 &&
+                  user.password.length > 0 &&
+                  user.bio !== currentUser?.[0]?.bio &&
+                  user.pseudo.length === 0 &&
+                  user.phone.length > 0 ? (
+                  user.password.length > 0 ||
+                  user.phone !== currentUser?.[0]?.phone ||
+                  user.bio !== currentUser?.[0]?.bio ? (
+                    <div className="save-changes">
+                      <Button
+                        variant="contained"
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -775,7 +1101,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -794,7 +1120,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -814,7 +1140,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -833,7 +1159,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -854,7 +1180,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
@@ -870,7 +1196,7 @@ const Privacy = () => {
                     <div className="save-changes">
                       <Button
                         variant="contained"
-                        disabled={newColor? true: false} onClick={() => setNewInfo()}
+                        disabled={open || newColor || needToReauthentificate || needToReauthentificateEmail ? true: false} onClick={() => setNewInfo()}
                       >
                         Enregistrer
                       </Button>
