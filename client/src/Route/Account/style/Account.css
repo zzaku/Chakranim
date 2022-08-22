@@ -1,6 +1,6 @@
 .dashboard-container{
     display: flex;
-    height: 100vh;
+    height: 150vh;
     width: 100vw;
     align-items: flex-end;
     justify-content: center;
@@ -9,7 +9,7 @@
 
 .dashboard{
     display: flex;
-    height: 90%;
+    height: 92%;
     width: 100%;
     flex-direction: row;
     background-color: white;

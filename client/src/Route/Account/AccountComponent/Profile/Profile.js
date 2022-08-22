@@ -1,5 +1,6 @@
 import { useAuth } from "../../../../Component/Context/AuthContext";
 import banniere from "../assets/backgroundProfile.jpg";
+import unnamed from "../assets/unnamed.png";
 import { Box } from "@mui/system";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
@@ -13,9 +14,15 @@ import ImageCropper from "../../../../Component/ImageCropper/ImageCropper";
 const Profile = () => {
   const { currentUser, setDisplayInfosUser, uploadAvatar, getBackImage, setAvatarPath } = useAuth();
   const [addAvatar, setAddAvatar] = useState(false)
+  const [addBackground, setAddBackground] = useState(false)
+  const [witchFormat, setWitchFormat] = useState("")
   const [imageUpload, setImageUpload] = useState(null)
+  const [imageBackgroundUpload, setImageBackgroundUpload] = useState(null)
+  const [imageName, setImageName] = useState(null)
+  const [imageDestination, setImageDestination] = useState("")
   const [avatar, setAvatar] = useState("")
   const buttonIcon = useRef()
+  const imageElement = useRef()
 
   const setBackgroundIcon = () => {
     buttonIcon.current.style.backgroundColor = "black"
@@ -25,21 +32,36 @@ const Profile = () => {
     
     const uuid = uuidv4()
 
-    if(imageUpload){
-      uploadAvatar(imageUpload, imageUpload.name, uuid)
+    if(imageDestination){
+      uploadAvatar(imageDestination, imageName, uuid)
       .then(() => {
-        getBackImage(currentUser[0].avatar_path, imageUpload.name, uuid).then(res => {
+        getBackImage(currentUser[0].avatar_path, imageName, uuid).then(res => {
           setAvatar(res)
           setAvatarPath({avatar: res}, currentUser[0].id)
+          setImageUpload(null)
+          setAddAvatar(false)
         })
       })
     }
-
   }
 
-  useEffect(() => {
-    uploadImage()
-  }, [imageUpload])
+  const setUrlImage = (e) => {
+    console.log(witchFormat)
+    const reader = new FileReader()
+    reader.readAsDataURL(e.target.files[0])
+    reader.addEventListener("load", () => {
+      if(witchFormat === "avatar"){
+        setImageUpload(reader.result)
+      } else if (witchFormat === "background"){
+        setImageBackgroundUpload(reader.result)
+      }
+        setImageName(e.target.files[0].name)
+    }, false);
+  
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0]);
+    }   
+  }
   
   const setDisplayInfoUser = (mail, phone) => {
     setDisplayInfosUser(
@@ -68,10 +90,24 @@ const Profile = () => {
     );
   };
 
+  console.log(imageUpload)
+
   return (
     <div className="profile-container">
-      <div className="bannière-container">
-        <img style={{ height: "100%", width: "100%" }} src={banniere} />
+      <div className="bannière-container" onMouseOver={() => setAddBackground(true)} onMouseOut={() => setAddBackground(false)}>
+        {imageBackgroundUpload ?
+          <ImageCropper style={{ height: "100%", width: "100%", borderRadius: "100%", background: "grey"}} setImageDestination={setImageDestination} witchFormat={witchFormat} imageDestination={imageDestination} previewImage={true} imageElement={imageElement} />
+          :
+          <img style={{ height: "100%", width: "100%" }} src={banniere} />
+        }
+        {addBackground &&
+          <div className="add-background">
+            <IconButton ref={buttonIcon} aria-label="upload picture" sx={{display: "flex", position: "relative", backgroundColor: "black", height: "100%", width: "100%", color:"white"}} onMouseOver={() => setBackgroundIcon()}>
+              <input className="input-file" accept="image/*" multiple type="file" onClick={() => setWitchFormat("background")} onChange={(e) => setUrlImage(e)} />
+              <AddPhotoAlternateIcon sx={{ height: "25%", width: "25%" }} />
+            </IconButton>
+          </div>
+        }
       </div>
       <div
         className="content-container"
@@ -82,23 +118,56 @@ const Profile = () => {
             flexDirection: "column"
         }}
       >
-        <div className="avatar-container">
-          <div className="content-avatar-container" onMouseOver={() => setAddAvatar(false)} onMouseOut={() => setAddAvatar(false)}>
-            {!avatar && !currentUser?.[0]?.avatar ? <div className="avatar-image-profile-container" style={{ fontSize: currentUser?.[0]?.avatar ? null : "40px", fontFamily: "jojo4" }}>
-              <h1>{currentUser?.[0]?.pseudo[0].toUpperCase()}</h1>
-            </div> 
+        {!imageUpload && !imageBackgroundUpload ? (
+          <div className="avatar-container">
+            <div className="content-avatar-container" onMouseOver={() => setAddAvatar(true)} onMouseOut={() => setAddAvatar(false)}>
+              {!avatar && !currentUser?.[0]?.avatar ? 
+              <div className="avatar-image-profile-container" style={{ fontSize: currentUser?.[0]?.avatar ? null : "40px", fontFamily: "jojo4" }}>
+                <h1>{currentUser?.[0]?.pseudo[0].toUpperCase()}</h1>
+              </div> 
             :
-            <ImageCropper style={{ height: "100%", width: "100%", borderRadius: "100%", background: "grey"}} imageUpload={imageUpload} imageSRC={banniere} />
+            <ImageCropper style={{ height: "100%", width: "100%", borderRadius: "100%", background: "grey"}} setImageDestination={setImageDestination} imageDestination={avatar ? avatar : currentUser?.[0]?.avatar && currentUser[0].avatar} format={"avatar"} previewImage={true} imageElement={imageElement} />
             }
             {addAvatar && 
               <div className="add-avatar">
                 <IconButton ref={buttonIcon} aria-label="upload picture" sx={{display: "flex", position: "relative", backgroundColor: "black", height: "100%", width: "100%", color:"white"}} onMouseOver={() => setBackgroundIcon()}>
-                  <input className="input-file" accept="image/*" multiple type="file" onChange={(e) =>  setImageUpload(e.target.files[0])} />
+                  <input className="input-file" accept="image/*" multiple type="file" onClick={() => setWitchFormat("avatar")} onChange={(e) => setUrlImage(e)} />
                   <AddPhotoAlternateIcon sx={{ height: "25%", width: "25%" }} />
                 </IconButton>
               </div>}
           </div>
         </div>
+        ):null}
+        {
+          imageUpload ?
+          <div className="container-cropping-image">
+            <div className="preview-image-container">
+              <div className="cancel-img-btn">
+                <Button variant="contained" onClick={() => setImageUpload(null) + setAddAvatar(false)}>Annuler</Button>
+              </div>
+              <div className="preview-image-profile">
+              <ImageCropper style={{ height: "100%", width: "100%", borderRadius: "100%", background: "grey"}} setImageDestination={setImageDestination} imageDestination={imageDestination} format={"avatar"} previewImage={true} imageElement={imageElement} />
+              </div>
+              <div className="save-img-btn">
+                <Button variant="contained" onClick={() => uploadImage()}>Enregistrer</Button>
+              </div>
+            </div>
+            <div className="cropper-image">
+              <div className="cropper-image-content">
+                <ImageCropper style={{ height: "100%", width: "100%", borderRadius: "100%", background: "grey"}} setImageDestination={setImageDestination} imageDestination={imageDestination} previewImage={false} imageElement={imageElement} imageSRC={imageUpload} />
+              </div>
+            </div>
+          </div>
+          :
+          imageBackgroundUpload ?
+          <div className="container-cropping-image" style={{width: "80%", height: "45%"}}>
+            <div className="cropper-image" style={{height: "95%"}}>
+              <div className="cropper-image-content">
+                <ImageCropper style={{ height: "100%", width: "100%", borderRadius: "100%", background: "grey"}} setImageDestination={setImageDestination} imageDestination={imageDestination} previewImage={false} imageElement={imageElement} imageSRC={imageBackgroundUpload} />
+              </div>
+            </div>
+          </div>
+          :
         <div className="content" style={{ background: "transparent" }}>
           <Box
             sx={{
@@ -197,6 +266,7 @@ const Profile = () => {
             </div>
           </Box>
         </div>
+        }
       </div>
     </div>
   );

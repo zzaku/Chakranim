@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndP
 import { db, auth } from "../Firebase/Firebase";
 import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc, } from "firebase/firestore";
 import { storage } from "../Firebase/Firebase";
-import { ref, uploadBytes, getStorage, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getStorage, getDownloadURL, uploadString } from "firebase/storage";
 import { async } from "@firebase/util";
 
 const AuthContext = createContext()
@@ -123,13 +123,26 @@ export const AuthProvider = ({children}) => {
 /**/
 /**/   const uploadAvatar = async (avatar, path_avatar, uuid) => {   
 /**/          const avatarRef = ref(storage, `avatars/${path_avatar + uuid}`)
-/**/          await uploadBytes(avatarRef, avatar)
+/**/          await uploadString(avatarRef, avatar, 'data_url')
 /**/          getUser()
 /**/     }
 /**/
 /**/   const getBackImage = async (path_avatar1, path_avatar2, uuid) => {
 /**/          const storage = getStorage();
 /**/          const getUrl = getDownloadURL(ref(storage,`avatars/${path_avatar2 + uuid}`)).then(url => url)
+/**/          getUser()
+/**/          return getUrl
+/**/     }
+/**/
+/**/   const uploadBackground = async (avatar, path_avatar, uuid) => {   
+/**/          const avatarRef = ref(storage, `background/${path_avatar + uuid}`)
+/**/          await uploadString(avatarRef, avatar, 'data_url')
+/**/          getUser()
+/**/     }
+/**/
+/**/   const getBackBackground = async (path_avatar1, path_avatar2, uuid) => {
+/**/          const storage = getStorage();
+/**/          const getUrl = getDownloadURL(ref(storage,`background/${path_avatar2 + uuid}`)).then(url => url)
 /**/          getUser()
 /**/          return getUrl
 /**/     }
@@ -262,6 +275,8 @@ export const AuthProvider = ({children}) => {
         getBackImage,
         setAvatarPath,
         reauthenticateAccount,
+        uploadBackground,
+        getBackBackground,
     }
 
     return (

@@ -23,7 +23,6 @@ const Privacy = () => {
     pseudo: "",
   });
   const [currentPass, setCurrentPass] = useState({password: "", password_confirmed: ""})
-  console.log(currentPass)
   const [color, setColor] = useState(currentUser?.[0]?.theme? {r: currentUser[0].theme.r, g: currentUser[0].theme.g, b: currentUser[0].theme.b, a: currentUser[0].theme.a} : {r: 80, g: 80, b: 80, a: 1});
   const [newColor, setNewColor] = useState(false);
   const [themeChecked, setThemeChecked] = useState(false);

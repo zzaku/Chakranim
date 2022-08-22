@@ -8,8 +8,28 @@
 
 .img-preview{
     display: flex;
-    width: 100%;
-    height: 100%;
+    width: 50%;
+    height: 50%;
     float: left;
-    margin-left: 10px;
+}
+
+.container-profile-image{
+    display: flex;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border-radius: 100%;
+}
+
+.container-profile-image2{
+    display: flex;
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+.container-cropper-image{
+    display: flex;
+    position: relative;
+    height: 100%;
+    width: 100%;
 }
