@@ -7,11 +7,11 @@ import { useEffect, useRef, useState } from "react"
 const ImageCropper = ({previewImage, format, imageDestination, setImageDestination,  imageElement, style, imageSRC}) => {
 
     useEffect(() => {
-        if(imageElement.current){
+        if(imageElement?.current){
             const cropper = new Cropper(imageElement.current, {
                 zoomable: true,
                 scalable: false,
-                aspectRatio: 1,
+                aspectRatio: format === "avatar" ? 1 : format === "background" && 3,
                 crop: () => {
                     const canvas = cropper.getCroppedCanvas();
                     setImageDestination(canvas.toDataURL("image/png"))
@@ -27,7 +27,7 @@ const ImageCropper = ({previewImage, format, imageDestination, setImageDestinati
             {previewImage ?
             <div className="container-profile-image">
                 <div style={style}>
-                    <img style={{borderRadius: format === "avatar" && "100%", height: "100%", width: "100%"}} className="img-preview" src={imageDestination} alt="Destination" />
+                    <img style={{borderRadius: format === "avatar" ? "100%" : format === "background" && "none", height: "100%", width: "100%"}} className="img-preview" src={imageDestination} alt="Destination" />
                 </div>
             </div>
             :

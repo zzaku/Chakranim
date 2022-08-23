@@ -1,6 +1,5 @@
 .dashboard-container{
     display: flex;
-    height: 150vh;
     width: 100vw;
     align-items: flex-end;
     justify-content: center;

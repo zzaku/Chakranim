@@ -16,7 +16,7 @@ const Account = () => {
         <Navigate to='/'/>
         :
         (
-        <div className="dashboard-container">
+        <div className="dashboard-container" style={{height: navSidebar === "privacy-settings" ? "100vh" : "150vh"}}>
             <div className="dashboard">
                 <Sidebar setNavSidebar={setNavSidebar} />
                 <div className='component-container'>

@@ -45,6 +45,7 @@
     height: auto;
     width: 100%;
     justify-content: space-around;
+    align-items: center;
     color: black;
     font-family: 'Courier New', Courier, monospace;
 }

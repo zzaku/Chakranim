@@ -147,6 +147,11 @@ export const AuthProvider = ({children}) => {
 /**/          return getUrl
 /**/     }
 /**/
+/**/   const setBackgroundPath = async (data, idUser) => {
+/**/          const userSetBackgroundPath = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", idUser)
+/**/          await updateDoc(userSetBackgroundPath, data)
+/**/          getUser()
+/**/     }
 /**/
 /**/    useEffect(() => {
 /**/        
@@ -277,6 +282,7 @@ export const AuthProvider = ({children}) => {
         reauthenticateAccount,
         uploadBackground,
         getBackBackground,
+        setBackgroundPath,
     }
 
     return (

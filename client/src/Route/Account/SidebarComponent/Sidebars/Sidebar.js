@@ -9,7 +9,8 @@ import { IconContext } from 'react-icons/lib';
 
 const Nav = styled.div`
   background: #25355c;
-  height: 80px;
+  height: 100vh;
+  position: fixed;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -29,6 +30,7 @@ const SidebarNav = styled.nav`
   width: 15%;
   height: 100%;
   display: flex;
+  
   justify-content: center;
   top: 0;
   left: ${({ sidebar }) => (sidebar ? '0' : '-100%')};
