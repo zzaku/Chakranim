@@ -606,7 +606,7 @@ const Privacy = () => {
                     className="paper-container-content"
                     style={{ flexDirection: newColor ? "row" : "column" }}
                   >
-                    <div className="color-palette">
+                    <div className="color-palette" style={{height: newColor ? "100%" : "auto"}}>
                       {newColor ? (
                         <section
                           className="custom-layout example"

@@ -56,7 +56,8 @@ const ContentAnime = ({
     anime.desc.split("Acteur")[0].split(".").splice(0, middleDesc).join(". ") +
       "...";
   //const [lecteur, setLecteur] = useState({Lecteur: sibnet})
-  const allLinks = useMemo(() => [anime.links, anime.nextLinks], [anime]);
+  const allLinks = useMemo(() => [anime.nextLinks ? anime.links.concat(anime.nextLinks) : anime.links], [anime]);
+  console.log(allLinks)
   const seasonRef = useRef();
   const mobile = useMediaQuery("(max-width:968px)");
   const [needToConnect, setNeedToConnect] = useState(false);
