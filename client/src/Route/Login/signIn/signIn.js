@@ -49,7 +49,6 @@ function Connexion({
           }
         })
         .catch((error) => {
-          console.log(error.message)
           setConnexion({ successConnexion: "" });
           const errorMessage = error.message;
           setError(
