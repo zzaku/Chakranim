@@ -144,6 +144,18 @@
     border-radius: 15px;
 }
 
+.filter-film{
+    display: flex;
+    height: 100%;
+    width: 25%;
+}
+
+.filter-page{
+    display: flex;
+    height: 100%;
+    width: 25%;
+}
+
 .filter-page > h2{
     display: flex;
     height: 100%;

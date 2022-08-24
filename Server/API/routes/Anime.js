@@ -109,6 +109,17 @@ router.get('/animes', async (req, res) => {
     }
 });
 
+//GET BACK NUMBER OF ANIME BY NAME
+router.get('/allanimes/count', async (req, res) => {
+    try{
+        const posts = await Post.find()
+        .countDocuments({})
+        res.status(200).json(posts)
+    }catch(err){
+        res.json({message: err})
+    }
+});
+
 //GET BACK ALL ANIMES BY NAME
 router.get('/animes/allSeason', async (req, res) => {
     try{
@@ -235,10 +246,10 @@ router.get('/list/animes', async (req, res) => {
     }
 });
 
-//GET ANIMES SERIE
+//GET BACK ANIMES SERIE
 router.get('/animes/type/serie', async (req, res) => {
     try{
-        const { page = 1, limit = 9 } = req.query;
+        const { page = 1, limit = 12 } = req.query;
         const posts = await Post.find({
             $nin: [
                 {
@@ -254,10 +265,10 @@ router.get('/animes/type/serie', async (req, res) => {
     }
 });
 
-//GET ANIMES FILM
+//GET BACK 12 FILMS ANIMES 
 router.get('/animes/type/film', async (req, res) => {
     try{
-        const { page = 1, limit = 9 } = req.query;
+        const { page = 1, limit = 12 } = req.query;
         const posts = await Post.find({
                 "saison": "Film"
             })
@@ -269,7 +280,19 @@ router.get('/animes/type/film', async (req, res) => {
     }
 });
 
-//GET ALL ANIMES FILM WITHOUT PAGINATION
+//GET BACK NUMBER OF RECORDS ABOUT FILMS ANIMES 
+router.get('/animes/type/film/count', async (req, res) => {
+    try{
+        const posts = await Post.find({
+                "saison": "Film"
+            }).countDocuments({})
+        res.status(200).json(posts)
+    }catch(err){
+        res.status(401).json({message: err})
+    }
+});
+
+//GET BACK 21 FILMS ANIMES 
 router.get('/animes/type/Allfilm', async (req, res) => {
     try{
         const filmornot = req.query.filmornot;
@@ -277,6 +300,139 @@ router.get('/animes/type/Allfilm', async (req, res) => {
         const posts = await Post.find({
                 "saison": "Film"
             })
+        .limit(limit * 1)
+        .skip((page - 1) * limit);
+        res.status(200).json(posts)
+    }catch(err){
+        res.status(401).json({message: err})
+    }
+});
+
+//GET BACK NUMBER OF RECORDS ABOUT FILMS ANIMES BY GENRE 
+router.get('/animes/type/filmByGenre/count', async (req, res) => {
+    try{
+        const genre1 = req.query.genre1;
+        const genre2 = req.query.genre2;
+        const genre3 = req.query.genre3;
+        const genre4 = req.query.genre4;
+        const genre5 = req.query.genre5;
+        const genre6 = req.query.genre6;
+        const genre7 = req.query.genre7;
+        const genre8 = req.query.genre8;
+        const genre9 = req.query.genre9;
+        const genre10 = req.query.genre10;
+        const genre11 = req.query.genre11;
+        const genre12 = req.query.genre12;
+        const { page = 1, limit = 12 } = req.query;
+        const posts = await Post.find({
+            $and: [
+                {
+                "saison": "Film",
+                },
+                {
+                "genre": genre1,
+                },
+                {
+                "genre": genre2,
+                },
+                {
+                "genre": genre3,
+                },
+                {
+                "genre": genre4,
+                },
+                {
+                "genre": genre5,
+                },
+                {
+                "genre": genre6,
+                },
+                {
+                "genre": genre7,
+                },
+                {
+                "genre": genre8,
+                },
+                {
+                "genre": genre9,
+                },
+                {
+                "genre": genre10,
+                },
+                {
+                "genre": genre11,
+                },
+                {
+                "genre": genre12,
+                },
+            ],
+        })
+        .countDocuments({});
+        res.status(200).json(posts)
+    }catch(err){
+        res.status(401).json({message: err})
+    }
+});
+
+//GET BACK FILMS ANIMES BY GENRE
+router.get('/animes/type/filmByGenre', async (req, res) => {
+    try{
+        const genre1 = req.query.genre1;
+        const genre2 = req.query.genre2;
+        const genre3 = req.query.genre3;
+        const genre4 = req.query.genre4;
+        const genre5 = req.query.genre5;
+        const genre6 = req.query.genre6;
+        const genre7 = req.query.genre7;
+        const genre8 = req.query.genre8;
+        const genre9 = req.query.genre9;
+        const genre10 = req.query.genre10;
+        const genre11 = req.query.genre11;
+        const genre12 = req.query.genre12;
+        const { page = 1, limit = 12 } = req.query;
+        const posts = await Post.find({
+            $and: [
+                {
+                "saison": "Film",
+                },
+                {
+                "genre": genre1,
+                },
+                {
+                "genre": genre2,
+                },
+                {
+                "genre": genre3,
+                },
+                {
+                "genre": genre4,
+                },
+                {
+                "genre": genre5,
+                },
+                {
+                "genre": genre6,
+                },
+                {
+                "genre": genre7,
+                },
+                {
+                "genre": genre8,
+                },
+                {
+                "genre": genre9,
+                },
+                {
+                "genre": genre10,
+                },
+                {
+                "genre": genre11,
+                },
+                {
+                "genre": genre12,
+                },
+            ],
+        })
         .limit(limit * 1)
         .skip((page - 1) * limit);
         res.status(200).json(posts)
@@ -343,6 +499,68 @@ router.get('/Allanimes/genres', async (req, res) => {
         })
         .limit(limit * 1)
         .skip((page - 1) * limit);
+        res.status(200).json(posts)
+    }catch(err){
+        res.status(401).json({message: err})
+    }
+});
+
+//GET BACK NUMBER OF RECORDS ABOUT ANIME BY GENRE
+router.get('/Allanimes/genres/count', async (req, res) => {
+    try{
+        const genre1 = req.query.genre1;
+        const genre2 = req.query.genre2;
+        const genre3 = req.query.genre3;
+        const genre4 = req.query.genre4;
+        const genre5 = req.query.genre5;
+        const genre6 = req.query.genre6;
+        const genre7 = req.query.genre7;
+        const genre8 = req.query.genre8;
+        const genre9 = req.query.genre9;
+        const genre10 = req.query.genre10;
+        const genre11 = req.query.genre11;
+        const genre12 = req.query.genre12;
+        const posts = await Post.find({
+            $and: [
+                {
+                "genre": genre1,
+                },
+                {
+                "genre": genre2,
+                },
+                {
+                "genre": genre3,
+                },
+                {
+                "genre": genre4,
+                },
+                {
+                "genre": genre5,
+                },
+                {
+                "genre": genre6,
+                },
+                {
+                "genre": genre7,
+                },
+                {
+                "genre": genre8,
+                },
+                {
+                "genre": genre9,
+                },
+                {
+                "genre": genre10,
+                },
+                {
+                "genre": genre11,
+                },
+                {
+                "genre": genre12,
+                },
+            ],
+        })
+        .countDocuments({})
         res.status(200).json(posts)
     }catch(err){
         res.status(401).json({message: err})

@@ -7,6 +7,7 @@ import {
   Pagination,
   Button,
   Backdrop,
+  FormControlLabel,
 } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewTwoTone from "@mui/icons-material/ArrowBackIosNewTwoTone";
@@ -27,8 +28,10 @@ import ParallaxHover from "../../Component/Home/List/Card/Card";
 const AllAnimes = ({ instance, allAnimes, setNotAtHome }) => {
   let withoutDoublon = [{}];
   const [nextPage, setNextPage] = useState(1);
+  const [maxPage, setMaxPage] = useState(1);
   const [animes, setAnimes] = useState([]);
   const [anime, setAnime] = useState([]);
+  const [checked, setChecked] = useState(false);
   const [animeBySeason, setAnimeBySeason] = useState([]);
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
@@ -82,7 +85,27 @@ const AllAnimes = ({ instance, allAnimes, setNotAtHome }) => {
     fetch(
       `${
         process.env.REACT_APP_API_ANIME
-      }/VOD/Allanimes/genres?page=${nextPage}&${getParam(getGenres)}`
+      }/VOD/Allanimes/genres?page=${nextPage}${getParam(getGenres)}`
+    )
+      .then((res) => res.json())
+      .then((data) => setAnimes(data));
+  };
+
+  let getFilmByGenre = async () => {
+    fetch(
+      `${
+        process.env.REACT_APP_API_ANIME
+      }/VOD/animes/type/filmByGenre?page=${nextPage}${getParam(getGenres)}`
+    )
+      .then((res) => res.json())
+      .then((data) => setAnimes(data));
+  };
+
+  let getFilm = async () => {
+    fetch(
+      `${
+        process.env.REACT_APP_API_ANIME
+      }/VOD/animes/type/film?page=${nextPage}`
     )
       .then((res) => res.json())
       .then((data) => setAnimes(data));
@@ -94,13 +117,52 @@ const AllAnimes = ({ instance, allAnimes, setNotAtHome }) => {
       .then((data) => setAnimes(data));
   };
 
-  useEffect(() => {
-    if (getGenres[0] && getGenres[0].length > 0) {
-      getByGenre();
-    } else {
+  const getAnimesByFilter = () => {
+    if (getGenres[0] && getGenres[0].length > 0 && !checked) {
+      getByGenre();          
+      fetch(`${
+        process.env.REACT_APP_API_ANIME
+      }/VOD/Allanimes/genres/count?${getParam(getGenres)}`
+      )
+      .then((res) => res.json())
+      .then((data) => {
+        setMaxPage((data/12) > parseInt((data/12).toString().split('.')[0]) ? parseInt((data/12).toString().split('.')[0]) + 1 : parseInt((data/12).toString().split('.')[0]))
+      });
+
+    } else if((!getGenres[0] && !checked) || (getGenres?.[0]?.length === 0 && !checked)) {
       getAllByPagination();
+            
+    fetch(`${
+      process.env.REACT_APP_API_ANIME
+    }/VOD/Allanimes/count`
+    )
+    .then((res) => res.json())
+    .then((data) => setMaxPage((data/12) > parseInt((data/12).toString().split('.')[0]) ? parseInt((data/12).toString().split('.')[0]) + 1 : parseInt((data/12).toString().split('.')[0])));
+
+    } else if(getGenres[0] && getGenres[0].length > 0 && checked) {
+      getFilmByGenre();
+            
+      fetch(`${
+        process.env.REACT_APP_API_ANIME
+      }/VOD/animes/type/filmByGenre/count?${getParam(getGenres)}`
+      )
+      .then((res) => res.json())
+      .then((data) => setMaxPage((data/12) > parseInt((data/12).toString().split('.')[0]) ? parseInt((data/12).toString().split('.')[0]) + 1 : parseInt((data/12).toString().split('.')[0])));
+    } else if((!getGenres[0] && checked) || (getGenres?.[0]?.length === 0 && checked)) {
+      getFilm();
+      
+      fetch(`${
+        process.env.REACT_APP_API_ANIME
+      }/VOD/animes/type/film/count`
+      )
+      .then((res) => res.json())
+      .then((data) => setMaxPage((data/12) > parseInt((data/12).toString().split('.')[0]) ? parseInt((data/12).toString().split('.')[0]) + 1 : parseInt((data/12).toString().split('.')[0])));
     }
-  }, [nextPage, getGenres, getAll15Animes]);
+  } 
+
+  useEffect(() => {
+    getAnimesByFilter();
+  }, [nextPage, getGenres, getAll15Animes, checked]);
 
   useEffect(() => {
     if (getGenres[0] && getGenres[0].length > 0) {
@@ -108,7 +170,7 @@ const AllAnimes = ({ instance, allAnimes, setNotAtHome }) => {
     } else {
       setNextPage(1);
     }
-  }, [getGenres]);
+  }, [getGenres, checked]);
 
   useEffect(() => {
     /**
@@ -224,7 +286,7 @@ const AllAnimes = ({ instance, allAnimes, setNotAtHome }) => {
               <Stack spacing={10}>
                 <Pagination
                   value={nextPage}
-                  count={88}
+                  count={maxPage}
                   onChange={(e, value) => setNextPage(value)}
                   variant="outlined"
                   style={{ backgroundColor: "white", borderRadius: "15px" }}
@@ -264,6 +326,16 @@ const AllAnimes = ({ instance, allAnimes, setNotAtHome }) => {
                   />
                 )}
               />
+              <div className="filter-film">
+              <FormControlLabel
+                                style={{color: "black", backgroundColor: "transparent", borderRadius: "12px", paddingLeft: "10px", border: `2px black solid`}}
+                                value="mode cinéma"
+                                control={<Checkbox checked={checked} />}
+                                label="FILM"
+                                labelPlacement="start"
+                                onChange={() => setChecked(checked === true ? false : true)}
+                                />
+              </div>
               <div className="filter-page">
                 <h3 style={{ display: "flex", height: "100%" }}>
                   Page : {nextPage}
@@ -380,7 +452,7 @@ const AllAnimes = ({ instance, allAnimes, setNotAtHome }) => {
                 );
               })}
             </Grid>
-            {nextPage === 88 ? null : (
+            {nextPage === maxPage ? null : (
               <div className="nextpage">
                 <Button
                   style={{ color: "black" }}
