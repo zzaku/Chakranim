@@ -1,10 +1,9 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth"
 import { db, auth } from "../Firebase/Firebase";
-import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc, } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc, setDoc,  } from "firebase/firestore";
 import { storage } from "../Firebase/Firebase";
 import { ref, uploadBytes, getStorage, getDownloadURL, uploadString } from "firebase/storage";
-import { async } from "@firebase/util";
 
 const AuthContext = createContext()
 
@@ -33,18 +32,37 @@ export const AuthProvider = ({children}) => {
   }, [currentUser]);
   ///////////////////////////////////////////////////////////
   
+  ////////local storage createRoomValue
+  const currentJoinedRoom = localStorage.userInfos;
+  const [joinRoomValue, setJoinRoomValue] = useState(currentJoinedRoom ? JSON.parse(currentJoinedRoom) : null)
+  
+  useEffect(() => {
+    localStorage.setItem("joined_room", JSON.stringify(joinRoomValue));
+  }, [joinRoomValue]);
+  ///////////////////////////////////////////////////////////
+  
+  ////////local storage currentUserID
+  const currentCreatedRoom = localStorage.userInfos;
+  const [createRoomValue, setCreateRoomValue] = useState(currentCreatedRoom ? JSON.parse(currentCreatedRoom) : null)
+  
+  useEffect(() => {
+    localStorage.setItem("created_room", JSON.stringify(createRoomValue));
+  }, [createRoomValue]);
+  ///////////////////////////////////////////////////////////
+  
   
 //////////INSERTION DES DONNEES UTILISATEUR DANS LA BASE DE DONNEE ET RECUPERATION DES DONNEES//////
 /**/
-/**/   const userCollectionRef = collection(db, "Users")
 /**/   const userInfosRef = currentUserID && query(collection(db, "Users"), where("mail", "==", currentUserID.email)) 
 /**/   const userPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Preferences")
 /**/   const userResumeRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Resume")
 /**/   const onSnapshotPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Preferences")
 /**/
-/**/   const addInfosUser = async (infos) => {
-/**/         await addDoc(userCollectionRef, infos)
-/**/         getUser()
+/**/   const addInfosUser = async (uid, infos) => {
+/**/        if(uid){
+/**/            await setDoc(doc(db, "Users", uid), infos)
+/**/            await getUser()
+/**/          }
 /**/     }
 /**/
 /**/      const getUser = async () => {
@@ -201,23 +219,23 @@ export const AuthProvider = ({children}) => {
 /**/          const deleteCurrentUserPref = collection(db, "Users", idUser, "Preferences")
 /**/          const deleteCurrentUserResume = collection(db, "Users", idUser, "Resume")
 /**/
-/**/          await deleteUser(auth.currentUser)
 /**/
 /**/          await onSnapshot(deleteCurrentUserPref, async (elem) => {
-/**/               elem.docs.map( async (document) => {
-/**/                  const deleteUserPreferences = doc(db, "Users", idUser, "Preferences", document._key.path.segments.at(-1))
-/**/                  await deleteDoc(deleteUserPreferences);
-/**/               })
-/**/           })
-/**/
-/**/          await onSnapshot(deleteCurrentUserResume, async (elem) => {
-/**/               elem.docs.map( async (document) => {
-/**/                  const deleteCurrentResume = doc(db, "Users", idUser, "Resume", document._key.path.segments.at(-1))
-/**/                  await deleteDoc(deleteCurrentResume);
-/**/               })
-/**/           })
-/**/
-/**/          await deleteDoc(deleteCurrentUser)
+  /**/               elem.docs.map( async (document) => {
+    /**/                  const deleteUserPreferences = doc(db, "Users", idUser, "Preferences", document._key.path.segments.at(-1))
+    /**/                  await deleteDoc(deleteUserPreferences);
+    /**/               })
+    /**/           })
+    /**/
+    /**/          await onSnapshot(deleteCurrentUserResume, async (elem) => {
+      /**/               elem.docs.map( async (document) => {
+        /**/                  const deleteCurrentResume = doc(db, "Users", idUser, "Resume", document._key.path.segments.at(-1))
+        /**/                  await deleteDoc(deleteCurrentResume);
+        /**/               })
+        /**/           })
+        /**/
+        /**/          await deleteDoc(deleteCurrentUser)
+        /**/          await deleteUser(auth.currentUser)
 /**/        }
 /**/
 /**/        const reauthenticateAccount = async (userProvidedPassword) => {
@@ -255,8 +273,11 @@ export const AuthProvider = ({children}) => {
 /**/    }, [])
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-
     const value = {
+        createRoomValue,
+        setCreateRoomValue,
+        joinRoomValue,
+        setJoinRoomValue,
         currentUserID,
         setCurrentUserID,
         currentUser,

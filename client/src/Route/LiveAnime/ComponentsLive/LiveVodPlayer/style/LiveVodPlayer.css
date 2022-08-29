@@ -1,0 +1,30 @@
+.Live-VOD-player-container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    border-radius: 25px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.info-live{
+    display: flex;
+    height: 15%;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    border-radius: 25px;
+    align-items: center;
+}
+
+.vod-live-container{
+    display: flex;
+    margin: 0;
+    padding: 0;
+    height: 85%;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 25px;
+}

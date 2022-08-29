@@ -22,7 +22,7 @@
 
 .found-container-list{
     display: flex;
-    height: 100%;
+    height: auto;
     width: 100%;
     justify-content: space-around;
     flex-wrap: wrap;

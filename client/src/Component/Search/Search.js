@@ -10,10 +10,8 @@ const Search = ({notAtHome, setNotAtHome, animeFound}) => {
 
     return (
         <>
-           
                 <Routes>
                     <Route path='/Search/Animes' element={<Found animeFound={animeFound} setNotAtHome={setNotAtHome} />} />
-                    {/*<Footer footerRef={footerRef} />*/}
                 </Routes>
                 
                 

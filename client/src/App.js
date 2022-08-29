@@ -11,6 +11,7 @@ import Search from "./Component/Search/Search";
 import Login from "./Route/Login/Login";
 import { AuthProvider } from "./Component/Context/AuthContext";
 import Account from "./Route/Account/Account";
+import LiveAnime from "./Route/LiveAnime/LiveAnime";
 
 export const epContext = createContext();
 export const log = createContext();
@@ -115,6 +116,8 @@ function App() {
           animeToFind: animeToFind,
           setAnimeToFind: setAnimeToFind,
           setAnimeFound: setAnimeFound,
+          setNotAtHome: setNotAtHome,
+          animeFound: animeFound,
           loading: loading,
           setLoading: setLoading,
         }}
@@ -160,6 +163,19 @@ function App() {
                 path="/list/preferences"
                 element={
                   <Preferences
+                    token={token}
+                    setToken={setToken}
+                    refreshToken={refreshToken}
+                    setRefreshToken={setRefreshToken}
+                    allAnimes={allAnimes}
+                    setNotAtHome={setNotAtHome}
+                  />
+                }
+              />
+              <Route
+                path="/live-anime/*"
+                element={
+                  <LiveAnime
                     token={token}
                     setToken={setToken}
                     refreshToken={refreshToken}

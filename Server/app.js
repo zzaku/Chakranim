@@ -3,6 +3,8 @@ const app = express();
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const http = require('http')
+const {Server} = require('socket.io')
 require('dotenv/config');
 const user = process.env.DB_CONNECTION_USER
 const pass = process.env.DB_CONNECTION_PASSWORD
@@ -10,7 +12,6 @@ const port = process.env.PORT
 
 //Import Routes
 const postsRoute = require('./API/routes/Anime')
-
 
 //Middlewares
 app.use(cors({
@@ -30,8 +31,6 @@ mongoose.connect(
 
 //Scrap Data
 setInterval(postsRoute.scrap, 14400000)
-
-
 
 //Listening to the server
 app.listen(port || 4000)

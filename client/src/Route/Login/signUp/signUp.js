@@ -30,23 +30,26 @@ function Inscription({ setRegister, pathLocation, setNeedToConnect, mobile }) {
       signup(auth, user.mail, user.password)
         .then((res) => {
           setInscription({ successInscription: "inscription reussis !" });
-          addInfosUser({
-            prenom: user.prenom,
-            nom: user.nom,
-            pseudo: user.pseudo,
-            mail: user.mail.toLowerCase(),
-            phone: user.tel,
-            adresse: user.adresse,
-          });
-          if(pathLocation === "/connexion" || pathLocation === "/list/preferences"){
-            setTimeout(() => {
-                navigate('/')
-            }, 1000) 
-        } else {
-            setTimeout(() => {
-                setNeedToConnect(false)
-            }, 1000) 
-        }
+          if(res.user.uid){
+            addInfosUser(res.user.uid,
+              {
+              prenom: user.prenom,
+              nom: user.nom,
+              pseudo: user.pseudo,
+              mail: user.mail.toLowerCase(),
+              phone: user.tel,
+              adresse: user.adresse,
+            });
+            if(pathLocation === "/connexion" || pathLocation === "/list/preferences"){
+              setTimeout(() => {
+                  navigate('/')
+              }, 1000) 
+          } else {
+              setTimeout(() => {
+                  setNeedToConnect(false)
+              }, 1000) 
+          }
+          }
         })
         .catch((error) => {
           setInscription({ successInscription: "" });

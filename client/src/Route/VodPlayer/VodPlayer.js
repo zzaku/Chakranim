@@ -169,7 +169,7 @@ const VodPlayer = ({}) => {
                                 open={true}
                             >
                                 <div className='iframe-container' ref={iframeContainer}>
-                                    {next ? <iframe className='iframe' title='VOD' sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allowFullScreen src={!ep.current_episode ? null : ep.current_episode[0][0].lien}></iframe> : <iframe title='VOD' allowFullScreen className='iframe' src={lecteur[0][0].lien}></iframe>}
+                                    {next ? <iframe className='iframe' title='VOD' sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" frameborder="0" allowFullScreen src={!ep.current_episode ? null : ep.current_episode[0][0].lien}></iframe> : <iframe title='VOD' frameborder="0" allowFullScreen className='iframe' src={lecteur[0][0].lien}></iframe>}
                                 </div>
                             </Backdrop>
                         </div>

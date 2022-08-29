@@ -77,7 +77,7 @@ import "../style/Preferences.css";
       .map((pref) => pref.animeId);
     if (ids.length > 0) {
       await fetch(
-        `https://chakranimes.herokuapp.com/VOD/list/animes?animeId=${ids}`
+        `${process.env.REACT_APP_API_ANIME}/VOD/list/animes?animeId=${ids}`
       )
         .then((res) => res.json())
         .then((data) => tempPref.push(data));

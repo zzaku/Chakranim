@@ -2,7 +2,7 @@ import { NavLink, Nav, Bars, NavMenu } from "./NavbarElements";
 import { FcSearch } from 'react-icons/fc';
 import { useContext, useEffect, useRef, useState } from 'react';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { epContext } from "../../App";
 import './style/Nav.css'
 import { Button, TextField, useMediaQuery } from "@mui/material";
@@ -22,6 +22,8 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
   const nav = useRef()
   const {currentUserID, setCurrentUserID, setCurrentUser, signout, getPref} = useAuth()
   const navigate = useNavigate();
+  const location = useLocation();
+  const pathLocation = location.pathname;
   
   useEffect(() => {
     let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -74,6 +76,9 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
     const seePreferences =  <NavLink to={"/list/preferences"} style={{height: "auto", marginTop: "5%"}}>
                             <div className={newFont ? "link-container" : ""}><h1>Mes préférences</h1></div>
                           </NavLink>
+    const liveAnime =  <NavLink to={"/live-anime"} style={{height: "auto", marginTop: "5%"}}>
+                            <div className={newFont ? "link-container" : ""}><h1>live Anime</h1></div>
+                          </NavLink>
 
     const login = currentUserID ?
                       <>
@@ -103,11 +108,13 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                     </NavMenu>
 
     return (
+      pathLocation === "/live-anime" ?
+      null 
+      :
+      (
       <>
-        {" "}
         {!open.search ? (
           <>
-            {" "}
             {appearNav ? (
               <>
                 {onMobile ? (
@@ -135,7 +142,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                         {home}
                       </NavMenu>
                     )}
-                    <div style={{display: "flex", flexDirection: "row", justifyContent: "space-around", width: "25%"}}>
+                    <div style={{display: "flex", flexDirection: "row", justifyContent: "space-around", width: "45%"}}>
                       <NavMenu
                       style={{ justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}
                     >
@@ -143,6 +150,9 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                     </NavMenu>
                     <NavMenu style={{ justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}>
                       {seePreferences}
+                    </NavMenu>
+                    <NavMenu style={{ justifyContent: "space-around", alignItems: "flex-start", width: "auto", height: "100%" }}>
+                      {liveAnime}
                     </NavMenu>
                     </div>
                     
@@ -168,7 +178,6 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
           </>
         ) : (
           <>
-            {" "}
             {appearNav ? (
               <Nav ref={nav} className="Navigation">
                 {mobile ? (
@@ -323,7 +332,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
             ) : null}
           </>
         )}
-      </>
+      </>)
     );
 }
 

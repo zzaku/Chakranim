@@ -1,6 +1,6 @@
 import "./style/ContentAnime.css";
 import Overlay from "./Overlay/Overlay";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { Circles } from "react-loader-spinner";
 import { epContext } from "../../App";
@@ -16,6 +16,7 @@ import { useAuth } from "../Context/AuthContext";
 import Popover from "@mui/material/Popover";
 import styled from "styled-components";
 import Login from "../../Route/Login/Login"
+import { useSocket } from "../Context/SocketContext";
 
 const ContentAnime = ({
   anime,
@@ -60,6 +61,9 @@ const ContentAnime = ({
   const seasonRef = useRef();
   const mobile = useMediaQuery("(max-width:968px)");
   const [needToConnect, setNeedToConnect] = useState(false);
+  const location = useLocation();
+  const pathLocation = location.pathname;
+  const {setDisplaySearch, setCurrentVodLiveStream} = useSocket() || {}
   const {
     addPreferences,
     setPreferences,
@@ -285,6 +289,12 @@ const ContentAnime = ({
         }, resume[0].id)
       }
     } 
+  }
+
+  const addToStreamLive = () => {
+    if(pathLocation === "/live-anime"){
+      setDisplaySearch(false)
+    }
   }
 
   return (
@@ -586,7 +596,7 @@ const ContentAnime = ({
           </div>
         </div>
         <div className="container-vod-anime">
-          {anime.saison === "Film" ? null : <h2>Liste des épisodes</h2>}
+          {anime.saison === "Film" ? (null) : (pathLocation === "/live-anime" ? <h2>Séléctionne ton épisode</h2> : <h2>Liste des épisodes</h2>)}
           {seasonSelected || langueSelected ? null : (
             <div className="container-episode-anime">
               {withoutDoublon[0].episode ? (
@@ -594,7 +604,10 @@ const ContentAnime = ({
                   return (
                     <div className="vod-anime" key={anime._id + i}>
                       <Link
-                        to={`/watch/${anime.name
+                        to={pathLocation === "/live-anime" ?
+                        "#"
+                        :
+                        `/watch/${anime.name
                           .replaceAll(" ", "-")
                           .replaceAll(".", "")
                           .replaceAll(",", "")
@@ -622,7 +635,8 @@ const ContentAnime = ({
                               saison: anime.saison,
                               image: anime.image,
                             }) +
-                            openSearch.setSearch(false)
+                            openSearch.setSearch(false) +
+                            addToStreamLive()
                           }
                           className="vod-cards card-shadow"
                           style={{

@@ -1,0 +1,67 @@
+.live-vod-container{
+    display: flex;
+    height: 100%;
+    border-radius: 25px;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-live{
+    display: flex;
+    height: 100%;
+    width: 20%;
+    background-color: #3b2976cc;
+    border-radius: 5px;
+    border: 3px black solid;
+}
+
+.chat-vod-container{
+    display: flex;
+    flex-direction: column;
+    height: 88%;
+    width: 85%;
+    background-color: rgb(52, 23, 156);
+    justify-content: center;
+    align-items: center;
+}
+
+.create-room-info{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.create-room-info-container{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.found-vod-anime{
+    display: flex;
+    height: 80%;
+    width: 100%;
+}
+
+.found-vod-anime > div {
+    margin: 0;
+}
+
+.creating-container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: row;
+}
+
+.vod-card-container{
+    display: flex;
+    height: 100%;
+    width: 40%;
+    align-items: center;
+    justify-content: center;
+}

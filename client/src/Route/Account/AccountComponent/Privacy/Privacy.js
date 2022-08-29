@@ -461,7 +461,7 @@ const Privacy = () => {
                     <h3>Nom d'utilisateur</h3>
                     <TextField
                       id="pseudo"
-                      label={currentUser[0]?.pseudo}
+                      label={currentUser?.[0]?.pseudo}
                       variant="filled"
                       value={user.pseudo}
                       onChange={(e) =>
@@ -541,7 +541,7 @@ const Privacy = () => {
                         )}
                         <TextField
                           id="mail"
-                          label={currentUser[0]?.mail}
+                          label={currentUser?.[0]?.mail}
                           variant="filled"
                           value={user.mail}
                           onChange={(e) =>
@@ -558,7 +558,7 @@ const Privacy = () => {
                     <h3>Numéro</h3>
                     <TextField
                       id="phone"
-                      label={currentUser[0]?.phone}
+                      label={currentUser?.[0]?.phone}
                       variant="filled"
                       value={user.phone}
                       onChange={(e) =>

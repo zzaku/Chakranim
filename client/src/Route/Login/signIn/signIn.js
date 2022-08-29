@@ -34,6 +34,7 @@ function Connexion({
       setError("");
       await signin(auth, userConnect.pseudo, userConnect.mdp)
         .then((res) => {
+          console.log(res)
           setConnexion({ successConnexion: "Connexion reussis !" });
           getPref()
           if (pathLocation === "/connexion") {

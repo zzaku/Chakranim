@@ -44,7 +44,7 @@ const Profile = () => {
     if (imageDestination) {
       if (witchFormat === "avatar") {
         uploadAvatar(imageDestination, imageName, uuid).then(() => {
-          getBackImage(currentUser[0].avatar_path, imageName, uuid).then(
+          getBackImage(currentUser?.[0]?.avatar_path, imageName, uuid).then(
             (res) => {
               setAvatar(res);
               setAvatarPath({ avatar: res }, currentUser[0].id);
