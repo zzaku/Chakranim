@@ -16,48 +16,20 @@ const LiveVodPlayer = ({setGoToPlayerVOD, joinId, currentVodLiveStream}) => {
     const [someone, setSomeone] = useState(null)
     const [user, setUser] = useState(null)
     const {currentUser, removeRoom} = useAuth()
-    const { thecode, socket, someoneelse, roomid, setMyid, iamhost, videoplayer, setVideoplayer, setAdTimer, setIsAd, isAd, adTimer, videoRef, setAllusersinroom, allusersinroom} = useSocket()
+    const { thecode, socket, checkIsAdPlayng, someoneelse, roomid, setMyid, iamhost, videoplayer, setVideoplayer, setAdTimer, setIsAd, isAd, adTimer, videoRef, setAllusersinroom, allusersinroom} = useSocket()
 
     useEffect(() => {
       
-      if(videoRef){
+      if(videoRef.current && currentUser?.Room?.[0]){
         checkIsAdPlayng()
-
+        console.log("hello la vide")
         return () => {
           checkIsAdPlayng()
         }
       } else {
 
       }
-    }, [videoRef])
-  
-  function checkIsAdPlayng() {
-    setAdTimer(setInterval(() => {
-      setIsAd(document.querySelector('.ad-cta-wrapper'));
-      if (isAd === null) {
-        getVideoPlayer();
-      }
-    }, 1000))
-  }
-  
-  function getVideoPlayer() {
-    clearInterval(adTimer);
-  
-    //keep listening to the hosts videoplayer events, only host can control the play pause and seek
-    if (currentUser.Room?.[0]?.host && videoRef?.current) {
-      setInterval(() => {
-        syncVideoStates();
-      }, 1000);
-    }
-  }
-  
-  function syncVideoStates() {
-    let videoState = {
-      hosttime: videoRef.current.currentTime,
-      isHostPaused: videoRef.current.paused,
-    };
-    socket.emit('videoStates', { videoState, roomid });
-  }
+    }, [videoRef, currentUser.Room])
 
   const disconnect = () => {
     removeRoom(currentUser.Room?.[0]?.id)

@@ -30,20 +30,15 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
   }, [open.ep]);
 
   const createRoom = async () => {
-      addRoom({host: true, name: createRoomName}, myid, currentUser[0].id)
-      .then((allowed) => {
-        if(allowed.isAllowed){
-          getRoom()
-          .then((res) => {
-            if(res[0].host){
-              socket.emit('joinmetothisroom', { roomid: myid, name: createRoomName });
-              setTellEveryOne(true)
-              setRoomid(myid);
-              setGoToPlayerVOD(true)
-            }
-          })
+      await addRoom({host: true, name: createRoomName}, myid, currentUser[0].id)
+      .then(res => {
+        if(res.isAllowed){
+          socket.emit('joinmetothisroom', { roomid: myid, name: createRoomName });
+          setRoomid(myid);
+          setIamhost(true)
+          setGoToPlayerVOD(true)
         } else {
-          setError("Vous avez déja créée une room, veuillez vous déconnecter de votre room avant dans créer une autre !")
+          setError("Vous avez déja créée une room, veuillez la quitter pour en créer une autre !")
         }
       })
   };
@@ -52,14 +47,9 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
       addRoom({host: false, name: joinRoomId.name}, joinRoomId.token, currentUser[0].id)
       .then(allowed => {
         if(allowed.isAllowed){
-          getRoom()
-          .then(res => {
-            if(!res[0].host){
-              socket.emit('joinmetothisroom', { roomid: joinRoomId.token, name:joinRoomId.name });
-              setRoomid(joinRoomId.token);
-              setGoToPlayerVOD(true)
-            }
-          })
+            socket.emit('joinmetothisroom', { roomid: joinRoomId.token, name:joinRoomId.name });
+            setRoomid(joinRoomId.token);
+            setGoToPlayerVOD(true)
         } else {
           setError("Vous avez déja rejoind une room, veuillez la quitter pour en rejoindre une autre !")
         }
