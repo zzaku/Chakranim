@@ -15,48 +15,29 @@ export const AuthProvider = ({children}) => {
     
   
   ////////local storage currentUserID
-  const userAccount = localStorage.user;
+  const userAccount = sessionStorage.user;
   const [currentUserID, setCurrentUserID] = useState(userAccount ? JSON.parse(userAccount) : {apiKey: "", appName: "", createdAt: "", email: "", emailVerified: null, isAnonymous: null, lastLoginAt: "", providerData: [], stsTokenManager: {}, uid: ""})
   
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(currentUserID));
+    sessionStorage.setItem("user", JSON.stringify(currentUserID));
   }, [currentUserID]);
   ///////////////////////////////////////////////////////////
   
   ////////local storage currentUserID
-  const userAccountInfos = localStorage.userInfos;
+  const userAccountInfos = sessionStorage.userInfos;
   const [currentUser, setCurrentUser] = useState(userAccountInfos ? JSON.parse(userAccountInfos) : null)
   
   useEffect(() => {
-    localStorage.setItem("userInfos", JSON.stringify(currentUser));
+    sessionStorage.setItem("userInfos", JSON.stringify(currentUser));
   }, [currentUser]);
   ///////////////////////////////////////////////////////////
-  
-  ////////local storage createRoomValue
-  const currentJoinedRoom = localStorage.userInfos;
-  const [joinRoomValue, setJoinRoomValue] = useState(currentJoinedRoom ? JSON.parse(currentJoinedRoom) : null)
-  
-  useEffect(() => {
-    localStorage.setItem("joined_room", JSON.stringify(joinRoomValue));
-  }, [joinRoomValue]);
-  ///////////////////////////////////////////////////////////
-  
-  ////////local storage currentUserID
-  const currentCreatedRoom = localStorage.userInfos;
-  const [createRoomValue, setCreateRoomValue] = useState(currentCreatedRoom ? JSON.parse(currentCreatedRoom) : null)
-  
-  useEffect(() => {
-    localStorage.setItem("created_room", JSON.stringify(createRoomValue));
-  }, [createRoomValue]);
-  ///////////////////////////////////////////////////////////
-  
   
 //////////INSERTION DES DONNEES UTILISATEUR DANS LA BASE DE DONNEE ET RECUPERATION DES DONNEES//////
 /**/
 /**/   const userInfosRef = currentUserID && query(collection(db, "Users"), where("mail", "==", currentUserID.email)) 
 /**/   const userPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Preferences")
 /**/   const userResumeRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Resume")
-/**/   const onSnapshotPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Preferences")
+/**/   const userRoomRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && collection(db, "Users", currentUser[0].id, "Room")
 /**/
 /**/   const addInfosUser = async (uid, infos) => {
 /**/        if(uid){
@@ -170,17 +151,49 @@ export const AuthProvider = ({children}) => {
 /**/          await updateDoc(userSetBackgroundPath, data)
 /**/          getUser()
 /**/     }
+/**/ 
+/**/   const getRoom = async () => {
+/**/          if(userRoomRef){
+/**/              const datas = await getDocs(userRoomRef);
+/**/              setCurrentUser({...currentUser, Room: datas.docs.map(doc => ({...doc.data(), id: doc.id}))})
+/**/              return datas.docs.map(doc => ({...doc.data()}))
+/**/          } else {
+/**/              setCurrentUser(null)
+/**/          }
+/**/      }
+/**/
+/**/   const addRoom = async (data, idRoom, currentId) => {
+            let allowed = {}
+/**/          await getRoom()
+/**/          .then(async (res) => {
+/**/            if(res.length > 0){
+                allowed = {isAllowed: false}
+                } else {
+                await setDoc(doc(db, "Users", currentId, "Room", idRoom), data)
+                allowed = {isAllowed: true}
+                }
+/**/         })
+return allowed
+/**/     }
+/**/
+/**/   const removeRoom = async (idRoom) => {
+/**/          const userSetPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", currentUser[0].id, "Room", idRoom)
+/**/          await deleteDoc(userSetPreferencesRef);
+/**/          await getRoom()
+/**/     }
 /**/
 /**/    useEffect(() => {
 /**/        
 /**/              getUser();
 /**/              getPref();
 /**/              getResume();
+/**/              getRoom();
 /**/
 /**/              return () => {
 /**/                getUser();
 /**/                getPref();
 /**/                getResume();
+/**/                getRoom();
 /**/             }
 /**/
 /**/    }, [currentUserID])
@@ -274,10 +287,6 @@ export const AuthProvider = ({children}) => {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
     const value = {
-        createRoomValue,
-        setCreateRoomValue,
-        joinRoomValue,
-        setJoinRoomValue,
         currentUserID,
         setCurrentUserID,
         currentUser,
@@ -304,6 +313,9 @@ export const AuthProvider = ({children}) => {
         uploadBackground,
         getBackBackground,
         setBackgroundPath,
+        addRoom,
+        removeRoom,
+        getRoom
     }
 
     return (

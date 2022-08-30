@@ -1,5 +1,7 @@
+import { async } from "@firebase/util";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client"
+import { useAuth } from "./AuthContext";
 
 const SocketContext = createContext()
 
@@ -9,24 +11,19 @@ export const useSocket = () => {
 
 export const SocketProvider = ({children}) => {
 
-const [urlsValidated, setUrlsValidated] = useState([])
+const [urlsValidated, setUrlsValidated] = useState(null)
 const [adTimer, setAdTimer] = useState(null)
 const [myid, setMyid] = useState(null)
 const [roomid, setRoomid] = useState(null)
-const userHost = localStorage.userInfos;
-  const [iamhost, setIamhost] = useState(userHost ? JSON.parse(userHost) : null)
-  
-  useEffect(() => {
-    localStorage.setItem("iamhost", JSON.stringify(iamhost));
-  }, [iamhost]);
-
+const [iamhost, setIamhost] = useState(null)
+const {currentUser, getRoom} = useAuth()
 const [isAd, setIsAd] = useState(null)
 const [allusersinroom, setAllusersinroom] = useState([])
-const [displaySearch, setDisplaySearch] = useState(false);
+const [displaySearch, setDisplaySearch] = useState(null);
 const [currentVodLiveStream, setCurrentVodLiveStream] = useState(null);
 const [userJoined, setUserJoined] = useState(null);
 const [thecode, setThecode] = useState(null);
-const [tellEveryOne, setTellEveryOne] = useState(false);
+const [tellEveryOne, setTellEveryOne] = useState(null);
 const videoRef = useRef();
 const infoRef = useRef();
 
@@ -34,62 +31,85 @@ const infoRef = useRef();
 const socket = io('https://lets-party-server.herokuapp.com/');
 
 useEffect(() => {
-    socket.on('whoami', function ({ id }) {
+    const sockets = io('https://lets-party-server.herokuapp.com/');
+    sockets.on('whoami', function ({ id }) {
         setMyid(id);
       });
-  }, [])
 
-socket.on('joinmetothisroomsuccess', (msg) => {
-    setThecode(msg)
-  });
+      sockets.on('someonejoined', (name) => {
+          console.log("second : ", currentUser.Room)
+          getRoom()
+          .then((res) => {
+            console.log(res)
+            if (res[0].host) {
+                  console.log("yeah jsuis rentré")
+                  setAllusersinroom(current => [...current, name]);
+                  const status = document.createElement("div")
+                  const user_namer = document.createElement("div")
+                  const nameOfUser_container = document.createElement("div")
+                  const nameOfUser = document.createElement("h2")
+                  const welcome_container = document.createElement("div")
+                  const welcome = document.createElement("span")
+                  status.className = "joined-container"
+                  user_namer.className = "users-names-container"
+                  nameOfUser_container.className = "users-names"
+                  nameOfUser.innerHTML = name
+                  welcome_container.className = "welcome-container"
+                  welcome.innerHTML = "Bienvenu dans votre room"
+                  infoRef.current.appendChild(status)
+                  status.appendChild(user_namer)
+                  user_namer.appendChild(welcome_container)
+                  welcome_container.appendChild(welcome)
+                  user_namer.appendChild(nameOfUser_container)
+                  nameOfUser_container.appendChild(nameOfUser)
+                  socket.emit('tell_everyone_who_joined', {
+                      allusers: allusersinroom,
+                      roomid,
+                  });
+              }
+          })
+      });
+      
+    }, [])
+    
+    
+    socket.on('joinmetothisroomsuccess', (msg) => {
+        setThecode(msg)
+    });
 
-  socket.on('someonejoined', (name) => {
-    console.log(iamhost)
-    if (iamhost) {
-        setAllusersinroom(current => [...current, name]);
-        setUserJoined(name)
-    }
-});
+        socket.on('who_joined', (allusers) => {
+            getRoom()
+            .then((res) => {
+              if (!res[0].host) {
+                  console.log(allusers)
+                  allusers?.forEach((user) => {
+                      const status = document.createElement("div")
+                      const user_namer = document.createElement("div")
+                      const nameOfUser_container = document.createElement("div")
+                      const nameOfUser = document.createElement("h2")
+                      const welcome_container = document.createElement("div")
+                      const welcome = document.createElement("span")
+                      status.className = "joined-container"
+                      user_namer.className = "users-names-container"
+                      nameOfUser_container.className = "users-names"
+                      nameOfUser.innerHTML = user
+                      welcome_container.className = "welcome-container"
+                      welcome.innerHTML = "a rejoind la room !"
+                      infoRef.current.appendChild(status)
+                      status.appendChild(user_namer)
+                      user_namer.appendChild(nameOfUser_container)
+                      nameOfUser_container.appendChild(nameOfUser)
+                      user_namer.appendChild(welcome_container)
+                      welcome_container.appendChild(welcome)
+                  });
+              }
+            })
+        });
 
-useEffect(() => {
-    if (iamhost) {
-          socket.emit('tell_everyone_who_joined', {
-              allusers: allusersinroom,
-              roomid,
-          });
-    }
-}, [allusersinroom])
-
-  socket.on('who_joined', (allusers) => {
-    console.log(iamhost)
-    if (!iamhost) {
-        console.log(allusers)
-		allusers?.forEach((user) => {
-            const status = document.createElement("div")
-            const user_namer = document.createElement("div")
-            const nameOfUser_container = document.createElement("div")
-            const nameOfUser = document.createElement("h2")
-            const welcome_container = document.createElement("div")
-            const welcome = document.createElement("span")
-            status.className = "joined-container"
-            user_namer.className = "users-names-container"
-            nameOfUser_container.className = "users-names"
-            nameOfUser.innerHTML = user
-            welcome_container.className = "welcome-container"
-            welcome.innerHTML = "a rejoind la room !"
-            infoRef.current.appendChild(status)
-            status.appendChild(user_namer)
-            user_namer.appendChild(nameOfUser_container)
-            nameOfUser_container.appendChild(nameOfUser)
-            user_namer.appendChild(welcome_container)
-            welcome_container.appendChild(welcome)
-		});
-	}
-  });
 
   socket.on('videoStates', ({ isHostPaused, hosttime }) => {
     // sync video player pause and play of users with the host
-    if (!iamhost && videoRef?.current) {
+    if (!currentUser.Room?.[0]?.host && videoRef?.current) {
       if (isHostPaused) {
         videoRef.current.pause();
       } else {
@@ -104,6 +124,8 @@ useEffect(() => {
       }
     }
   });
+    
+
 
     //Check Address
     function isStunAddressUp(address, _timeout){
@@ -251,7 +273,9 @@ useEffect(() => {
         setIsAd,
         isAd,
         adTimer,
-        infoRef
+        infoRef,
+        setTellEveryOne,
+        tellEveryOne
     }
 
     return (

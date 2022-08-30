@@ -1,6 +1,7 @@
 import { async } from "@firebase/util"
 import { Button } from "@mui/material"
 import { useEffect, useRef, useState } from "react"
+import { io } from "socket.io-client"
 import { useAuth } from "../../../../Component/Context/AuthContext"
 import { useSocket } from "../../../../Component/Context/SocketContext"
 import extrait from './assets/extrait.mp4'
@@ -14,7 +15,8 @@ const LiveVodPlayer = ({setGoToPlayerVOD, joinId, currentVodLiveStream}) => {
     const [finished, setFinished] = useState(false)
     const [someone, setSomeone] = useState(null)
     const [user, setUser] = useState(null)
-    const { thecode, someoneelse, socket, roomid, setMyid, iamhost, videoplayer, setVideoplayer, setAdTimer, setIsAd, isAd, adTimer, videoRef, setAllusersinroom, allusersinroom} = useSocket()
+    const {currentUser, removeRoom} = useAuth()
+    const { thecode, socket, someoneelse, roomid, setMyid, iamhost, videoplayer, setVideoplayer, setAdTimer, setIsAd, isAd, adTimer, videoRef, setAllusersinroom, allusersinroom} = useSocket()
 
     useEffect(() => {
       
@@ -42,7 +44,7 @@ const LiveVodPlayer = ({setGoToPlayerVOD, joinId, currentVodLiveStream}) => {
     clearInterval(adTimer);
   
     //keep listening to the hosts videoplayer events, only host can control the play pause and seek
-    if (iamhost && videoRef?.current) {
+    if (currentUser.Room?.[0]?.host && videoRef?.current) {
       setInterval(() => {
         syncVideoStates();
       }, 1000);
@@ -58,7 +60,10 @@ const LiveVodPlayer = ({setGoToPlayerVOD, joinId, currentVodLiveStream}) => {
   }
 
   const disconnect = () => {
+    removeRoom(currentUser.Room?.[0]?.id)
     socket.on('disconnect')
+    setGoToPlayerVOD(false)
+    
   }
   
     return (
@@ -66,7 +71,7 @@ const LiveVodPlayer = ({setGoToPlayerVOD, joinId, currentVodLiveStream}) => {
         <div className="Live-VOD-player-container">
           <div className="info-live">
             <div>
-              <Button variant="contained" onClick={() => disconnect() + setGoToPlayerVOD(false)}>Retour</Button>
+              <Button variant="contained" onClick={() => disconnect()}>Retour</Button>
             </div>
             <div style={{display: "flex", height: "100%", width: "80%", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
               <div style={{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", height: "50%", width: "90%", borderRadius: "25px", border: "3px solid black", background: "#362c7d"}}>

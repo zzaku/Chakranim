@@ -2,65 +2,68 @@ import "./style/StreamAnime.css";
 import Button from "@mui/material/Button";
 import { useEffect, useState, useContext } from "react";
 import { useAuth } from "../../../../Component/Context/AuthContext";
-import { IconButton, TextField } from "@mui/material";
+import { Alert, IconButton, TextField } from "@mui/material";
 import { useSocket } from "../../../../Component/Context/SocketContext";
 import LiveVodPlayer from "../LiveVodPlayer/LiveVodPlayer";
 import { epContext } from "../../../../App";
 import Found from "../../../../Component/Search/Found/Found";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import ChatLive from "../ChatLive/ChatLive";
+import { io } from "socket.io-client";
 
 const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
-  const { currentUserID, currentUser } = useAuth();
+  const { currentUserID, getRoom, currentUser, addRoom } = useAuth();
   const [choice, setChoice] = useState("");
-  const { socket, myid, videoplayer, setVideoplayer, setIamhost, setRoomid, roomid, iamhost, setMyid, displaySearch, setDisplaySearch, setCurrentVodLiveStream, currentVodLiveStream } = useSocket();
-  const [joinRoomId, setJoinRoomId] = useState({});
+  const { myid, socket, setIamhost, setRoomid, roomid, displaySearch, setTellEveryOne, setDisplaySearch, setCurrentVodLiveStream, currentVodLiveStream } = useSocket();
+  const [joinRoomId, setJoinRoomId] = useState({name: "", token: ""});
   const [createRoomName, setCreateRoomName] = useState("");
+  const [error, setError] = useState("");
 
   const open = useContext(epContext)
 
   useEffect(() => {
     setCurrentVodLiveStream({vod: open.ep})
+
+    return () => {
+      setCurrentVodLiveStream({vod: open.ep})
+    }
   }, [open.ep]);
 
-  const createRoom = () => {
-    try{
-      if (createRoomName) {
-        localStorage.setItem('lets_party_uname', createRoomName);
-        setRoomid(myid);
-        setIamhost(true);
-        startCreating()
-      }
-    } catch(error){
-        console.log(error)
-    }
+  const createRoom = async () => {
+      addRoom({host: true, name: createRoomName}, myid, currentUser[0].id)
+      .then((allowed) => {
+        if(allowed.isAllowed){
+          getRoom()
+          .then((res) => {
+            if(res[0].host){
+              socket.emit('joinmetothisroom', { roomid: myid, name: createRoomName });
+              setTellEveryOne(true)
+              setRoomid(myid);
+              setGoToPlayerVOD(true)
+            }
+          })
+        } else {
+          setError("Vous avez déja créée une room, veuillez vous déconnecter de votre room avant dans créer une autre !")
+        }
+      })
   };
 
-  const startCreating = () => {
-    if(iamhost){
-      socket.emit('joinmetothisroom', { roomid: myid, name: createRoomName });
-      setGoToPlayerVOD(true)
-    }
-  }
-
-  const startJoining = () => {
-
-      socket.emit('joinmetothisroom', { roomid: joinRoomId.token, name:joinRoomId.name });
-      setGoToPlayerVOD(true)
-    
-  }
-
-  const joinRoom = () => {
-    try{
-      if (joinRoomId?.name && joinRoomId?.token) {
-        localStorage.setItem('lets_party_uname',joinRoomId.name);
-        setRoomid(joinRoomId.token);
-        startJoining()
-        setIamhost(false)
-      }
-    } catch(error){
-      console.log(error)
-    }
+  const joinRoom = async () => {
+      addRoom({host: false, name: joinRoomId.name}, joinRoomId.token, currentUser[0].id)
+      .then(allowed => {
+        if(allowed.isAllowed){
+          getRoom()
+          .then(res => {
+            if(!res[0].host){
+              socket.emit('joinmetothisroom', { roomid: joinRoomId.token, name:joinRoomId.name });
+              setRoomid(joinRoomId.token);
+              setGoToPlayerVOD(true)
+            }
+          })
+        } else {
+          setError("Vous avez déja rejoind une room, veuillez la quitter pour en rejoindre une autre !")
+        }
+      })
   };
 
 
@@ -90,7 +93,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                 <div className="creating-container">
                     <div className="create-room-info-container" style={{justifyContent: !displaySearch && "center", alignItems: !displaySearch && "center"}}>
                         <form
-                        style={{height: "20%"}}
+                        style={{height: "80%"}}
                         className="search-input"
                         onSubmit={(e) => launchSearching(e, open.animeToFind)}
                         >
@@ -121,8 +124,12 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                                 <h1>Nom : {currentVodLiveStream?.vod?.name}</h1>
                                 <h1>Langue : {currentVodLiveStream?.vod?.langue}</h1>
                                 <h1>Saison : {currentVodLiveStream?.vod?.saison}</h1>
-                                <h1>Episode : {currentVodLiveStream?.vod?.current_episode[0][0].episode}</h1>
+                                <h1>Episode : {currentVodLiveStream?.vod?.current_episode?.[0]?.[0]?.episode}</h1>
                                 <TextField onChange={(e) => setCreateRoomName(e.target.value)} variant="filled" placeholder="Nom de la party"></TextField>
+                                <div>{error && 
+                                <Alert variant="filled" severity="info">
+                                    {error}
+                                </Alert>}</div>
                             </div>
                             }
                             <div>
@@ -179,6 +186,10 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                 >
                   REJOINDRE
                 </Button>
+                <div>{error && 
+                                <Alert variant="filled" severity="info">
+                                    {error}
+                                </Alert>}</div>
               </>
             )
           )}
