@@ -115,7 +115,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                                 <h1>Langue : {currentVodLiveStream?.vod?.langue}</h1>
                                 <h1>Saison : {currentVodLiveStream?.vod?.saison}</h1>
                                 <h1>Episode : {currentVodLiveStream?.vod?.current_episode?.[0]?.[0]?.episode}</h1>
-                                <TextField onChange={(e) => setCreateRoomName(e.target.value)} variant="filled" placeholder="Nom de la party"></TextField>
+                                <TextField onChange={(e) => setCreateRoomName(e.target.value)} variant="filled" placeholder="Choisissez un pseudo"></TextField>
                                 <div>{error && 
                                 <Alert variant="filled" severity="info">
                                     {error}
@@ -159,14 +159,14 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                   style={{ background: "white" }}
                   value={joinRoomId.name}
                   onChange={(e) => setJoinRoomId({...joinRoomId, name: e.target.value})}
-                  placeholder="nom de la room"
+                  placeholder="Choisissez un pseudo"
                 />
                 <TextField
                   variant="filled"
                   style={{ background: "white" }}
                   value={joinRoomId.token}
                   onChange={(e) => setJoinRoomId({...joinRoomId, token: e.target.value})}
-                  placeholder="Token"
+                  placeholder="Entrer le code secret"
                 />
                 <Button
                   disabled={joinRoomId?.name && joinRoomId?.token ? false : true}

@@ -32,10 +32,13 @@ const [playingState, setPlayingState] = useState({
     played: 0,
     seeking: false,
 });
+const {playing, played} = playingState
 let alreadyInTheRoom = false
 let namedInTheRoom = ""
 const videoRef = useRef();
 const infoRef = useRef();
+const [sync, setSync] = useState(false)
+const [confSync, setConfSync] = useState(false)
 let newHostPaused
 
 
@@ -59,10 +62,20 @@ useEffect(() => {
                         }
                     
           
-                let diffOfSeek = playingState.played - hosttime.played;
+                let diffOfSeek = hosttime - videoRef.current.getCurrentTime();
+
                 // sync time if any user is behind by more than 8 s (in case of poor connection)
                 // or if any user is forward 8s than everyone
-                
+                if(diffOfSeek > 2 || diffOfSeek < -2){
+                    setSync(true)
+                    videoRef.current.seekTo(hosttime)
+                }
+            } else if(res[0].host && videoRef?.current){
+                if(sync){
+                    setConfSync(true)
+                } else {
+                    setConfSync(false)
+                }
             }
         });
     });
@@ -154,6 +167,24 @@ useEffect(() => {
 }, [])
 
 useEffect(() => {
+      
+    if (currentUser.Room?.[0]?.host && videoRef?.current) {
+      if(!videoRef?.current){
+        return
+      }
+      if(confSync){
+        return
+      } else {
+          socket.emit('videoStates', { videoState: {
+            hosttime: videoRef.current.getCurrentTime(),
+            isHostPaused: !playing
+          }, roomid });
+          console.log("j'emite")
+      }
+    }
+  }, [videoRef, confSync, currentUser?.Room, played])
+
+useEffect(() => {
     socket.on('someonejoined', (name) => {
         if (iamhost && roomid) {
             getRoom()
@@ -218,7 +249,7 @@ useEffect(() => {
     return () => {
         socket.off("tell_everyone_who_joined")
     }
-}, [allusersinroom])
+}, [allusersinroom, roomid])
 
     //Check Address
     function isStunAddressUp(address, _timeout){
@@ -367,7 +398,8 @@ useEffect(() => {
         setTellEveryOne,
         tellEveryOne,
         playingState,
-        setPlayingState
+        setPlayingState,
+        sync,
     }
 
     return (

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { useSocket } from "../../../../../Component/Context/SocketContext";
 import extrait from '../assets/extrait.mp4'
-import extrait2 from '../assets/opm.mp4'
+import extrait2 from '../assets/extrait.mp4'
 import PlayerControls from "./PlayerControls/PlayerControls";
 import screenFull from "screenfull"
 import { isOpera } from "react-device-detect";
@@ -99,7 +99,7 @@ const VodPlayer = ({playerContainerRef}) => {
     }
     
     const handleSeekMouseUp = (e, newValue) => {
-        setPlayingState({...playingState,  seeking: false})
+        setPlayingState({...playingState,  seeking: false, currentPosition: newValue})
         videoRef.current.seekTo(newValue / 100)
     }
     
@@ -118,7 +118,7 @@ const VodPlayer = ({playerContainerRef}) => {
     const totalDuration = format(duration)
 
     return (
-        <div style={{display: "flex", height: "100%", width: "100%"}} ref={overlayContainerRef} onMouseMove={handleMouseMouve}>
+        <div style={{display: "flex", position: "relative", height: "100%", width: "100%"}} ref={overlayContainerRef} onMouseMove={handleMouseMouve}>
             <ReactPlayer  
             style={{objectFit: "none"}} 
             muted={muted} 

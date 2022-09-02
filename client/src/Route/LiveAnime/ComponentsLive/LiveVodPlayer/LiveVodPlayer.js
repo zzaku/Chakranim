@@ -16,21 +16,6 @@ const LiveVodPlayer = ({setGoToPlayerVOD, joinId, currentVodLiveStream}) => {
     const playerContainerRef = useRef()
 
 
-    useEffect(() => {
-      
-      if (currentUser.Room?.[0]?.host && videoRef?.current) {
-        if(!videoRef?.current){
-          return
-        }
-        socket.emit('videoStates', { videoState: {
-          hosttime: {loaded, loadedSeconds, played, playedSeconds},
-          isHostPaused: !playing
-        }, roomid });
-      }
-      //console.log({loaded, loadedSeconds, played, playedSeconds})
-    }, [videoRef, currentUser?.Room, playing])
-
-
     const disconnect = () => {
       removeRoom(currentUser.Room?.[0]?.id)
       socket.on('disconnect')
