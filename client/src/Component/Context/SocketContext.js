@@ -24,45 +24,48 @@ const [currentVodLiveStream, setCurrentVodLiveStream] = useState(null);
 const [userJoined, setUserJoined] = useState(null);
 const [thecode, setThecode] = useState(null);
 const [tellEveryOne, setTellEveryOne] = useState(null);
+const [playingState, setPlayingState] = useState({
+    playing: false,
+    muted: false,
+    volume: 0.5,
+    playbackRate: 1.0,
+    played: 0,
+    seeking: false,
+});
 let alreadyInTheRoom = false
 let namedInTheRoom = ""
 const videoRef = useRef();
 const infoRef = useRef();
+let newHostPaused
 
-
-
-  
-function checkIsAdPlayng() {
-    setAdTimer(setInterval(() => {
-      let isAd = document.querySelector('.ad-cta-wrapper');
-      if (isAd === null) {
-        getVideoPlayer();
-      }
-    }, 1000))
-  }
-  
-  function getVideoPlayer() {
-    clearInterval(adTimer);
-    //keep listening to the hosts videoplayer events, only host can control the play pause and seek
-    if (currentUser.Room?.[0]?.host && videoRef?.current) {
-      setInterval(() => {
-        syncVideoStates();
-      }, 1000);
-    }
-  }
-  
-  function syncVideoStates() {
-    let videoState = {
-      hosttime: videoRef.current.currentTime,
-      isHostPaused: videoRef.current.paused,
-    };
-    socket.emit('videoStates', { videoState, roomid });
-  }
 
 useEffect(() => {
     socket.on('whoami',  ({ id }) => {
         setMyid(id);
       });
+
+    socket.on('videoStates', ({ isHostPaused, hosttime }) => {
+        // sync video player pause and play of users with the host
+        let currentHostPaused = isHostPaused
+        getRoom()
+            .then(res => {
+                if(!res[0].host && videoRef?.current){
+                    
+                        newHostPaused = isHostPaused
+                        if (isHostPaused) {
+                            setPlayingState({...playingState, playing: false})
+                        } else {
+                            setPlayingState({...playingState, playing: true})
+                        }
+                    
+          
+                let diffOfSeek = playingState.played - hosttime.played;
+                // sync time if any user is behind by more than 8 s (in case of poor connection)
+                // or if any user is forward 8s than everyone
+                
+            }
+        });
+    });
 
       socket.on('joinmetothisroomsuccess', (msg) => {
           setThecode(msg)
@@ -75,7 +78,6 @@ useEffect(() => {
             .then(res => {
                 if(!res[0].host){
                     if(!alreadyInTheRoom){
-                        console.log(allusers)
                         alreadyInTheRoom = true
                         allusers?.map((user) => {
                             if(res[0].name === user){
@@ -119,7 +121,6 @@ useEffect(() => {
                                 }
                             });
                         } else {
-                            console.log(allusers)
                             const status = document.createElement("div")
                             const user_namer = document.createElement("div")
                             const nameOfUser_container = document.createElement("div")
@@ -146,6 +147,7 @@ useEffect(() => {
     
     return () => {
         socket.off("whoami")
+        socket.off("videoStates")
         socket.off("joinmetothisroomsuccess")
         socket.off("who_joined")
     }
@@ -217,26 +219,6 @@ useEffect(() => {
         socket.off("tell_everyone_who_joined")
     }
 }, [allusersinroom])
-
-    socket.on('videoStates', ({ isHostPaused, hosttime }) => {
-        // sync video player pause and play of users with the host
-        console.log("jsuis dans la video")
-        if (!currentUser?.Room?.[0]?.host && videoRef?.current) {
-            if (isHostPaused) {
-                videoRef.current?.pause();
-            } else {
-                videoRef.current?.play();
-            }
-
-            let diffOfSeek = videoRef.current.currentTime - hosttime;
-
-            // sync time if any user is behind by more than 8 s (in case of poor connection)
-            // or if any user is forward 8s than everyone
-            if (diffOfSeek < -2 || diffOfSeek > 2) {
-                videoRef.current.currentTime = hosttime;
-            }
-        }
-    });
 
     //Check Address
     function isStunAddressUp(address, _timeout){
@@ -339,7 +321,7 @@ useEffect(() => {
     }
 
     
-        const pc = new RTCPeerConnection({
+        /*const pc = new RTCPeerConnection({
             iceServers: [
                     {
                     urls: "stun:openrelay.metered.ca:80",
@@ -360,10 +342,9 @@ useEffect(() => {
                     credential: "openrelayproject",
                     },
             ]
-        })
+        })*/
 
     const value = {
-        pc,
         displaySearch,
         setDisplaySearch,
         setCurrentVodLiveStream,
@@ -385,7 +366,8 @@ useEffect(() => {
         infoRef,
         setTellEveryOne,
         tellEveryOne,
-        checkIsAdPlayng
+        playingState,
+        setPlayingState
     }
 
     return (

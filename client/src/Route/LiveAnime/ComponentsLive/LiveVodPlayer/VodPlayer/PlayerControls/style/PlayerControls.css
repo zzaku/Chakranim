@@ -1,0 +1,26 @@
+.wrapper-controls{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+.control-icons{
+    font-size: large;
+    transform: scale(0.9);
+}
+
+.control-icons:hover{
+    color: #2c2c80;
+    transform: scale(1);
+}
+
+.play-btn:hover{
+    color: #2c2c80;
+}
