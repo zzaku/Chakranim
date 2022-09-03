@@ -18,6 +18,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
   const [joinRoomId, setJoinRoomId] = useState({name: "", token: ""});
   const [createRoomName, setCreateRoomName] = useState("");
   const [error, setError] = useState("");
+  const footerContext = useContext(epContext)
 
   const open = useContext(epContext)
 
@@ -37,6 +38,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
           setRoomid(myid);
           setIamhost(true)
           setGoToPlayerVOD(true)
+          footerContext.setHideFooter(true)
         } else {
           setError("Vous avez déja créée une room, veuillez la quitter pour en créer une autre !")
         }
@@ -50,6 +52,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
             socket.emit('joinmetothisroom', { roomid: joinRoomId.token, name:joinRoomId.name });
             setRoomid(joinRoomId.token);
             setGoToPlayerVOD(true)
+            footerContext.setHideFooter(true)
         } else {
           setError("Vous avez déja rejoind une room, veuillez la quitter pour en rejoindre une autre !")
         }

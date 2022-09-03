@@ -24,6 +24,7 @@ function App() {
   const [animeToFind, setAnimeToFind] = useState("");
   const [animeFound, setAnimeFound] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hideFooter, setHideFooter] = useState(false);
 
   ////local storage ep
   const saveAnime = localStorage.watching;
@@ -120,6 +121,8 @@ function App() {
           animeFound: animeFound,
           loading: loading,
           setLoading: setLoading,
+          hideFooter: hideFooter,
+          setHideFooter: setHideFooter,
         }}
       >
         <div className="App">
@@ -188,7 +191,7 @@ function App() {
               <Route path="/connexion" element={<Login />} />
               <Route path="/account" element={<Account />} />
             </Routes>
-            <Footer />
+            {!hideFooter && <Footer />}
           </Router>
         </div>
       </epContext.Provider>
