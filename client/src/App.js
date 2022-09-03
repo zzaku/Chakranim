@@ -191,7 +191,7 @@ function App() {
               <Route path="/connexion" element={<Login />} />
               <Route path="/account" element={<Account />} />
             </Routes>
-            {!hideFooter && <Footer />}
+            <Footer />
           </Router>
         </div>
       </epContext.Provider>
