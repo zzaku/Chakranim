@@ -45,7 +45,7 @@
     display: flex;
     height: 82%;
     width: 85%;
-    border-radius: 75px;
+    border-radius: 45px;
     flex-direction: column;
     border: 4px solid #6669ba;
     background: #262626;
@@ -58,11 +58,42 @@
     display: flex;
     height: 100%;
     width: 100%;
-    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-message-overflow-container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.chat-message-nooverflow{
+    display: flex;
+    height: 80%;
+    width: 95%;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
+}
+
+.chat-message-overflow{
+    display: flex;
+    height: 80%;
+    width: 95%;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.chat-message-container::-webkit-scrollbar{
+    display: none;
 }
 
 .chat-message-input{
@@ -71,11 +102,10 @@
     width: 100%;
     justify-content: center;
     align-items: center;
-    border-radius: 25px;
 }
 
-.chat-message-input > div > div{
-    border-radius: 25px;
+.chat-message-input > form > div > div{
+    border-radius: 10px;
     border: 2px solid #6669ba;
 }
 
@@ -90,8 +120,15 @@
     height: 10%;
     width: 100%;
     color: #fff;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+}
+
+.chat-message-content{
+    display: flex;
+    height: auto;
+    width: auto;
+    margin-left: 5%;
 }
 
 .joined-container{

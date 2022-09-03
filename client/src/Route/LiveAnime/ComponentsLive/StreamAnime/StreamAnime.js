@@ -9,12 +9,11 @@ import { epContext } from "../../../../App";
 import Found from "../../../../Component/Search/Found/Found";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import ChatLive from "../ChatLive/ChatLive";
-import { io } from "socket.io-client";
 
 const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
   const { currentUserID, getRoom, currentUser, addRoom } = useAuth();
   const [choice, setChoice] = useState("");
-  const { myid, socket, setIamhost, setRoomid, roomid, displaySearch, setTellEveryOne, setDisplaySearch, setCurrentVodLiveStream, currentVodLiveStream } = useSocket();
+  const { myid, socket, setIamhost, setRoomid, roomid, displaySearch, setDisplaySearch, setCurrentVodLiveStream, currentVodLiveStream } = useSocket();
   const [joinRoomId, setJoinRoomId] = useState({name: "", token: ""});
   const [createRoomName, setCreateRoomName] = useState("");
   const [error, setError] = useState("");

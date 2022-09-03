@@ -2,13 +2,19 @@ import { TextField } from "@mui/material"
 import { useSocket } from "../../../../Component/Context/SocketContext"
 import "./style/ChatLive.css"
 import { useState } from "react"
+import { useAuth } from "../../../../Component/Context/AuthContext"
 
 const ChatLive = () => {
 
-
-    const {someoneelse, infoRef} = useSocket()
+    const [chatMessage, setChatMessage] = useState("")
+    const {currentUser} = useAuth()
+    const { socket, roomid, infoRef, chatMessageRef, messages } = useSocket()
     
-    
+    const submitMessage = (e) => {
+        e.preventDefault()
+        socket.emit("msg", {data: {msg: chatMessage, id: currentUser[0].id}, roomid: roomid})
+        setChatMessage("")
+    }
     
     return (
         <div className="chat-live-container">
@@ -25,15 +31,12 @@ const ChatLive = () => {
                     </div>
                     <div className="chat-container">
                         <div className="chat-message-container">
-                            <div className="chat-message-sending">
-                                <span>c Biennnnnnnnnnnnnnnnnn !</span>
-                            </div>
-                            <div className="chat-message-sending">
-                                <span>c Biennnnnnnnnnnnnnnnnn !</span>
-                            </div>
+                            <div ref={chatMessageRef} className={messages.length <= 10 ? "chat-message-nooverflow" : "chat-message-overflow"}></div>
                         </div>
                         <div className="chat-message-input">
-                        <TextField sx={{borderRadius: "25px", background: "white"}} placeholder="Envoyer un message"></TextField>
+                            <form onSubmit={submitMessage}>
+                                <TextField sx={{borderRadius: "10px", background: "white"}} value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} placeholder="Envoyer un message"></TextField>
+                            </form>
                         </div>
                     </div>
                 </div>

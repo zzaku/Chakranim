@@ -173,7 +173,7 @@ export const AuthProvider = ({children}) => {
                 allowed = {isAllowed: true}
                 }
 /**/         })
-return allowed
+          return allowed
 /**/     }
 /**/
 /**/   const removeRoom = async (idRoom) => {

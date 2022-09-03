@@ -27,7 +27,7 @@ const [tellEveryOne, setTellEveryOne] = useState(null);
 const [playingState, setPlayingState] = useState({
     playing: false,
     muted: false,
-    volume: 0.5,
+    volume: 0.2,
     playbackRate: 1.0,
     played: 0,
     seeking: false,
@@ -37,15 +37,14 @@ let alreadyInTheRoom = false
 let namedInTheRoom = ""
 const videoRef = useRef();
 const infoRef = useRef();
+const chatMessageRef = useRef();
+const [messages, setMessages] = useState([])
 const [sync, setSync] = useState(false)
 const [confSync, setConfSync] = useState(false)
 let newHostPaused
 
 
 useEffect(() => {
-    socket.on('whoami',  ({ id }) => {
-        setMyid(id);
-      });
 
     socket.on('videoStates', ({ isHostPaused, hosttime }) => {
         // sync video player pause and play of users with the host
@@ -78,6 +77,27 @@ useEffect(() => {
                 }
             }
         });
+    });
+
+    socket.on('msg', (data) => {
+        if(chatMessageRef?.current){
+            setMessages(current => [...current, data.msg])
+            const chatMessage_container = document.createElement("div")
+            chatMessage_container.className = "chat-message-sending"
+            const chat_name_container = document.createElement("div")
+            chat_name_container.className = "chat-name-container"
+            const chat_name = document.createElement("h3")
+            chat_name.innerHTML = (data.id === currentUser[0].id ? currentUser[0].pseudo : "invité") + ":"
+            const chatMessage_content = document.createElement("div")
+            chatMessage_content.className = "chat-message-content"
+            const chatMessage = document.createElement("span")
+            chatMessage.innerHTML = data.msg
+            chatMessageRef.current.appendChild(chatMessage_container)
+            chatMessage_container.appendChild(chat_name_container)
+            chat_name_container.appendChild(chat_name)
+            chatMessage_container.appendChild(chatMessage_content)
+            chatMessage_content.appendChild(chatMessage)
+        }
     });
 
       socket.on('joinmetothisroomsuccess', (msg) => {
@@ -159,10 +179,20 @@ useEffect(() => {
     });
     
     return () => {
-        socket.off("whoami")
         socket.off("videoStates")
+        socket.off("msg")
         socket.off("joinmetothisroomsuccess")
         socket.off("who_joined")
+    }
+}, [])
+
+useEffect(() => {
+    socket.on('whoami',  ({ id }) => {
+        setMyid(id);
+      });
+
+      return () => {
+        socket.off("whoami")
     }
 }, [])
 
@@ -179,7 +209,6 @@ useEffect(() => {
             hosttime: videoRef.current.getCurrentTime(),
             isHostPaused: !playing
           }, roomid });
-          console.log("j'emite")
       }
     }
   }, [videoRef, confSync, currentUser?.Room, played])
@@ -395,11 +424,13 @@ useEffect(() => {
         setAdTimer,
         adTimer,
         infoRef,
+        chatMessageRef,
         setTellEveryOne,
         tellEveryOne,
         playingState,
         setPlayingState,
         sync,
+        messages,
     }
 
     return (
