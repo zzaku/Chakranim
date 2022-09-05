@@ -9,6 +9,7 @@ import { epContext } from "../../../../App";
 import Found from "../../../../Component/Search/Found/Found";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import ChatLive from "../ChatLive/ChatLive";
+import DropFileInput from "../../../../Component/DropFileInput/DropFileInput";
 
 const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
   const { currentUserID, getRoom, currentUser, addRoom } = useAuth();
@@ -83,6 +84,11 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
           {choice === "create" ? (
             <div className="create-room-info">
                 <div className="creating-container">
+                {(!displaySearch && currentVodLiveStream) &&
+                        <div className="vod-input-files">
+                            <DropFileInput />
+                        </div>
+                    }
                     <div className="create-room-info-container" style={{justifyContent: !displaySearch && "center", alignItems: !displaySearch && "center"}}>
                         <form
                         style={{height: "80%"}}
@@ -117,7 +123,9 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                                 <h1>Langue : {currentVodLiveStream?.vod?.langue}</h1>
                                 <h1>Saison : {currentVodLiveStream?.vod?.saison}</h1>
                                 <h1>Episode : {currentVodLiveStream?.vod?.current_episode?.[0]?.[0]?.episode}</h1>
-                                <TextField onChange={(e) => setCreateRoomName(e.target.value)} variant="filled" placeholder="Choisissez un pseudo"></TextField>
+                                <div style={{display: "flex", flexDirection: "row", width: "100%", alignItems: "center"}}>
+                                  <TextField onChange={(e) => setCreateRoomName(e.target.value)} variant="filled" placeholder="Choisissez un pseudo"></TextField>
+                                </div>
                                 <div>{error && 
                                 <Alert variant="filled" severity="info">
                                     {error}

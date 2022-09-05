@@ -1,0 +1,102 @@
+.DropFileInput-container{
+    display: flex;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border: 2px dashed white;
+    border-radius: 20px;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: antiquewhite;
+    flex-direction: column;
+}
+
+.file-img{
+    display: flex;
+    height: 60%;
+    width: 100%;
+    flex-direction: row;
+    background-color: crimson;
+}
+
+.DropFileInput{
+    display: flex;
+    position: relative;
+    border: 2px dashed rgb(72, 45, 121);
+    border-radius: 20px;
+    height: 40%;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgba(143, 101, 240, 0.678);
+    flex-direction: column;
+}
+
+.input-file-video input{
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.DropFileInput:hover,
+.DropFileInput.dragover{
+    opacity: 0.6;
+}
+
+.file-img{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+}
+
+.file-img::-webkit-scrollbar{
+    display: none;
+}
+
+.input-image-vod{
+    display: flex;
+    position: relative;
+    height: 40%;
+    width: 50%;
+    flex-direction: column;
+}
+
+.input-image-vod-container{
+    display: flex;
+    position: relative;
+    height: 90%;
+    width: 100%;
+}
+.image-vod-name{
+    display: flex;
+    position: relative;
+    height: 10%;
+    width: 100%;
+}
+
+.video-image{
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.overlay-video-image{
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    background-color: #777;
+    opacity: 0.3;
+    z-index: 10;
+}

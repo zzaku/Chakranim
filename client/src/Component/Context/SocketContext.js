@@ -87,7 +87,7 @@ useEffect(() => {
             const chat_name_container = document.createElement("div")
             chat_name_container.className = "chat-name-container"
             const chat_name = document.createElement("h3")
-            chat_name.innerHTML = (data.id === currentUser[0].id ? currentUser[0].pseudo : "invité") + ":"
+            chat_name.innerHTML = (data.id === currentUser[0].id ? currentUser[0].pseudo : data.pseudo) + ":"
             const chatMessage_content = document.createElement("div")
             chatMessage_content.className = "chat-message-content"
             const chatMessage = document.createElement("span")
@@ -198,7 +198,7 @@ useEffect(() => {
 
 useEffect(() => {
       
-    if (currentUser.Room?.[0]?.host && videoRef?.current) {
+    if (currentUser?.Room?.[0]?.host && videoRef?.current) {
       if(!videoRef?.current){
         return
       }

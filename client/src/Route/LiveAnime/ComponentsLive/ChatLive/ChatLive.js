@@ -12,7 +12,7 @@ const ChatLive = () => {
     
     const submitMessage = (e) => {
         e.preventDefault()
-        socket.emit("msg", {data: {msg: chatMessage, id: currentUser[0].id}, roomid: roomid})
+        socket.emit("msg", {data: {msg: chatMessage, id: currentUser[0].id, pseudo: currentUser[0].pseudo}, roomid: roomid})
         setChatMessage("")
     }
     
