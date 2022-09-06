@@ -31,6 +31,7 @@ const [playingState, setPlayingState] = useState({
     playbackRate: 1.0,
     played: 0,
     seeking: false,
+    url: "",
 });
 const {playing, played} = playingState
 let alreadyInTheRoom = false
@@ -41,8 +42,8 @@ const chatMessageRef = useRef();
 const [messages, setMessages] = useState([])
 const [sync, setSync] = useState(false)
 const [confSync, setConfSync] = useState(false)
+const [urlVod, setUrlVod] = useState("")
 let newHostPaused
-
 
 useEffect(() => {
 
@@ -431,6 +432,8 @@ useEffect(() => {
         setPlayingState,
         sync,
         messages,
+        urlVod,
+        setUrlVod,
     }
 
     return (

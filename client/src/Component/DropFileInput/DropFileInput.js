@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import PlayCircle from '@mui/icons-material/PlayCircle';
 
 
-const DropFileInput = () => {
+const DropFileInput = ({setUrlUpload}) => {
 
     const wrapperVodRef = useRef(null)
 
@@ -28,20 +28,23 @@ const DropFileInput = () => {
         const newFile = e.target.files[e.target.files.length - 1]
         if(newFile){
         const reader = new FileReader();
+        console.log(newFile)
         let buffer = reader.readAsArrayBuffer(newFile);
-        let videoBlob = new Blob([new Uint8Array(buffer)], { type: 'video/mp4' });
+        newFile.arrayBuffer().then((arrayBuffer) => {
+            const blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'video/mp4' });
+            console.log(blob)
+            setUrlUpload([...fileList, { result: blob }])
+        });
         let url = window.URL.createObjectURL(newFile);
         reader.addEventListener(
           "load",
           () => {
-            setFileList([...fileList,{ name: newFile["name"], result: url }]);
+            setFileList([...fileList, { name: newFile["name"], result: url }]);
           },
           false
         );
       };
     }
-
-    console.log(fileList)
 
     return (
         <div className="DropFileInput-container">

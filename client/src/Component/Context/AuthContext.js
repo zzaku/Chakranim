@@ -181,6 +181,18 @@ export const AuthProvider = ({children}) => {
 /**/          await deleteDoc(userSetPreferencesRef);
 /**/          await getRoom()
 /**/     }
+/**/    
+/**/   const uploadVodLive = async (url, roomId) => {   
+/**/          const blobRef = ref(storage, `vod_live/${roomId}`)
+/**/          const upload =  await uploadBytes(blobRef, url)
+/**/          return upload
+/**/     }
+/**/
+/**/   const getBackVodLive = async (roomId) => {
+/**/          const storage = getStorage();
+/**/          const getUrl = getDownloadURL(ref(storage,`vod_live/${roomId}`)).then(url => url)
+/**/          return getUrl
+/**/     }
 /**/
 /**/    useEffect(() => {
 /**/        
@@ -315,7 +327,9 @@ export const AuthProvider = ({children}) => {
         setBackgroundPath,
         addRoom,
         removeRoom,
-        getRoom
+        getRoom,
+        uploadVodLive,
+        getBackVodLive,
     }
 
     return (

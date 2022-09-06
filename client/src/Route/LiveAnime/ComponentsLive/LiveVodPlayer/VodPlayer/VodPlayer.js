@@ -32,7 +32,7 @@ const VodPlayer = ({playerContainerRef}) => {
 
     const [screenFulls, setScreenFull] = useState(false)
 
-    const {playingState, setPlayingState} = useSocket()
+    const {playingState, setPlayingState, urlVod} = useSocket()
 
     const {playing, muted, volume, playbackRate, played, seeking} = playingState
 
@@ -127,7 +127,7 @@ const VodPlayer = ({playerContainerRef}) => {
             ref={videoRef}
             playing={playing}
             volume={volume}
-            url={extrait2} 
+            url={urlVod} 
             playbackRate={playbackRate}
             onProgress={handleProgress}
             />

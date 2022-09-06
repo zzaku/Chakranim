@@ -257,7 +257,7 @@ h1{
     }
 
     .list-card{
-        width: 80%;
+        width: 340px;
         height: 62%;
         padding: 1rem var(--spacer) 1rem var(--spacer);
         grid-auto-columns: 40%;

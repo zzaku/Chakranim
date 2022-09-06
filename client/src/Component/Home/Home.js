@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useMediaQuery } from "@mui/material"
 import "./style/Home.css"
 import { useAuth } from "../Context/AuthContext"
+import { isSafari } from "react-device-detect"
 
 const Home = ({allAnimes, setNotAtHome}) => {
 
@@ -40,8 +41,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
         }
         
         useEffect(() => {
-            setReady(true)
-            if(ready){
+
                 getByLastAnime()
                 getMostWatched()
                 getByGenre13()
@@ -60,11 +60,8 @@ const Home = ({allAnimes, setNotAtHome}) => {
                     getByGenre9()
                     getByGenre12()
                     getByGenre3()
-                  }
-            }
-
-            
-        }, [ready])
+                }    
+        }, [])
 
         useEffect(() => {
             getResume()
@@ -73,6 +70,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
                 getResume()
               }
         }, [currentUserID, currentUser])
+        
 
                 let getByGenre3 = async () => {
                     fetch(`${process.env.REACT_APP_API_ANIME}/VOD/animes/Allgenres?genre1=${genres[2]}${getParam(genres[2])}`)
@@ -136,7 +134,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
         return (
             <div className="anime-list">
                 <div className="anime-container">
-                    <div className="extrait">
+                    <div className="extrait" style={{height: isSafari && "26vh"}}>
                        <Extrait />
                     </div>
                     <div className="list">
@@ -145,7 +143,7 @@ const Home = ({allAnimes, setNotAtHome}) => {
 
                             {!currentUserID || resume[0]?.Reprendre?.message?.name === "CastError" || resume[0]?.[genres[14]]?.length === 0 ? null : <List allAnimes={allAnimes} genres={genres[14]} genre={resume} setGenre={setLastAnime} setNotAtHome={setNotAtHome} />}
 
-                            {mostWatched ? <List allAnimes={allAnimes} genres={genres[13]} genre={mostWatched} setGenre={setLastAnime} setNotAtHome={setNotAtHome} /> : null}
+                            {mostWatched ? <List allAnimes={allAnimes} genres={genres[13]} genre={mostWatched} setGenre={setMostWatched} setNotAtHome={setNotAtHome} /> : null}
                             
                             {genre3 && genres[2] ?<List allAnimes={allAnimes} genres={genres[2]} genre={ genre3} setGenre={setGenre3} setNotAtHome={setNotAtHome}/> : null}
                             {genre4 && genres[3] ?<List allAnimes={allAnimes} genres={genres[3]} genre={ genre4} setGenre={setGenre4} setNotAtHome={setNotAtHome}/> : null}
