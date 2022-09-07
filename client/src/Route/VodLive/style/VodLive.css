@@ -1,0 +1,23 @@
+.live-vod-containers{
+    display: flex;
+    height: 100%;
+    width: 80%;
+    border-radius: 25px;
+    justify-content: center;
+    align-items: center;
+}
+
+.vod-id-live{
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-lives{
+    display: flex;
+    height: 100%;
+    width: 20%;
+}

@@ -9,7 +9,7 @@ import "./style/LiveVodPlayer.css"
 import { epContext } from "../../../../App"
 
 
-const LiveVodPlayer = ({setGoToPlayerVOD, joinId, currentVodLiveStream}) => {
+const LiveVodPlayer = ({setGoToPlayerVOD}) => {
 
     const {currentUser, removeRoom} = useAuth()
     const { thecode, socket, roomid, setAdTimer, adTimer, videoRef, playingState} = useSocket()

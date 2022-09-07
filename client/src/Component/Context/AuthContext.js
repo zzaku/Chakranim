@@ -194,6 +194,10 @@ export const AuthProvider = ({children}) => {
 /**/          return getUrl
 /**/     }
 /**/
+/**/   const getHostLive = async (currentUser) => {
+/**/          return currentUser
+/**/     }
+/**/
 /**/    useEffect(() => {
 /**/        
 /**/              getUser();
@@ -330,7 +334,8 @@ export const AuthProvider = ({children}) => {
         getRoom,
         uploadVodLive,
         getBackVodLive,
-    }
+        getHostLive,    
+      }
 
     return (
         <AuthContext.Provider value={value}>

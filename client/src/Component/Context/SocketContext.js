@@ -1,6 +1,7 @@
 import { async } from "@firebase/util";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client"
+import { epContext } from "../../App";
 import { useAuth } from "./AuthContext";
 const socket = io('https://lets-party-server.herokuapp.com/');
 
@@ -12,12 +13,10 @@ export const useSocket = () => {
 
 export const SocketProvider = ({children}) => {
 
+const id_live = useContext(epContext)
 const [urlsValidated, setUrlsValidated] = useState(null)
 const [adTimer, setAdTimer] = useState(null)
-const [myid, setMyid] = useState(null)
-const [roomid, setRoomid] = useState(null)
-const [iamhost, setIamhost] = useState(false)
-const {currentUser, getRoom} = useAuth()
+const {currentUser, getHostLive} = useAuth()
 const [allusersinroom, setAllusersinroom] = useState([])
 const [displaySearch, setDisplaySearch] = useState(null);
 const [currentVodLiveStream, setCurrentVodLiveStream] = useState(null);
@@ -41,26 +40,25 @@ const infoRef = useRef();
 const chatMessageRef = useRef();
 const [messages, setMessages] = useState([])
 const [sync, setSync] = useState(false)
-const [confSync, setConfSync] = useState(false)
-const [urlVod, setUrlVod] = useState("")
 let newHostPaused
 
 useEffect(() => {
 
     socket.on('videoStates', ({ isHostPaused, hosttime }) => {
+        console.log("recéption data : ", isHostPaused, hosttime)
         // sync video player pause and play of users with the host
         let currentHostPaused = isHostPaused
-        getRoom()
-            .then(res => {
-                if(!res[0].host && videoRef?.current){
-                    
+        const getHost = getHostLive(currentUser?.Room?.[0]?.host)
+        getHost
+        .then(host => {
+            console.log(host)
+                if(!host){
                         newHostPaused = isHostPaused
                         if (isHostPaused) {
                             setPlayingState({...playingState, playing: false})
                         } else {
                             setPlayingState({...playingState, playing: true})
                         }
-                    
           
                 let diffOfSeek = hosttime - videoRef.current.getCurrentTime();
 
@@ -70,14 +68,8 @@ useEffect(() => {
                     setSync(true)
                     videoRef.current.seekTo(hosttime)
                 }
-            } else if(res[0].host && videoRef?.current){
-                if(sync){
-                    setConfSync(true)
-                } else {
-                    setConfSync(false)
-                }
             }
-        });
+        })
     });
 
     socket.on('msg', (data) => {
@@ -108,13 +100,14 @@ useEffect(() => {
     
     socket.on('who_joined', (allusers) => {
         if(allusers.length > 1){
-            getRoom()
+            const getHost = getHostLive(currentUser?.Room?.[0]?.host)
+            getHost
             .then(res => {
-                if(!res[0].host){
+                if(!res){
                     if(!alreadyInTheRoom){
                         alreadyInTheRoom = true
                         allusers?.map((user) => {
-                            if(res[0].name === user){
+                            if(currentUser[0].pseudo === user){
                                 const status = document.createElement("div")
                                 const user_namer = document.createElement("div")
                                 const nameOfUser_container = document.createElement("div")
@@ -189,7 +182,7 @@ useEffect(() => {
 
 useEffect(() => {
     socket.on('whoami',  ({ id }) => {
-        setMyid(id);
+        id_live.setMyId(id);
       });
 
       return () => {
@@ -198,28 +191,22 @@ useEffect(() => {
 }, [])
 
 useEffect(() => {
-      
+    console.log("envoie data : ", currentUser?.Room?.[0]?.host, videoRef?.current)
     if (currentUser?.Room?.[0]?.host && videoRef?.current) {
       if(!videoRef?.current){
         return
       }
-      if(confSync){
-        return
-      } else {
-          socket.emit('videoStates', { videoState: {
-            hosttime: videoRef.current.getCurrentTime(),
-            isHostPaused: !playing
-          }, roomid });
-      }
+        socket.emit('videoStates', { videoState: {
+        hosttime: videoRef.current.getCurrentTime(),
+        isHostPaused: !playing
+        }, roomid: id_live.roomid })
     }
-  }, [videoRef, confSync, currentUser?.Room, played])
+  }, [currentUser?.Room, played, playing])
 
 useEffect(() => {
     socket.on('someonejoined', (name) => {
-        if (iamhost && roomid) {
-            getRoom()
-            .then(res => {
-                if(res[0].name === name){
+        if (id_live.iamhost && id_live.roomid) {
+                if(currentUser[0].pseudo === name){
                     const status = document.createElement("div")
                     const user_namer = document.createElement("div")
                     const nameOfUser_container = document.createElement("div")
@@ -258,9 +245,8 @@ useEffect(() => {
                     user_namer.appendChild(welcome_container)
                     welcome_container.appendChild(welcome)
                 }
-            })
-        }
-        if(roomid){
+            }
+        if(id_live.roomid){
             setAllusersinroom(current => [...current, name]);
         }
     });
@@ -268,18 +254,18 @@ useEffect(() => {
     return () => {
         socket.off("someonejoined")
     }
-}, [roomid])
+}, [id_live.roomid])
 
 useEffect(() => {
     socket.emit('tell_everyone_who_joined', {
         allusers: allusersinroom,
-        roomid,
+        roomid: id_live.roomid,
     });
 
     return () => {
         socket.off("tell_everyone_who_joined")
     }
-}, [allusersinroom, roomid])
+}, [allusersinroom, id_live.roomid])
 
     //Check Address
     function isStunAddressUp(address, _timeout){
@@ -411,12 +397,6 @@ useEffect(() => {
         setCurrentVodLiveStream,
         currentVodLiveStream,
         socket,
-        myid,
-        setMyid,
-        iamhost,
-        setRoomid,
-        roomid,
-        setIamhost,
         videoRef,
         setAllusersinroom,
         allusersinroom,
@@ -432,8 +412,6 @@ useEffect(() => {
         setPlayingState,
         sync,
         messages,
-        urlVod,
-        setUrlVod,
     }
 
     return (

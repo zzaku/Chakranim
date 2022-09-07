@@ -10,17 +10,20 @@ import Found from "../../../../Component/Search/Found/Found";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import ChatLive from "../ChatLive/ChatLive";
 import DropFileInput from "../../../../Component/DropFileInput/DropFileInput";
+import { useNavigate } from "react-router-dom";
 
 const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
   const { currentUserID, getRoom, currentUser, addRoom, uploadVodLive, getBackVodLive } = useAuth();
   const [choice, setChoice] = useState("");
-  const { myid, socket, setIamhost, setRoomid, roomid, setUrlVod, displaySearch, setDisplaySearch, setCurrentVodLiveStream, currentVodLiveStream } = useSocket();
+  const { socket, displaySearch, setDisplaySearch, setCurrentVodLiveStream, currentVodLiveStream } = useSocket();
   const [joinRoomId, setJoinRoomId] = useState({name: "", token: ""});
   const [createRoomName, setCreateRoomName] = useState("");
   const [error, setError] = useState("");
   const [urlUpload, setUrlUpload] = useState([]);
   const [loadingLive, setLoadingLive] = useState(false);
   const footerContext = useContext(epContext)
+  const id = useContext(epContext)
+  const navigate = useNavigate();
 
   const open = useContext(epContext)
 
@@ -35,37 +38,42 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
   const createRoom = async () => {
     let room = {}
     setLoadingLive("Creation de la room...")
-      await addRoom({host: true, name: createRoomName}, myid, currentUser[0].id)
+      await addRoom({host: true, name: currentUser[0].pseudo}, id.myId, currentUser[0].id)
       .then( async (res) => {
         if(res.isAllowed){
-          await uploadVodLive(urlUpload[0].result, myid)
+        await getRoom()
+        .then(async (res) => {
+        if(res.length > 0){
+          await uploadVodLive(urlUpload[0].result, id.myId)
           .then(async () => {
-            await getBackVodLive(myid)
+            await getBackVodLive(id.myId)
             .then(res => {
-              socket.emit('joinmetothisroom', { roomid: myid, name: createRoomName });
-              setRoomid(myid);
-              setIamhost(true)
+              socket.emit('joinmetothisroom', { roomid: id.myId, name: currentUser[0].pseudo });
+              id.setRoomid(id.myId);
+              id.setIamhost(true)
               footerContext.setHideFooter(true)
-              setUrlVod(res)
+              id.setUrlVod(res)
               setLoadingLive("")
               room = {room_created: true, room_already_created: false}
             })
           })
-        } else {
-          room = {room_created: false, room_already_created: true}
         }
       })
 
-      return room
+      } else {
+        room = {room_created: false, room_already_created: true}
+      }
+    })
+    return room
   };
 
   const goToRoom = async () => {
-    console.log(choice)
     if(choice === "create"){
       createRoom()
       .then(res => {
         if(res.room_created && !res.room_already_created){
           setGoToPlayerVOD(true)
+          navigate(`/live-anime/${id.myId}`)
         } else if(!res.room_created && res.room_already_created) {
           setError("Vous avez déja créée une room, veuillez la quitter pour en créer une autre !")
         }
@@ -75,6 +83,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
       .then(res => {
         if(res.room_joined && !res.room_already_joined){
           setGoToPlayerVOD(true)
+          navigate(`/live-anime/${id.myId}`)
         } else if(!res.room_joined && res.room_already_joined) {
           setError("Vous avez déja rejoind une room, veuillez la quitter pour en rejoindre une autre !")
         }
@@ -85,18 +94,23 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
   const joinRoom = async () => {
     let room = {}
     setLoadingLive("Chargement de la room...")
-      await addRoom({host: false, name: joinRoomId.name}, joinRoomId.token, currentUser[0].id)
+      await addRoom({host: false, name: currentUser[0].pseudo}, joinRoomId.token, currentUser[0].id)
       .then( async (allowed) => {
         if(allowed.isAllowed){
-          await getBackVodLive(joinRoomId.token)
-            .then(res => {
-              socket.emit('joinmetothisroom', { roomid: joinRoomId.token, name:joinRoomId.name });
-              setUrlVod(res)
-              setRoomid(joinRoomId.token);
-              setLoadingLive("")
-              footerContext.setHideFooter(true)
-              room = {room_joined: true, room_already_joined: false, url_vod: res}
-            })
+          await getRoom()
+          .then(async (res) => {
+            if(res.length > 0){
+              await getBackVodLive(joinRoomId.token)
+                .then(res => {
+                  socket.emit('joinmetothisroom', { roomid: joinRoomId.token, name: currentUser[0].pseudo });
+                  id.setUrlVod(res)
+                  id.setRoomid(joinRoomId.token);
+                  setLoadingLive("")
+                  footerContext.setHideFooter(true)
+                  room = {room_joined: true, room_already_joined: false, url_vod: res}
+                })
+            }
+          })
         } else {
           room = {room_joined: false, room_already_joined: true}
         }
@@ -115,8 +129,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
 
   return (
     <>
-    <div className="live-vod-container" style={{width: goToPlayerVOD ? "80%": "100%"}}>
-      {!goToPlayerVOD ? (
+      <div className="live-vod-container" style={{width: goToPlayerVOD ? "80%": "100%"}}>
         <div className="chat-vod-container">
           <div className="choice-btn" style={{display: displaySearch && "none"}}>
             <Button variant="contained" onClick={() => setChoice("join")}>
@@ -168,9 +181,6 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                                 <h1>Langue : {currentVodLiveStream?.vod?.langue}</h1>
                                 <h1>Saison : {currentVodLiveStream?.vod?.saison}</h1>
                                 <h1>Episode : {currentVodLiveStream?.vod?.current_episode?.[0]?.[0]?.episode}</h1>
-                                <div style={{display: "flex", flexDirection: "row", width: "100%", alignItems: "center"}}>
-                                  <TextField onChange={(e) => setCreateRoomName(e.target.value)} variant="filled" placeholder="Choisissez un pseudo"></TextField>
-                                </div>
                                 <div>{error && 
                                 <Alert variant="filled" severity="info">
                                     {error}
@@ -200,7 +210,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                     
                 {!displaySearch &&
                 <Button
-                  disabled={createRoomName ? false : true}
+                  disabled={false}
                   variant="contained"
                   onClick={() => goToRoom()}
                 >
@@ -225,13 +235,6 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                 <TextField
                   variant="filled"
                   style={{ background: "white" }}
-                  value={joinRoomId.name}
-                  onChange={(e) => setJoinRoomId({...joinRoomId, name: e.target.value})}
-                  placeholder="Choisissez un pseudo"
-                />
-                <TextField
-                  variant="filled"
-                  style={{ background: "white" }}
                   value={joinRoomId.token}
                   onChange={(e) => setJoinRoomId({...joinRoomId, token: e.target.value})}
                   placeholder="Entrer le code secret"
@@ -239,7 +242,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                 {
                 !loadingLive ?
                 <Button
-                  disabled={joinRoomId?.name && joinRoomId?.token ? false : true}
+                  disabled={joinRoomId?.token ? false : true}
                   to={"/live-anime/vod/id"}
                   variant="contained"
                   onClick={() => goToRoom()}
@@ -259,15 +262,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
             )
           )}
         </div>
-      ) : (
-        <LiveVodPlayer setGoToPlayerVOD={setGoToPlayerVOD} joinId={joinRoomId} currentVodLiveStream={currentVodLiveStream} />
-      )}
     </div>
-    {goToPlayerVOD &&
-      <div className="chat-live">
-        <ChatLive />
-      </div>
-    }
     </>
   );
 };

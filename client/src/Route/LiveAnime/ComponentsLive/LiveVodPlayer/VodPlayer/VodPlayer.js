@@ -1,12 +1,11 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { useSocket } from "../../../../../Component/Context/SocketContext";
-import extrait from '../assets/extrait.mp4'
-import extrait2 from '../assets/extrait.mp4'
 import PlayerControls from "./PlayerControls/PlayerControls";
 import screenFull from "screenfull"
 import { isOpera } from "react-device-detect";
 import "./style/VodPlayer.css"
+import { epContext } from "../../../../../App";
 
 const format = (second) => {
     if(isNaN(second)){
@@ -32,7 +31,7 @@ const VodPlayer = ({playerContainerRef}) => {
 
     const [screenFulls, setScreenFull] = useState(false)
 
-    const {playingState, setPlayingState, urlVod} = useSocket()
+    const {playingState, setPlayingState} = useSocket()
 
     const {playing, muted, volume, playbackRate, played, seeking} = playingState
 
@@ -41,6 +40,8 @@ const VodPlayer = ({playerContainerRef}) => {
     const overlayContainerRef = useRef(null)
 
     const [count, setCount] = useState(0)
+
+    const vod = useContext(epContext)
 
     const handlePlayPause = () => {
         setPlayingState({...playingState, playing: !playingState.playing})
@@ -127,7 +128,7 @@ const VodPlayer = ({playerContainerRef}) => {
             ref={videoRef}
             playing={playing}
             volume={volume}
-            url={urlVod} 
+            url={vod.urlVod} 
             playbackRate={playbackRate}
             onProgress={handleProgress}
             />

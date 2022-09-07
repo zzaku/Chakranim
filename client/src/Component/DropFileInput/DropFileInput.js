@@ -10,29 +10,19 @@ const DropFileInput = ({setUrlUpload}) => {
 
     const [fileList, setFileList] = useState([])
 
-    const onDragEnter = () => wrapperVodRef.current.classList.add('dragover') + console.log("draged")
+    const onDragEnter = () => wrapperVodRef.current.classList.add('dragover')
 
     const onDragLeave = () => wrapperVodRef.current.classList.remove('dragover')
 
     const onDrop = () => wrapperVodRef.current.classList.remove('dragover')
 
-    const onFileDrop = (e) => {
-        const newFile = e.target.files[0]
-        if(newFile){
-            const updateList = [...fileList, newFile]
-            setFileList(updateList)
-        }
-    }
-
     const setUrlImage = (e) => {
         const newFile = e.target.files[e.target.files.length - 1]
         if(newFile){
         const reader = new FileReader();
-        console.log(newFile)
         let buffer = reader.readAsArrayBuffer(newFile);
         newFile.arrayBuffer().then((arrayBuffer) => {
             const blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'video/mp4' });
-            console.log(blob)
             setUrlUpload([...fileList, { result: blob }])
         });
         let url = window.URL.createObjectURL(newFile);

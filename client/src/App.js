@@ -12,6 +12,7 @@ import Login from "./Route/Login/Login";
 import { AuthProvider } from "./Component/Context/AuthContext";
 import Account from "./Route/Account/Account";
 import LiveAnime from "./Route/LiveAnime/LiveAnime";
+import VodLive from "./Route/VodLive/VodLive";
 
 export const epContext = createContext();
 export const log = createContext();
@@ -25,6 +26,11 @@ function App() {
   const [animeFound, setAnimeFound] = useState([]);
   const [loading, setLoading] = useState(true);
   const [hideFooter, setHideFooter] = useState(false);
+  const [myId, setMyId] = useState("");
+  const [goToPlayerVOD, setGoToPlayerVOD] = useState(false);
+  const [urlVod, setUrlVod] = useState("")
+  const [roomid, setRoomid] = useState(null)
+  const [iamhost, setIamhost] = useState(false)
 
   ////local storage ep
   const saveAnime = localStorage.watching;
@@ -123,6 +129,16 @@ function App() {
           setLoading: setLoading,
           hideFooter: hideFooter,
           setHideFooter: setHideFooter,
+          myId: myId,
+          setMyId: setMyId,
+          goToPlayerVOD,
+          setGoToPlayerVOD,
+          urlVod: urlVod,
+          setUrlVod: setUrlVod,
+          roomid: roomid,
+          setRoomid: setRoomid,
+          iamhost: iamhost,
+          setIamhost: setIamhost,
         }}
       >
         <div className="App">
@@ -176,9 +192,22 @@ function App() {
                 }
               />
               <Route
-                path="/live-anime/*"
+                path="/live-anime/"
                 element={
                   <LiveAnime
+                    token={token}
+                    setToken={setToken}
+                    refreshToken={refreshToken}
+                    setRefreshToken={setRefreshToken}
+                    allAnimes={allAnimes}
+                    setNotAtHome={setNotAtHome}
+                  />
+                }
+              />
+              <Route
+                path={`/live-anime/${myId}`}
+                element={
+                  <VodLive
                     token={token}
                     setToken={setToken}
                     refreshToken={refreshToken}
