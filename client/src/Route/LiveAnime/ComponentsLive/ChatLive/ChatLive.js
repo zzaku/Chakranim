@@ -1,17 +1,22 @@
 import { TextField } from "@mui/material"
 import { useSocket } from "../../../../Component/Context/SocketContext"
 import "./style/ChatLive.css"
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useAuth } from "../../../../Component/Context/AuthContext"
+import { epContext } from "../../../../App"
 
 const ChatLive = () => {
 
     const [chatMessage, setChatMessage] = useState("")
+    const [send, setSend] = useState(false)
     const {currentUser} = useAuth()
-    const { socket, roomid, infoRef, chatMessageRef, messages } = useSocket()
+    const { roomid }= useContext(epContext)
+    const { socket, infoRef, chatMessageRef, messages, setMessages } = useSocket()
     
     const submitMessage = (e) => {
+        setSend(true)
         e.preventDefault()
+        console.log(chatMessage, currentUser[0].id, currentUser[0].pseudo, roomid)
         socket.emit("msg", {data: {msg: chatMessage, id: currentUser[0].id, pseudo: currentUser[0].pseudo}, roomid: roomid})
         setChatMessage("")
     }

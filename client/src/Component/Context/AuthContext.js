@@ -3,7 +3,7 @@ import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndP
 import { db, auth } from "../Firebase/Firebase";
 import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc, setDoc,  } from "firebase/firestore";
 import { storage } from "../Firebase/Firebase";
-import { ref, uploadBytes, getStorage, getDownloadURL, uploadString } from "firebase/storage";
+import { ref, uploadBytes, getStorage, getDownloadURL, uploadString, deleteObject } from "firebase/storage";
 
 const AuthContext = createContext()
 
@@ -194,6 +194,12 @@ export const AuthProvider = ({children}) => {
 /**/          return getUrl
 /**/     }
 /**/
+/**/   const removeVod = async (roomId) => {
+/**/          const delVodRef = ref(storage, `vod_live/${roomId}`)
+/**/          const deleteVod = deleteObject(delVodRef).then(url => url)
+/**/          return deleteVod
+/**/     }
+/**/
 /**/   const getHostLive = async (currentUser) => {
 /**/          return currentUser
 /**/     }
@@ -334,7 +340,8 @@ export const AuthProvider = ({children}) => {
         getRoom,
         uploadVodLive,
         getBackVodLive,
-        getHostLive,    
+        getHostLive,
+        removeVod
       }
 
     return (

@@ -7,21 +7,24 @@ import { useSocket } from "../../../../Component/Context/SocketContext"
 import VodPlayer from "./VodPlayer/VodPlayer"
 import "./style/LiveVodPlayer.css"
 import { epContext } from "../../../../App"
+import { useNavigate } from "react-router-dom"
 
 
 const LiveVodPlayer = ({setGoToPlayerVOD}) => {
 
-    const {currentUser, removeRoom} = useAuth()
-    const { thecode, socket, roomid, setAdTimer, adTimer, videoRef, playingState} = useSocket()
-    const {playing, muted, volume, playbackRate, played, seeking, loaded, loadedSeconds, playedSeconds} = playingState
+    const {currentUser, removeRoom, removeVod} = useAuth()
+    const { thecode, socket } = useSocket()
     const playerContainerRef = useRef()
     const footerContext = useContext(epContext)
+    const navigate = useNavigate();
 
 
     const disconnect = () => {
       removeRoom(currentUser.Room?.[0]?.id)
+      removeVod(currentUser.Room?.[0]?.id)
       socket.on('disconnect')
       setGoToPlayerVOD(false)
+      navigate('/live-anime')
       footerContext.setHideFooter(false)
     }
     

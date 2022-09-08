@@ -44,7 +44,7 @@ let newHostPaused
 
 useEffect(() => {
 
-    socket.on('videoStates', ({ isHostPaused, hosttime }) => {
+    socket.on('videoStates', ({ isHostPaused, hosttime, played }) => {
         console.log("recéption data : ", isHostPaused, hosttime)
         // sync video player pause and play of users with the host
         let currentHostPaused = isHostPaused
@@ -73,7 +73,9 @@ useEffect(() => {
     });
 
     socket.on('msg', (data) => {
+        console.log('reception messages : ', data)
         if(chatMessageRef?.current){
+            console.log('ça passe')
             setMessages(current => [...current, data.msg])
             const chatMessage_container = document.createElement("div")
             chatMessage_container.className = "chat-message-sending"
@@ -198,7 +200,8 @@ useEffect(() => {
       }
         socket.emit('videoStates', { videoState: {
         hosttime: videoRef.current.getCurrentTime(),
-        isHostPaused: !playing
+        isHostPaused: !playing,
+        played: played
         }, roomid: id_live.roomid })
     }
   }, [currentUser?.Room, played, playing])

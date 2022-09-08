@@ -108,7 +108,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                     </NavMenu>
 
     return (
-      pathLocation === "/live-anime" ?
+      pathLocation === "/live-anime" || pathLocation === `/live-anime/${open.myId}` ?
       null 
       :
       (
