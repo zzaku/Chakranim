@@ -17,22 +17,30 @@ const id_live = useContext(epContext)
 const [urlsValidated, setUrlsValidated] = useState(null)
 const [adTimer, setAdTimer] = useState(null)
 const {currentUser, getHostLive} = useAuth()
-const [allusersinroom, setAllusersinroom] = useState([])
 const [displaySearch, setDisplaySearch] = useState(null);
 const [currentVodLiveStream, setCurrentVodLiveStream] = useState(null);
 const [userJoined, setUserJoined] = useState(null);
 const [thecode, setThecode] = useState(null);
 const [tellEveryOne, setTellEveryOne] = useState(null);
-const [playingState, setPlayingState] = useState({
+const [allusersinroom, setAllusersinroom] = useState([])
+const [countAllusers, setCountAllusers] = useState(null)
+const [userOn, setUserOn] = useState(0)
+
+const userPlayingState = sessionStorage.playing_state;
+const [playingState, setPlayingState] = useState(userPlayingState ? JSON.parse(userPlayingState) : {
     playing: false,
     muted: false,
-    volume: 0.2,
+    volume: 0.5,
     playbackRate: 1.0,
     played: 0,
     seeking: false,
     url: "",
-});
-const {playing, played} = playingState
+})
+useEffect(() => {
+  sessionStorage.setItem("playing_state", JSON.stringify(playingState));
+}, [playingState]);
+
+const {playing, played, playbackRate} = playingState
 let alreadyInTheRoom = false
 let namedInTheRoom = ""
 const videoRef = useRef();
@@ -44,24 +52,21 @@ let newHostPaused
 
 useEffect(() => {
 
-    socket.on('videoStates', ({ isHostPaused, hosttime, played }) => {
-        console.log("recéption data : ", isHostPaused, hosttime)
+    socket.on('videoStates', ({ isHostPaused, hosttime, played, playbackRate }) => {
         // sync video player pause and play of users with the host
         let currentHostPaused = isHostPaused
         const getHost = getHostLive(currentUser?.Room?.[0]?.host)
         getHost
         .then(host => {
-            console.log(host)
                 if(!host){
                         newHostPaused = isHostPaused
                         if (isHostPaused) {
-                            setPlayingState({...playingState, playing: false})
+                            setPlayingState({...playingState, playing: false, played: played, playbackRate: playbackRate})
                         } else {
-                            setPlayingState({...playingState, playing: true})
+                            setPlayingState({...playingState, playing: true, played: played, playbackRate: playbackRate})
                         }
           
                 let diffOfSeek = hosttime - videoRef.current.getCurrentTime();
-
                 // sync time if any user is behind by more than 8 s (in case of poor connection)
                 // or if any user is forward 8s than everyone
                 if(diffOfSeek > 2 || diffOfSeek < -2){
@@ -73,9 +78,7 @@ useEffect(() => {
     });
 
     socket.on('msg', (data) => {
-        console.log('reception messages : ', data)
         if(chatMessageRef?.current){
-            console.log('ça passe')
             setMessages(current => [...current, data.msg])
             const chatMessage_container = document.createElement("div")
             chatMessage_container.className = "chat-message-sending"
@@ -97,18 +100,18 @@ useEffect(() => {
 
       socket.on('joinmetothisroomsuccess', (msg) => {
           setThecode(msg)
+          setUserOn(current => current + 1)
     });
 
-    
     socket.on('who_joined', (allusers) => {
-        if(allusers.length > 1){
+        if(allusers.allusers.length > 1){
             const getHost = getHostLive(currentUser?.Room?.[0]?.host)
             getHost
             .then(res => {
                 if(!res){
                     if(!alreadyInTheRoom){
                         alreadyInTheRoom = true
-                        allusers?.map((user) => {
+                        allusers.allusers?.map((user) => {
                             if(currentUser[0].pseudo === user){
                                 const status = document.createElement("div")
                                 const user_namer = document.createElement("div")
@@ -159,7 +162,7 @@ useEffect(() => {
                                 status.className = "joined-container"
                                 user_namer.className = "users-names-container"
                                 nameOfUser_container.className = "users-names"
-                                nameOfUser.innerHTML = allusers[allusers.length-1]
+                                nameOfUser.innerHTML = allusers.allusers[allusers.allusers.length-1]
                                 welcome_container.className = "welcome-container"
                                 welcome.innerHTML = "a rejoind la room !"
                                 infoRef.current.appendChild(status)
@@ -193,16 +196,16 @@ useEffect(() => {
 }, [])
 
 useEffect(() => {
-    console.log("envoie data : ", currentUser?.Room?.[0]?.host, videoRef?.current)
-    if (currentUser?.Room?.[0]?.host && videoRef?.current) {
+    if (currentUser?.Room?.[0]?.host && videoRef?.current) { 
       if(!videoRef?.current){
         return
       }
         socket.emit('videoStates', { videoState: {
-        hosttime: videoRef.current.getCurrentTime(),
-        isHostPaused: !playing,
-        played: played
-        }, roomid: id_live.roomid })
+            hosttime: videoRef.current.getCurrentTime(),
+            isHostPaused: !playing,
+            played: played,
+            playbackRate: playbackRate
+            }, roomid: id_live.roomid })
     }
   }, [currentUser?.Room, played, playing])
 
@@ -261,14 +264,16 @@ useEffect(() => {
 
 useEffect(() => {
     socket.emit('tell_everyone_who_joined', {
-        allusers: allusersinroom,
+        allusers: {
+            allusers: allusersinroom,
+        },
         roomid: id_live.roomid,
     });
 
     return () => {
         socket.off("tell_everyone_who_joined")
     }
-}, [allusersinroom, id_live.roomid])
+}, [allusersinroom])
 
     //Check Address
     function isStunAddressUp(address, _timeout){
@@ -415,6 +420,7 @@ useEffect(() => {
         setPlayingState,
         sync,
         messages,
+        userOn
     }
 
     return (

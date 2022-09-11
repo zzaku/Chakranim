@@ -23,7 +23,7 @@ const format = (second) => {
 }
 
 
-const VodPlayer = ({playerContainerRef}) => {
+const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
 
     const {videoRef} = useSocket()
 
@@ -80,10 +80,13 @@ const VodPlayer = ({playerContainerRef}) => {
 
         if(count > 0){
             controlsRef.current.style.visibility = 'hidden'
+            document.body.style.cursor = 'none'
+            chatRef.current.style.cursor = 'default'
+            tokenRef.current.style.cursor = 'default'
             setCount(0)
         }
         
-        if(controlsRef.current.style.visibility === 'visible'){
+        if(controlsRef.current.style.visibility === 'visible' && controlsRef.current.style.cursor === 'default'){
             setCount(current => current + 1)
         }
         
@@ -110,6 +113,8 @@ const VodPlayer = ({playerContainerRef}) => {
     
     const handleMouseMouve = () => {
         controlsRef.current.style.visibility = "visible";
+        controlsRef.current.style.cursor = 'default';
+        document.body.style.cursor = 'default';
         setCount(0)
     }
     

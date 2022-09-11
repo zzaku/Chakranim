@@ -38,12 +38,12 @@ const DropFileInput = ({setUrlUpload}) => {
 
     return (
         <div className="DropFileInput-container">
-            <div className="DropFileInput" ref={wrapperVodRef} onDragEnter={onDragEnter} onDragLeave={onDragLeave} onDrop={onDrop}>
-                <div style={{display: "flex", height: "auto", width: "100%"}}>
+            <div className="DropFileInput" style={{height: fileList.length > 0 ? "40%" : "100%"}} ref={wrapperVodRef} onDragEnter={onDragEnter} onDragLeave={onDragLeave} onDrop={onDrop}>
+                <div style={{display: "flex", height: "auto", width: "100%", justifyContent: "center"}}>
                     <h2>Drag & Drop ta vidéo juste ici</h2>
                 </div>
                 <div>
-                    <CloudUploadIcon sx={{fontSize: "150px"}} />
+                    <CloudUploadIcon sx={{fontSize: "150px", color: "#ceb5ff"}} />
                 </div>
                 <div className="input-file-video">
                     <input type="file" accept="video/*" onChange={setUrlImage} name="video"/>

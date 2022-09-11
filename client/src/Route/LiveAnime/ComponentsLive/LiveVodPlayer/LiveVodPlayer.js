@@ -10,14 +10,14 @@ import { epContext } from "../../../../App"
 import { useNavigate } from "react-router-dom"
 
 
-const LiveVodPlayer = ({setGoToPlayerVOD}) => {
+const LiveVodPlayer = ({setGoToPlayerVOD, chatRef}) => {
 
     const {currentUser, removeRoom, removeVod} = useAuth()
-    const { thecode, socket } = useSocket()
-    const playerContainerRef = useRef()
+    const { thecode, socket, userOn } = useSocket()
+    const playerContainerRef = useRef(null)
     const footerContext = useContext(epContext)
     const navigate = useNavigate();
-
+    const tokenRef = useRef(null)
 
     const disconnect = () => {
       removeRoom(currentUser.Room?.[0]?.id)
@@ -31,7 +31,7 @@ const LiveVodPlayer = ({setGoToPlayerVOD}) => {
     return (
       <>
         <div className="Live-VOD-player-container">
-          <div className="info-live">
+          <div ref={tokenRef} className="info-live">
             <div>
               <Button variant="contained" sx={{background: "#2c2c80", color: "white", border: "2px solid #fff"}} onClick={() => disconnect()}>Quitter la room</Button>
             </div>
@@ -44,7 +44,7 @@ const LiveVodPlayer = ({setGoToPlayerVOD}) => {
             </div>
           </div>
           <div ref={playerContainerRef} className="vod-live-container">
-            <VodPlayer playerContainerRef={playerContainerRef} />
+            <VodPlayer playerContainerRef={playerContainerRef} chatRef={chatRef} tokenRef={tokenRef} />
           </div>
         </div>
         </>

@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react"
 import { useAuth } from "../../../../Component/Context/AuthContext"
 import { epContext } from "../../../../App"
 
-const ChatLive = () => {
+const ChatLive = ({chatRef}) => {
 
     const [chatMessage, setChatMessage] = useState("")
     const [send, setSend] = useState(false)
@@ -22,7 +22,7 @@ const ChatLive = () => {
     }
     
     return (
-        <div className="chat-live-container">
+        <div ref={chatRef} className="chat-live-container">
             <div className="chat-live-joined-info-container">
                 <div className="chat-live-joined-info">
                     <div className="chat-info-container" ref={infoRef} style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "100%"}}>

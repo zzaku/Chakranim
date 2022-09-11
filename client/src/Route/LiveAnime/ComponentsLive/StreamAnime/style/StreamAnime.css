@@ -40,7 +40,6 @@
     width: 40%;
     justify-content: center;
     align-items: center;
-    background-color: rgb(117, 207, 32);
 }
 
 .found-vod-anime{
@@ -66,7 +65,6 @@
     width: 30%;
     align-items: center;
     justify-content: center;
-    background-color: cadetblue;
 }
 
 .vod-input-files{

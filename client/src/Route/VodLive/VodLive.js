@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useRef } from "react"
 import { epContext } from "../../App"
 import ChatLive from "../LiveAnime/ComponentsLive/ChatLive/ChatLive"
 import LiveVodPlayer from "../LiveAnime/ComponentsLive/LiveVodPlayer/LiveVodPlayer"
@@ -10,15 +10,16 @@ const VodLive = () => {
 
 
     const vod = useContext(epContext)
+    const chatRef = useRef(null)
 
     return (
             <div className="vod-id-live">
                 <SocketProvider>
                     <div className="live-vod-containers">
-                        <LiveVodPlayer setGoToPlayerVOD={vod.setGoToPlayerVOD} />
+                        <LiveVodPlayer setGoToPlayerVOD={vod.setGoToPlayerVOD} chatRef={chatRef} />
                     </div>
                     <div className="chat-lives">
-                        <ChatLive />
+                        <ChatLive chatRef={chatRef} />
                     </div>
                 </SocketProvider>
             </div>
