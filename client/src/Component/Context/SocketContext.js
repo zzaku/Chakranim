@@ -23,47 +23,47 @@ const [userJoined, setUserJoined] = useState(null);
 const [thecode, setThecode] = useState(null);
 const [tellEveryOne, setTellEveryOne] = useState(null);
 const [allusersinroom, setAllusersinroom] = useState([])
-const [countAllusers, setCountAllusers] = useState(null)
-const [userOn, setUserOn] = useState(0)
+const [indexVod, setIndexVod] = useState(0)
 
-const userPlayingState = sessionStorage.playing_state;
-const [playingState, setPlayingState] = useState(userPlayingState ? JSON.parse(userPlayingState) : {
+const [playingState, setPlayingState] = useState({
     playing: false,
     muted: false,
-    volume: 0.5,
+    volume: 0.2,
     playbackRate: 1.0,
     played: 0,
     seeking: false,
     url: "",
 })
-useEffect(() => {
-  sessionStorage.setItem("playing_state", JSON.stringify(playingState));
-}, [playingState]);
 
-const {playing, played, playbackRate} = playingState
+
+const {playing, played, playbackRate, volume} = playingState
 let alreadyInTheRoom = false
-let namedInTheRoom = ""
 const videoRef = useRef();
 const infoRef = useRef();
 const chatMessageRef = useRef();
 const [messages, setMessages] = useState([])
 const [sync, setSync] = useState(false)
 let newHostPaused
-
 useEffect(() => {
 
-    socket.on('videoStates', ({ isHostPaused, hosttime, played, playbackRate }) => {
+    socket.on('videoStates', ({ isHostPaused, hosttime, played, playbackRate, volume, newUrl, vodUrlChanged }) => {
         // sync video player pause and play of users with the host
         let currentHostPaused = isHostPaused
         const getHost = getHostLive(currentUser?.Room?.[0]?.host)
         getHost
         .then(host => {
                 if(!host){
+
                         newHostPaused = isHostPaused
+
                         if (isHostPaused) {
-                            setPlayingState({...playingState, playing: false, played: played, playbackRate: playbackRate})
+                            setPlayingState({...playingState, playing: false, played: played, playbackRate: playbackRate, volume})
                         } else {
-                            setPlayingState({...playingState, playing: true, played: played, playbackRate: playbackRate})
+                            setPlayingState({...playingState, playing: true, played: played, playbackRate: playbackRate, volume})
+                        }
+
+                        if(vodUrlChanged){
+                            setIndexVod(newUrl)
                         }
           
                 let diffOfSeek = hosttime - videoRef.current.getCurrentTime();
@@ -100,7 +100,6 @@ useEffect(() => {
 
       socket.on('joinmetothisroomsuccess', (msg) => {
           setThecode(msg)
-          setUserOn(current => current + 1)
     });
 
     socket.on('who_joined', (allusers) => {
@@ -204,14 +203,29 @@ useEffect(() => {
             hosttime: videoRef.current.getCurrentTime(),
             isHostPaused: !playing,
             played: played,
-            playbackRate: playbackRate
+            volume,
+            playbackRate: playbackRate,
+            vodUrlChanged: false
             }, roomid: id_live.roomid })
     }
   }, [currentUser?.Room, played, playing])
+  
+useEffect(() => {
+    if (currentUser?.Room?.[0]?.host && videoRef?.current) { 
+      if(!videoRef?.current){
+        return
+      }
+        socket.emit('videoStates', { videoState: {
+            newUrl: indexVod,
+            vodUrlChanged: true
+            }, roomid: id_live.roomid })
+    }
+  }, [indexVod])
 
 useEffect(() => {
     socket.on('someonejoined', (name) => {
         if (id_live.iamhost && id_live.roomid) {
+            if(infoRef?.current){
                 if(currentUser[0].pseudo === name){
                     const status = document.createElement("div")
                     const user_namer = document.createElement("div")
@@ -251,6 +265,7 @@ useEffect(() => {
                     user_namer.appendChild(welcome_container)
                     welcome_container.appendChild(welcome)
                 }
+            }
             }
         if(id_live.roomid){
             setAllusersinroom(current => [...current, name]);
@@ -420,7 +435,8 @@ useEffect(() => {
         setPlayingState,
         sync,
         messages,
-        userOn
+        indexVod,
+        setIndexVod
     }
 
     return (

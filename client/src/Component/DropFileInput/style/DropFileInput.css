@@ -25,7 +25,7 @@
     width: 100%;
     justify-content: space-around;
     align-items: center;
-    background-color: rgba(163, 155, 182, 0.678);
+    background-color: rgba(163, 155, 182, 0.342);
     flex-direction: column;
 }
 
@@ -72,11 +72,29 @@
     height: 90%;
     width: 100%;
 }
+
+.image-vod-name-container{
+    display: flex;
+    position: relative;
+    height: auto;
+    width: 100%;
+}
+
 .image-vod-name{
     display: flex;
     position: relative;
-    height: 10%;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
     width: 100%;
+}
+
+.image-overlay-vod-name{
+    display: flex;
+    position: absolute;
+    height: 50px;
+    width: 100%;
+    opacity: 0;
 }
 
 .video-image{
@@ -93,7 +111,7 @@
     justify-content: center;
     height: 100%;
     width: 100%;
-    background-color: #777;
+    background-color: rgba(100, 91, 91, 0.11);
     opacity: 0.3;
     z-index: 10;
 }

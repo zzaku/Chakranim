@@ -16,7 +16,6 @@ const ChatLive = ({chatRef}) => {
     const submitMessage = (e) => {
         setSend(true)
         e.preventDefault()
-        console.log(chatMessage, currentUser[0].id, currentUser[0].pseudo, roomid)
         socket.emit("msg", {data: {msg: chatMessage, id: currentUser[0].id, pseudo: currentUser[0].pseudo}, roomid: roomid})
         setChatMessage("")
     }

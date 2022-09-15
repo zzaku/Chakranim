@@ -13,13 +13,12 @@ import DropFileInput from "../../../../Component/DropFileInput/DropFileInput";
 import { useNavigate } from "react-router-dom";
 
 const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
-  const { currentUserID, getRoom, currentUser, addRoom, uploadVodLive, getBackVodLive } = useAuth();
+  const { currentUserID, getRoom, currentUser, addRoom, uploadVodLive, getBackVodLive, getBackLengthOfLive, getBackVodLiveFromGuestArray, getBackVodLiveFromGuest, setInRoom} = useAuth();
   const [choice, setChoice] = useState("");
   const { socket, displaySearch, setDisplaySearch, setCurrentVodLiveStream, currentVodLiveStream } = useSocket();
   const [joinRoomId, setJoinRoomId] = useState({name: "", token: ""});
   const [createRoomName, setCreateRoomName] = useState("");
   const [error, setError] = useState("");
-  const [urlUpload, setUrlUpload] = useState([]);
   const [loadingLive, setLoadingLive] = useState(false);
   const footerContext = useContext(epContext)
   const id = useContext(epContext)
@@ -34,32 +33,53 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
       setCurrentVodLiveStream({vod: open.ep})
     }
   }, [open.ep]);
+  
+  const uploadVodArray = async (vodArray) => {
+    return Promise.all(vodArray.map((elem, i) => uploadVodLive(elem.result, id.myId, id.allTitle[i].position, id.allTitle[i].name)));
+  }
+  
+  const getBackVodArray = async (host, vodArray, idSocket) => {
+    if(!host) {
+      return Promise.all(vodArray.map((elem, i) => {
+        let getPosition = elem.name
+        let current_Position = parseInt(getPosition)
+         return getBackVodLiveFromGuestArray(idSocket, current_Position).then(res => {
+          return getBackVodLiveFromGuest(res.items[0].fullPath, res.items[0].name, parseInt(res.items[0].parent.name))
+        })
+      }));
+    } else {
+      return Promise.all(vodArray.map((elem, i) => getBackVodLive(idSocket, id.allTitle[i].position, id.allTitle[i].name).then(res => {
+        id.setUrlVod(current => [...current, {url: res, title: id.allTitle[i].name, position: id.allTitle[i].position}])
+      })));   
+    }
+  }
 
   const createRoom = async () => {
     let room = {}
     setLoadingLive("Creation de la room...")
-      await addRoom({host: true, name: currentUser[0].pseudo}, id.myId, currentUser[0].id)
+      await addRoom({host: true, name: currentUser?.[0].pseudo}, id.myId, currentUser?.[0].id)
       .then( async (res) => {
         if(res.isAllowed){
-        await getRoom()
-        .then(async (res) => {
-        if(res.length > 0){
-          await uploadVodLive(urlUpload[0].result, id.myId)
+          await setInRoom(currentUser?.[0].id)
           .then(async () => {
-            await getBackVodLive(id.myId)
-            .then(res => {
-              socket.emit('joinmetothisroom', { roomid: id.myId, name: currentUser[0].pseudo });
-              id.setRoomid(id.myId);
-              id.setIamhost(true)
-              footerContext.setHideFooter(true)
-              id.setUrlVod(res)
-              setLoadingLive("")
-              room = {room_created: true, room_already_created: false}
+            await getRoom()
+            .then(async (res) => {
+              if(res.length > 0){
+                await uploadVodArray(id.urlUpload)
+                .then(async () => {
+                  await getBackVodArray(true, id.urlUpload, id.myId)
+                  .then(res => {
+                    socket.emit('joinmetothisroom', { roomid: id.myId, name: currentUser[0].pseudo });
+                    id.setRoomid(id.myId);
+                    id.setIamhost(true)
+                    footerContext.setHideFooter(true)
+                    setLoadingLive("")
+                    room = {room_created: true, room_already_created: false}
+                  })
+                })
+              }
             })
           })
-        }
-      })
-
       } else {
         room = {room_created: false, room_already_created: true}
       }
@@ -97,19 +117,26 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
       await addRoom({host: false, name: currentUser[0].pseudo}, joinRoomId.token, currentUser[0].id)
       .then( async (allowed) => {
         if(allowed.isAllowed){
-          await getRoom()
-          .then(async (res) => {
-            if(res.length > 0){
-              await getBackVodLive(joinRoomId.token)
-                .then(res => {
-                  socket.emit('joinmetothisroom', { roomid: joinRoomId.token, name: currentUser[0].pseudo });
-                  id.setUrlVod(res)
-                  id.setRoomid(joinRoomId.token);
-                  setLoadingLive("")
-                  footerContext.setHideFooter(true)
-                  room = {room_joined: true, room_already_joined: false, url_vod: res}
-                })
-            }
+          await setInRoom(currentUser?.[0].id)
+          .then(async () => {
+            await getRoom()
+            .then(async (res) => {
+              if(res.length > 0){
+                await getBackLengthOfLive(joinRoomId.token)
+                  .then(async (res) => {
+                    console.log('recèpte : ', res)
+                    await getBackVodArray(false, res, joinRoomId.token)
+                    .then((res) => {
+                      id.setUrlVod(res)
+                      socket.emit('joinmetothisroom', { roomid: joinRoomId.token, name: currentUser[0].pseudo });
+                      id.setRoomid(joinRoomId.token);
+                      setLoadingLive("")
+                      footerContext.setHideFooter(true)
+                      room = {room_joined: true, room_already_joined: false, url_vod: res}
+                    })
+                  })
+              }
+            })
           })
         } else {
           room = {room_joined: false, room_already_joined: true}
@@ -144,7 +171,7 @@ const StreamAnime = ({goToPlayerVOD, setGoToPlayerVOD}) => {
                 <div className="creating-container">
                 {(!displaySearch && currentVodLiveStream) &&
                         <div className="vod-input-files">
-                            <DropFileInput setUrlUpload={setUrlUpload} />
+                            <DropFileInput setUrlUpload={id.setUrlUpload} urlUpload={id.urlUpload} allTitle={id.allTitle} setAllTitle={id.setAllTitle} />
                         </div>
                     }
                     <div className="create-room-info-container" style={{justifyContent: !displaySearch && "center", alignItems: !displaySearch && "center"}}>

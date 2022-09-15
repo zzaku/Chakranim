@@ -1,9 +1,9 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateEmail, updatePassword, deleteUser, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth"
 import { db, auth } from "../Firebase/Firebase";
-import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc, setDoc,  } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where, updateDoc, doc, onSnapshot, deleteDoc, setDoc, deleteField, documentId } from "firebase/firestore";
 import { storage } from "../Firebase/Firebase";
-import { ref, uploadBytes, getStorage, getDownloadURL, uploadString, deleteObject } from "firebase/storage";
+import { ref, uploadBytes, getStorage, getDownloadURL, uploadString, deleteObject, listAll, list } from "firebase/storage";
 
 const AuthContext = createContext()
 
@@ -176,28 +176,73 @@ export const AuthProvider = ({children}) => {
           return allowed
 /**/     }
 /**/
+/**/   const setInRoom = async (idUser) => {
+/**/          const userSetInRoom = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", idUser)
+/**/          await updateDoc(userSetInRoom, {in_room: true})
+/**/          await getRoom()
+/**/     }
+/**/
+/**/   const setNotInRoom = async (idUser) => {
+/**/          const userSetInRoom = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", idUser)
+/**/          await updateDoc(userSetInRoom, {in_room: deleteField()})
+/**/          await getRoom()
+/**/     }
+/**/
 /**/   const removeRoom = async (idRoom) => {
 /**/          const userSetPreferencesRef = currentUserID && currentUser && currentUser[0] && currentUser[0].id && doc(db, "Users", currentUser[0].id, "Room", idRoom)
 /**/          await deleteDoc(userSetPreferencesRef);
 /**/          await getRoom()
 /**/     }
 /**/    
-/**/   const uploadVodLive = async (url, roomId) => {   
-/**/          const blobRef = ref(storage, `vod_live/${roomId}`)
+/**/   const uploadVodLive = async (url, roomId, position, vodName) => {   
+/**/          const blobRef = ref(storage, `vod_live/${roomId}/${position}/${vodName}`)
 /**/          const upload =  await uploadBytes(blobRef, url)
 /**/          return upload
 /**/     }
 /**/
-/**/   const getBackVodLive = async (roomId) => {
+/**/   const getBackVodLive = async (roomId, position, vodName) => {
 /**/          const storage = getStorage();
-/**/          const getUrl = getDownloadURL(ref(storage,`vod_live/${roomId}`)).then(url => url)
+/**/          const getUrl = getDownloadURL(ref(storage,`vod_live/${roomId}/${position}/${vodName}`)).then(url => url)
 /**/          return getUrl
 /**/     }
 /**/
-/**/   const removeVod = async (roomId) => {
-/**/          const delVodRef = ref(storage, `vod_live/${roomId}`)
+/**/   const getBackVodLiveFromGuest = async (vodPath, titleName, topPosition) => {
+/**/          const storage = getStorage();
+/**/          const getUrl = await getDownloadURL(ref(storage, vodPath)).then(url => url)
+/**/          let vod_payload = {url: getUrl, title: titleName, position: topPosition}
+/**/          return vod_payload
+/**/     }
+/**/
+/**/   const getBackLengthOfLive = async (roomId) => {
+/**/          const storage = getStorage();
+/**/          const getUrl = await list(ref(storage,`vod_live/${roomId}`)).then(res => res.prefixes)
+/**/          return getUrl
+/**/     }
+/**/
+/**/   const getBackVodLiveFromGuestArray = async (roomId, position) => {
+/**/          const storage = getStorage();
+/**/          const getUrl = await listAll(ref(storage,`vod_live/${roomId}/${position}`)).then(res => res)
+/**/          return getUrl
+/**/     }
+/**/
+/**/   const removeVod = async (roomId, position, vodName) => {
+/**/          const delVodRef = ref(storage, `vod_live/${roomId}/${position}/${vodName}`)
 /**/          const deleteVod = deleteObject(delVodRef).then(url => url)
 /**/          return deleteVod
+/**/     }
+/**/
+/**/   const getUserInRoom = async (roomId) => {
+/**/          const q = query(collection(db, "Users"), where("in_room", "==", true)); 
+/**/          const getUserInRoom = await getDocs(q);
+/**/          let count = 0
+/**/          for (const doc of getUserInRoom.docs) {
+/**/             const userInRoom = currentUserID && query(collection(db, "Users", doc.id, "Room"), where(documentId(), "==", roomId)) 
+/**/             let UserInRoom = await getDocs(userInRoom);
+/**/             if(UserInRoom.docs.length > 0){
+/**/               count += 1
+/**/               }
+/**/            }
+/**/          return count
 /**/     }
 /**/
 /**/   const getHostLive = async (currentUser) => {
@@ -341,7 +386,13 @@ export const AuthProvider = ({children}) => {
         uploadVodLive,
         getBackVodLive,
         getHostLive,
-        removeVod
+        removeVod,
+        getBackVodLiveFromGuest,
+        getBackLengthOfLive,
+        getBackVodLiveFromGuestArray,
+        getUserInRoom,
+        setInRoom,
+        setNotInRoom,
       }
 
     return (

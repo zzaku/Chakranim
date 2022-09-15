@@ -12,20 +12,37 @@ import { useNavigate } from "react-router-dom"
 
 const LiveVodPlayer = ({setGoToPlayerVOD, chatRef}) => {
 
-    const {currentUser, removeRoom, removeVod} = useAuth()
+    const {currentUser, removeRoom, removeVod, getUserInRoom, setNotInRoom} = useAuth()
     const { thecode, socket, userOn } = useSocket()
     const playerContainerRef = useRef(null)
     const footerContext = useContext(epContext)
+    const vod = useContext(epContext)
     const navigate = useNavigate();
     const tokenRef = useRef(null)
 
-    const disconnect = () => {
-      removeRoom(currentUser.Room?.[0]?.id)
-      removeVod(currentUser.Room?.[0]?.id)
-      socket.on('disconnect')
-      setGoToPlayerVOD(false)
-      navigate('/live-anime')
-      footerContext.setHideFooter(false)
+    const removeVodArray = (vodArray) => {
+      return Promise.all(vodArray.map((elem, i) => removeVod(currentUser.Room?.[0]?.id, JSON.parse(sessionStorage.getItem('urlVod'))[i].position, JSON.parse(sessionStorage.getItem('urlVod'))[i].title)));
+    }
+
+    const disconnect = async () => {
+      await getUserInRoom(currentUser.Room?.[0]?.id)
+      .then(async (res) => {
+        if(res === 1){
+          await removeVodArray(vod.urlVod)
+        }
+        await removeRoom(currentUser.Room?.[0]?.id)
+        .then(async () => {
+          await setNotInRoom(currentUser?.[0]?.id)
+          .then(() => {
+            vod.setUrlVod([])
+            vod.setUrlUpload([])
+            socket.on('disconnect')
+            setGoToPlayerVOD(false)
+            navigate('/live-anime')
+            footerContext.setHideFooter(false)
+          })
+        })
+      })
     }
     
     return (

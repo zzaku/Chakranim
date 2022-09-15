@@ -28,9 +28,15 @@ function App() {
   const [hideFooter, setHideFooter] = useState(false);
   const [myId, setMyId] = useState("");
   const [goToPlayerVOD, setGoToPlayerVOD] = useState(false);
-  const [urlVod, setUrlVod] = useState("")
+  const [urlUpload, setUrlUpload] = useState([])
   const [roomid, setRoomid] = useState(null)
   const [iamhost, setIamhost] = useState(false)
+  const userUrlVod = sessionStorage.urlVod;
+  const [urlVod, setUrlVod] = useState(userUrlVod ? JSON.parse(userUrlVod) : [])
+  useEffect(() => {
+    sessionStorage.setItem("urlVod", JSON.stringify(urlVod));
+  }, [urlVod]);
+  const [allTitle, setAllTitle] = useState([])
 
   ////local storage ep
   const saveAnime = localStorage.watching;
@@ -139,6 +145,10 @@ function App() {
           setRoomid: setRoomid,
           iamhost: iamhost,
           setIamhost: setIamhost,
+          urlUpload: urlUpload,
+          setUrlUpload: setUrlUpload,
+          allTitle: allTitle,
+          setAllTitle: setAllTitle,
         }}
       >
         <div className="App">

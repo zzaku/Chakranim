@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useContext, useState } from "react";
 import { Button, IconButton, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import FastRewindRoundedIcon from "@mui/icons-material/FastRewindRounded";
@@ -13,7 +13,11 @@ import Slider from "@mui/material/Slider";
 import styled from "@emotion/styled";
 import PropTypes from 'prop-types';
 import Tooltip from '@mui/material/Tooltip';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import "./style/PlayerControls.css";
+import { epContext } from "../../../../../../App";
+import { useAuth } from "../../../../../../Component/Context/AuthContext";
 
 function ValueLabelComponent(props) {
   const { children, value } = props;
@@ -30,7 +34,10 @@ ValueLabelComponent.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-export default forwardRef(({ onPlayPause, playing, onRewind, onFastForward, muted, onMute, onVolumeSeekUp, onVolumeSeekDown, volume, onPlaybackRateChange, playbackRate, onToggleFullScreen, played, onSeek, onSeekMouseUp, onSeekMouseDown, elapsedTime, totalDuration, onChangeDisplayFormat, screenFull }, ref) => {
+export default forwardRef(({ onPlayPause, playing, onRewind, onFastForward, muted, onMute, onVolumeSeekUp, onVolumeSeekDown, volume, onPlaybackRateChange, playbackRate, onToggleFullScreen, played, onSeek, onSeekMouseUp, onSeekMouseDown, elapsedTime, totalDuration, onChangeDisplayFormat, screenFull, previousVod, nextVod, currentVod }, ref) => {
+
+  const vod = useContext(epContext)
+  const {currentUser} = useAuth()
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handlePopover = (event) => {
@@ -97,7 +104,7 @@ export default forwardRef(({ onPlayPause, playing, onRewind, onFastForward, mute
       >
         <Grid item>
           <Typography variant="h5" style={{ color: "white" }}>
-            Video Title
+            {currentVod('title')}
           </Typography>
         </Grid>
       </Grid>
@@ -168,6 +175,25 @@ export default forwardRef(({ onPlayPause, playing, onRewind, onFastForward, mute
             <Button onClick={onChangeDisplayFormat} variant="text" style={{ color: "#c0c1c0", marginLeft: 16 }}>
               <Typography>{elapsedTime} / {totalDuration}</Typography>
             </Button>
+
+            {
+              currentVod("position") === 0 || !currentUser.Room?.[0]?.host ?
+                null
+                :
+
+              <IconButton onClick={previousVod} sx={{color: "#c0c1c0"}} className="play-btn">
+                <SkipPreviousIcon sx={{ fontSize: 30 }} />
+              </IconButton>
+            }
+
+            {
+              currentVod("position") === vod.urlVod.length - 1 || !currentUser.Room?.[0]?.host ?
+                null
+                :
+                <IconButton onClick={nextVod} sx={{color: "#c0c1c0"}} className="play-btn">
+                  <SkipNextIcon sx={{ fontSize: 30 }} />
+                </IconButton>
+            }
           </Grid>
         </Grid>
 

@@ -31,7 +31,7 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
 
     const [screenFulls, setScreenFull] = useState(false)
 
-    const {playingState, setPlayingState} = useSocket()
+    const {playingState, setPlayingState, indexVod, setIndexVod} = useSocket()
 
     const {playing, muted, volume, playbackRate, played, seeking} = playingState
 
@@ -118,6 +118,28 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
         setCount(0)
     }
     
+    const previousVod = () => {
+        setIndexVod(current => current - 1)
+    }
+    
+    const nextVod = () => {
+        setIndexVod(current => current + 1)
+    }
+    
+    const currentVod = (option) => {
+        let current_vod = vod.urlVod.filter(elem => elem.position === indexVod)
+        let current_vod_url = current_vod[0].url
+        let current_vod_title = current_vod[0].title
+        let current_vod_position = current_vod[0].position
+        if(option === "url"){
+            return current_vod_url
+        } else if(option === "title"){
+            return current_vod_title
+        } else if(option === "position"){
+            return current_vod_position
+        }
+    }
+    
     const currentTime = videoRef.current ? videoRef.current.getCurrentTime() : "00:00"
     const duration = videoRef.current ? videoRef.current.getDuration() : "00:00"
     const elapsedTime = timeDisplay === "normal" ? format(currentTime) : `-${format(duration - currentTime)}`
@@ -126,14 +148,14 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
     return (
         <div style={{display: "flex", position: "relative", height: "100%", width: "100%"}} ref={overlayContainerRef} onMouseMove={handleMouseMouve}>
             <ReactPlayer  
-            style={{objectFit: "none"}} 
-            muted={muted} 
-            height={screenFulls ? "100%" : (isOpera ? 848 : 867)}
+            style={{objectFit: "none"}}
+            muted={muted}
+            height={screenFulls ? "100%" : (isOpera ? 845 : 864)}
             width={screenFulls ? "100%" : 2000} 
             ref={videoRef}
             playing={playing}
             volume={volume}
-            url={vod.urlVod} 
+            url={currentVod("url")} 
             playbackRate={playbackRate}
             onProgress={handleProgress}
             />
@@ -160,6 +182,9 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
             totalDuration={totalDuration}
             onChangeDisplayFormat={handleChangeDisplayFormat}
             screenFull={screenFulls}
+            previousVod={previousVod}
+            nextVod={nextVod}
+            currentVod={currentVod}
             />
             
         </div>
