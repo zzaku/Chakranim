@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { useSocket } from "../../../../../Component/Context/SocketContext";
 import PlayerControls from "./PlayerControls/PlayerControls";
@@ -6,6 +6,7 @@ import screenFull from "screenfull"
 import { isOpera } from "react-device-detect";
 import "./style/VodPlayer.css"
 import { epContext } from "../../../../../App";
+import { useAuth } from "../../../../../Component/Context/AuthContext";
 
 const format = (second) => {
     if(isNaN(second)){
@@ -31,7 +32,8 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
 
     const [screenFulls, setScreenFull] = useState(false)
 
-    const {playingState, setPlayingState, indexVod, setIndexVod} = useSocket()
+    const {playingState, setPlayingState, indexVod, setIndexVod, canceled, setCanceled} = useSocket()
+    const { currentUser } = useAuth()
 
     const {playing, muted, volume, playbackRate, played, seeking} = playingState
 
@@ -40,23 +42,29 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
     const overlayContainerRef = useRef(null)
 
     const [count, setCount] = useState(0)
+    const [secondeBeforeNextVod, setSecondeBeforeNextVod] = useState(10)
+    const [showNextVod, setShowNextVod] = useState(false)
 
     const vod = useContext(epContext)
 
     const handlePlayPause = () => {
         setPlayingState({...playingState, playing: !playingState.playing})
+        setCount(-1)
     }
 
     const handleRewind = () => {
         videoRef.current.seekTo(videoRef.current.getCurrentTime() - 10)
+        setCount(-1)
     }
 
     const handleFastForward = () => {
         videoRef.current.seekTo(videoRef.current.getCurrentTime() + 10)
+        setCount(-1)
     }
      
     const handleMute = () => {
         setPlayingState({...playingState, muted: !playingState.muted})
+        setCount(-1)
     }
 
     const handleVolumeSeekUp = (e, newValue) => {
@@ -77,6 +85,22 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
     }
 
     const handleProgress = (changeState) => {
+
+        if(canceled){
+            setShowNextVod(false)
+        } else {
+            if(vod.urlVod.length > 1 && currentVod("position") !== vod.urlVod.length - 1){
+    
+                if(played > 0.90){      
+                    setShowNextVod(true)
+                    setSecondeBeforeNextVod(current => current - 1)
+    
+                    if(secondeBeforeNextVod === 1 && currentUser.Room?.[0]?.host){
+                        setIndexVod(current => current + 1)
+                    }
+                }
+            }
+        }
 
         if(count > 0){
             controlsRef.current.style.visibility = 'hidden'
@@ -128,9 +152,9 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
     
     const currentVod = (option) => {
         let current_vod = vod.urlVod.filter(elem => elem.position === indexVod)
-        let current_vod_url = current_vod[0].url
-        let current_vod_title = current_vod[0].title
-        let current_vod_position = current_vod[0].position
+        let current_vod_url = current_vod?.[0]?.url
+        let current_vod_title = current_vod?.[0]?.title
+        let current_vod_position = current_vod?.[0]?.position
         if(option === "url"){
             return current_vod_url
         } else if(option === "title"){
@@ -139,6 +163,16 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
             return current_vod_position
         }
     }
+    
+    console.log("time : ", showNextVod)
+    useEffect(() => {
+        console.log("vhanged : ", indexVod)
+        console.log("time : ", played)
+        setCanceled(false)
+        setPlayingState({...playingState, played: 0})
+        setShowNextVod(false)
+        setSecondeBeforeNextVod(10)
+    }, [indexVod])
     
     const currentTime = videoRef.current ? videoRef.current.getCurrentTime() : "00:00"
     const duration = videoRef.current ? videoRef.current.getDuration() : "00:00"
@@ -185,6 +219,10 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
             previousVod={previousVod}
             nextVod={nextVod}
             currentVod={currentVod}
+            showNextVod={showNextVod}
+            secondeBeforeNextVod={secondeBeforeNextVod}
+            setCanceled={setCanceled}
+            setCount={setCount}
             />
             
         </div>

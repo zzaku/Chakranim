@@ -24,6 +24,7 @@ const [thecode, setThecode] = useState(null);
 const [tellEveryOne, setTellEveryOne] = useState(null);
 const [allusersinroom, setAllusersinroom] = useState([])
 const [indexVod, setIndexVod] = useState(0)
+const [canceled, setCanceled] = useState(false)
 
 const [playingState, setPlayingState] = useState({
     playing: false,
@@ -46,7 +47,7 @@ const [sync, setSync] = useState(false)
 let newHostPaused
 useEffect(() => {
 
-    socket.on('videoStates', ({ isHostPaused, hosttime, played, playbackRate, volume, newUrl, vodUrlChanged }) => {
+    socket.on('videoStates', ({ isHostPaused, hosttime, played, playbackRate, volume, newUrl, vodUrlChanged, canceledChanged, isCanceled }) => {
         // sync video player pause and play of users with the host
         let currentHostPaused = isHostPaused
         const getHost = getHostLive(currentUser?.Room?.[0]?.host)
@@ -64,6 +65,10 @@ useEffect(() => {
 
                         if(vodUrlChanged){
                             setIndexVod(newUrl)
+                        }
+
+                        if(canceledChanged){
+                            setCanceled(isCanceled)
                         }
           
                 let diffOfSeek = hosttime - videoRef.current.getCurrentTime();
@@ -205,7 +210,8 @@ useEffect(() => {
             played: played,
             volume,
             playbackRate: playbackRate,
-            vodUrlChanged: false
+            vodUrlChanged: false,
+            canceledChanged: false
             }, roomid: id_live.roomid })
     }
   }, [currentUser?.Room, played, playing])
@@ -221,6 +227,18 @@ useEffect(() => {
             }, roomid: id_live.roomid })
     }
   }, [indexVod])
+
+useEffect(() => {
+    if (currentUser?.Room?.[0]?.host && videoRef?.current) { 
+      if(!videoRef?.current){
+        return
+      }
+        socket.emit('videoStates', { videoState: {
+            isCanceled: canceled,
+            canceledChanged: true
+            }, roomid: id_live.roomid })
+    }
+  }, [canceled])
 
 useEffect(() => {
     socket.on('someonejoined', (name) => {
@@ -436,7 +454,9 @@ useEffect(() => {
         sync,
         messages,
         indexVod,
-        setIndexVod
+        setIndexVod,
+        canceled,
+        setCanceled
     }
 
     return (

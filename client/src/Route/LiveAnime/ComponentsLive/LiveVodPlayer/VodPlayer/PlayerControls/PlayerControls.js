@@ -34,15 +34,15 @@ ValueLabelComponent.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-export default forwardRef(({ onPlayPause, playing, onRewind, onFastForward, muted, onMute, onVolumeSeekUp, onVolumeSeekDown, volume, onPlaybackRateChange, playbackRate, onToggleFullScreen, played, onSeek, onSeekMouseUp, onSeekMouseDown, elapsedTime, totalDuration, onChangeDisplayFormat, screenFull, previousVod, nextVod, currentVod }, ref) => {
+export default forwardRef(({ onPlayPause, playing, onRewind, onFastForward, muted, onMute, onVolumeSeekUp, onVolumeSeekDown, volume, onPlaybackRateChange, playbackRate, onToggleFullScreen, played, onSeek, onSeekMouseUp, onSeekMouseDown, elapsedTime, totalDuration, onChangeDisplayFormat, screenFull, previousVod, nextVod, currentVod, showNextVod, secondeBeforeNextVod, setCanceled, setCount }, ref) => {
 
   const vod = useContext(epContext)
   const {currentUser} = useAuth()
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handlePopover = (event) => {
-
     setAnchorEl(event.currentTarget);
+    setCount(-1)
   };
 
   const handleClose = () => {
@@ -136,67 +136,80 @@ export default forwardRef(({ onPlayPause, playing, onRewind, onFastForward, mute
         container
         direction="row"
         alignItems="center"
+        position="relative"
         justifyContent="space-between"
         style={{ padding: 16 }}
       >
-        <Grid item xs={12}>
-          <PrettoSlider
-            min={0}
-            max={100}
-            value={played * 100}
-            valueLabelDisplay="auto"
-            components={{
-              ValueLabel: (e) => <ValueLabelComponent {...e} value={elapsedTime} />
-            }}
-            onChange={onSeek}
-            onChangeCommitted={onSeekMouseUp}
-          />
-        </Grid>
+        {
+          showNextVod ?
+            <div className="show-next-vod-container">
+              <div className="show-next-vod">
+                <h1>Vidéo suivante dans {secondeBeforeNextVod}</h1>
+                <Button disabled={currentUser.Room?.[0]?.host ? false : true} sx={{fontSize: "100%", border: "2px solid white", background: "#2c2c80"}} variant="contained" onClick={() => setCanceled(true)}>Voir la fin</Button>
+              </div>
+            </div>
+            : 
+            <>
+              <Grid item xs={12}>
+                <PrettoSlider
+                  min={0}
+                  max={100}
+                  value={played * 100}
+                  valueLabelDisplay="auto"
+                  components={{
+                    ValueLabel: (e) => <ValueLabelComponent {...e} value={elapsedTime} />
+                  }}
+                  onChange={onSeek}
+                  onChangeCommitted={onSeekMouseUp}
+                />
+              </Grid>
 
-        <Grid item>
-          <Grid container alignItems="center" direction="row">
-            <IconButton onClick={onPlayPause} sx={{color: "#c0c1c0"}} className="play-btn">
-              {playing ? <PauseRoundedIcon sx={{ fontSize: 30 }} /> : <PlayArrowRoundedIcon sx={{ fontSize: 30 }} />}
-            </IconButton>
+              <Grid item>
+                <Grid container alignItems="center" direction="row">
+                  <IconButton onClick={onPlayPause} sx={{color: "#c0c1c0"}} className="play-btn">
+                    {playing ? <PauseRoundedIcon sx={{ fontSize: 30 }} /> : <PlayArrowRoundedIcon sx={{ fontSize: 30 }} />}
+                  </IconButton>
 
-            <IconButton onClick={onMute} sx={{color: "#c0c1c0"}} className="play-btn">
-              {muted ? <VolumeOffIcon sx={{ fontSize: 30 }} /> : <VolumeUpIcon sx={{ fontSize: 30 }} />}
-            </IconButton>
+                  <IconButton onClick={onMute} sx={{color: "#c0c1c0"}} className="play-btn">
+                    {muted ? <VolumeOffIcon sx={{ fontSize: 30 }} /> : <VolumeUpIcon sx={{ fontSize: 30 }} />}
+                  </IconButton>
 
-            <Slider
-              min={0}
-              max={50}
-              value={volume * 100}
-              sx={{ width: 100, height: 2, color: "#2c2c80" }}
-              onChange={onVolumeSeekUp}
-              onChangeCommitted={onVolumeSeekDown}
-            />
+                  <Slider
+                    min={0}
+                    max={50}
+                    value={volume * 100}
+                    sx={{ width: 100, height: 2, color: "#2c2c80" }}
+                    onChange={onVolumeSeekUp}
+                    onChangeCommitted={onVolumeSeekDown}
+                  />
 
-            <Button onClick={onChangeDisplayFormat} variant="text" style={{ color: "#c0c1c0", marginLeft: 16 }}>
-              <Typography>{elapsedTime} / {totalDuration}</Typography>
-            </Button>
+                  <Button onClick={onChangeDisplayFormat} variant="text" style={{ color: "#c0c1c0", marginLeft: 16 }}>
+                    <Typography>{elapsedTime} / {totalDuration}</Typography>
+                  </Button>
 
-            {
-              currentVod("position") === 0 || !currentUser.Room?.[0]?.host ?
-                null
-                :
+                  {
+                    currentVod("position") === 0 || !currentUser.Room?.[0]?.host ?
+                      null
+                      :
 
-              <IconButton onClick={previousVod} sx={{color: "#c0c1c0"}} className="play-btn">
-                <SkipPreviousIcon sx={{ fontSize: 30 }} />
-              </IconButton>
-            }
+                    <IconButton onClick={previousVod} sx={{color: "#c0c1c0"}} className="play-btn">
+                      <SkipPreviousIcon sx={{ fontSize: 30 }} />
+                    </IconButton>
+                  }
 
-            {
-              currentVod("position") === vod.urlVod.length - 1 || !currentUser.Room?.[0]?.host ?
-                null
-                :
-                <IconButton onClick={nextVod} sx={{color: "#c0c1c0"}} className="play-btn">
-                  <SkipNextIcon sx={{ fontSize: 30 }} />
-                </IconButton>
-            }
-          </Grid>
-        </Grid>
-
+                  {
+                    currentVod("position") === vod.urlVod.length - 1 || !currentUser.Room?.[0]?.host ?
+                      null
+                      :
+                      <IconButton onClick={nextVod} sx={{color: "#c0c1c0"}} className="play-btn">
+                        <SkipNextIcon sx={{ fontSize: 30 }} />
+                      </IconButton>
+                  }
+                </Grid>
+                
+            </Grid>
+          </>
+          }
         <Grid item sx={{ display: "flex", flexDirection: "row"}}>
          {
             !screenFull ? 

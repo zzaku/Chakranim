@@ -1,7 +1,5 @@
-import { async } from "@firebase/util"
 import { Button } from "@mui/material"
-import { useContext, useEffect, useRef, useState } from "react"
-import { io } from "socket.io-client"
+import { useContext, useRef } from "react"
 import { useAuth } from "../../../../Component/Context/AuthContext"
 import { useSocket } from "../../../../Component/Context/SocketContext"
 import VodPlayer from "./VodPlayer/VodPlayer"
@@ -13,7 +11,7 @@ import { useNavigate } from "react-router-dom"
 const LiveVodPlayer = ({setGoToPlayerVOD, chatRef}) => {
 
     const {currentUser, removeRoom, removeVod, getUserInRoom, setNotInRoom} = useAuth()
-    const { thecode, socket, userOn } = useSocket()
+    const { thecode, socket } = useSocket()
     const playerContainerRef = useRef(null)
     const footerContext = useContext(epContext)
     const vod = useContext(epContext)
@@ -30,19 +28,15 @@ const LiveVodPlayer = ({setGoToPlayerVOD, chatRef}) => {
         if(res === 1){
           await removeVodArray(vod.urlVod)
         }
-        await removeRoom(currentUser.Room?.[0]?.id)
-        .then(async () => {
-          await setNotInRoom(currentUser?.[0]?.id)
-          .then(() => {
-            vod.setUrlVod([])
-            vod.setUrlUpload([])
-            socket.on('disconnect')
-            setGoToPlayerVOD(false)
-            navigate('/live-anime')
-            footerContext.setHideFooter(false)
-          })
-        })
       })
+      await removeRoom(currentUser.Room?.[0]?.id)
+      await setNotInRoom(currentUser?.[0]?.id)
+      vod.setUrlVod([])
+      vod.setUrlUpload([])
+      socket.on('disconnect')
+      setGoToPlayerVOD(false)
+      footerContext.setHideFooter(false)
+      navigate('/live-anime')
     }
     
     return (

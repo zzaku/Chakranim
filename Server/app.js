@@ -30,7 +30,7 @@ mongoose.connect(
 
 
 //Scrap Data
-setInterval(postsRoute.scrap, 14400000)
+postsRoute.scrap()
 
 //Listening to the server
 app.listen(port || 4000)
