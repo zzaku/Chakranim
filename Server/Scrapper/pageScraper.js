@@ -2,7 +2,7 @@ const axios = require('axios').default;
 const isThereNbrEp = require('./addNewAnime')
 
 const scraperObject = {
-    url: 'https://vostfree.tv',
+    url: 'https://vostfree.in',
     async scraper(browser){
         let page = await browser.newPage();
 		console.log(`Navigating to ${this.url}...`);
@@ -86,7 +86,7 @@ const scraperObject = {
         let allAnimesLinks = []
         console.log("Cherche les nouveaux animes et episodes disponibles...")
         for(let i = 0; i < sections; i++){
-            let currentSectionData = await listSection(`https://vostfree.tv/lastnews/page/${i+1}/`);
+            let currentSectionData = await listSection(`https://vostfree.in/lastnews/page/${i+1}/`);
             console.log(currentSectionData)
 			allAnimesLinks.push(currentSectionData)
 		}
@@ -269,7 +269,7 @@ const scraperObject = {
         for(elems of allAnimesLinks){
             for(link in elems){
                 if(elems[link]){
-                    if(elems[name] !== "One Piece"){
+                    if(elems[link].name !== "One Piece"){
                         let currentPageData1;
                         let currentPageData2;
                         let suite = elems[link].nbr_episode >= 300

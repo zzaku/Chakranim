@@ -164,10 +164,7 @@ const VodPlayer = ({playerContainerRef, chatRef, tokenRef}) => {
         }
     }
     
-    console.log("time : ", showNextVod)
     useEffect(() => {
-        console.log("vhanged : ", indexVod)
-        console.log("time : ", played)
         setCanceled(false)
         setPlayingState({...playingState, played: 0})
         setShowNextVod(false)

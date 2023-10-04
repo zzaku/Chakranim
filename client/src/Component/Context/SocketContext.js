@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import io from "socket.io-client"
 import { epContext } from "../../App";
 import { useAuth } from "./AuthContext";
-const socket = io('https://lets-party-server.herokuapp.com/');
+const socket = io('https://chakranimes-party2-8fa28edcb764.herokuapp.com');
 
 const SocketContext = createContext()
 

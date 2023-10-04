@@ -98,7 +98,7 @@ const Navbar = ({notAtHome, setNotAtHome}) => {
                     </>
                     :
                     <NavLink to={"/connexion"} style={{height: "auto", marginTop: "5%"}}>
-                      <div className={newFont ? "link-container" : ""}><h1>Se connecer</h1></div>
+                      <div className={newFont ? "link-container" : ""}><h1>Se connecter</h1></div>
                     </NavLink>
 
     const search =  <NavMenu style={{justifyContent: "space-around", width: "10%"}}>

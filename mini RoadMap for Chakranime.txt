@@ -1,0 +1,48 @@
+Partie 1)
+	
+	
+1)	Footer : Créer un footer (OUI)
+
+2)	Description : ne pas tout afficher et ajouter un lien "afficher la suite" qui affiche la suite de la description. (OUI)
+
+3)	Affichage : Récupérer tout les animes par genre sans pagination et adapter le css. (OUI mais finir le css)
+
+4)	Scrapper : Executer le scrapping de manniére récurrente et sans faire d'appel à l'API si possible. (OUI)
+
+5)	VOD : Modifier l'affichage des vod afin de l'optimiser. (OUI)
+
+6)	Route : Créer une route List_All_Anime qui récupère touts les animes peu importe le genre. (OUI mais finir le css)
+
+7)	Tri/Filtre : Mettre en place la possibilité de filtrer les animés par genre/nouveau_ep dans la page List_All_Anime. (OUI mais finir le css)
+
+8)	Recherche : Créer le composant Search qui affiche dynamiquement les animes recherchés.
+
+
+Partie 2)
+
+
+	_Navbar transparent bug (OUI)
+	_GIF sur la liste sur la page accueil (OUI)
+	_modifier le css de l'overlay de l'anime choisi (OUI)
+	_modifier le css du composant vodPlayer (OUI)
+	_sauvegarder en mémoire l'animé séléctionné (OUI)
+	_défilement des liste sur la page accueil (OUI)
+	_authorization appel à l'api (OUI)
+	_récupérer l'ip des users (OUI)
+
+	Mise en ligne du site (OUI)
+
+
+Partie 3)
+
+	
+	_Amélioration du scraper (soon)
+	_Ajout d'un deuxième scraper (soon)
+	_Ajout d'une inscription/connexion sur le site (OUI)
+	_Ajout de fonctionnalités permettant à l'utilisateur inscrit de reprendre l'animé en cour et des suggestions (OUI)
+	_Ajout des animés les plus regardés (OUI)
+	_Ajout favoris (OUI)
+	_Ajout d'un tchat en ligne (OUI)
+
+
+
